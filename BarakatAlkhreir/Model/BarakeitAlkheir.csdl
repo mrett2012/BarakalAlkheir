@@ -1,0 +1,1975 @@
+<Schema Namespace="BarakeitAlkheirModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="BarakeitAlkheirEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AssignDocumentTransactionTasks" EntityType="BarakeitAlkheirModel.AssignDocumentTransactionTask" />
+    <EntitySet Name="AuthorizationPersons" EntityType="BarakeitAlkheirModel.AuthorizationPerson" />
+    <EntitySet Name="Banks" EntityType="BarakeitAlkheirModel.Bank" />
+    <EntitySet Name="CarCustomerRents" EntityType="BarakeitAlkheirModel.CarCustomerRent" />
+    <EntitySet Name="CarCustomerRentPayments" EntityType="BarakeitAlkheirModel.CarCustomerRentPayment" />
+    <EntitySet Name="Cars" EntityType="BarakeitAlkheirModel.Car" />
+    <EntitySet Name="CarSuplliers" EntityType="BarakeitAlkheirModel.CarSupllier" />
+    <EntitySet Name="CarSupplierRents" EntityType="BarakeitAlkheirModel.CarSupplierRent" />
+    <EntitySet Name="CarSupplierRentPayments" EntityType="BarakeitAlkheirModel.CarSupplierRentPayment" />
+    <EntitySet Name="Companies" EntityType="BarakeitAlkheirModel.Company" />
+    <EntitySet Name="CompanyAuthorizations" EntityType="BarakeitAlkheirModel.CompanyAuthorization" />
+    <EntitySet Name="companyGovermentContracts" EntityType="BarakeitAlkheirModel.companyGovermentContract" />
+    <EntitySet Name="CompanyLicences" EntityType="BarakeitAlkheirModel.CompanyLicence" />
+    <EntitySet Name="CompanyLicencesEnds" EntityType="BarakeitAlkheirModel.CompanyLicencesEnd" />
+    <EntitySet Name="CompanyLicencesRemarks" EntityType="BarakeitAlkheirModel.CompanyLicencesRemark" />
+    <EntitySet Name="CompanyLicenseDesignations" EntityType="BarakeitAlkheirModel.CompanyLicenseDesignation" />
+    <EntitySet Name="Customers" EntityType="BarakeitAlkheirModel.Customer" />
+    <EntitySet Name="Dependents" EntityType="BarakeitAlkheirModel.Dependent" />
+    <EntitySet Name="Designations" EntityType="BarakeitAlkheirModel.Designation" />
+    <EntitySet Name="DocumentDefs" EntityType="BarakeitAlkheirModel.DocumentDef" />
+    <EntitySet Name="Documents" EntityType="BarakeitAlkheirModel.Document" />
+    <EntitySet Name="DocumentTransactions" EntityType="BarakeitAlkheirModel.DocumentTransaction" />
+    <EntitySet Name="DocumentTransactionSteps" EntityType="BarakeitAlkheirModel.DocumentTransactionStep" />
+    <EntitySet Name="DocumentTransactionTasks" EntityType="BarakeitAlkheirModel.DocumentTransactionTask" />
+    <EntitySet Name="DocumentTypeDefinitions" EntityType="BarakeitAlkheirModel.DocumentTypeDefinition" />
+    <EntitySet Name="DocumnetStores" EntityType="BarakeitAlkheirModel.DocumnetStore" />
+    <EntitySet Name="Educations" EntityType="BarakeitAlkheirModel.Education" />
+    <EntitySet Name="EmployeeLicenseShops" EntityType="BarakeitAlkheirModel.EmployeeLicenseShop" />
+    <EntitySet Name="EmployeePassports" EntityType="BarakeitAlkheirModel.EmployeePassport" />
+    <EntitySet Name="Employees" EntityType="BarakeitAlkheirModel.Employee" />
+    <EntitySet Name="EmployeeSalaries" EntityType="BarakeitAlkheirModel.EmployeeSalary" />
+    <EntitySet Name="EmployeeSponsors" EntityType="BarakeitAlkheirModel.EmployeeSponsor" />
+    <EntitySet Name="EmployeeStatusDefs" EntityType="BarakeitAlkheirModel.EmployeeStatusDef" />
+    <EntitySet Name="EmployeeWorkContracts" EntityType="BarakeitAlkheirModel.EmployeeWorkContract" />
+    <EntitySet Name="EventsDefinitions" EntityType="BarakeitAlkheirModel.EventsDefinition" />
+    <EntitySet Name="FormEvents" EntityType="BarakeitAlkheirModel.FormEvent" />
+    <EntitySet Name="FormScreans" EntityType="BarakeitAlkheirModel.FormScrean" />
+    <EntitySet Name="Genders" EntityType="BarakeitAlkheirModel.Gender" />
+    <EntitySet Name="Governorates" EntityType="BarakeitAlkheirModel.Governorate" />
+    <EntitySet Name="GovernorateAreas" EntityType="BarakeitAlkheirModel.GovernorateArea" />
+    <EntitySet Name="LicensesShops" EntityType="BarakeitAlkheirModel.LicensesShop" />
+    <EntitySet Name="MaritalStatus" EntityType="BarakeitAlkheirModel.MaritalStatu" />
+    <EntitySet Name="Nationalities" EntityType="BarakeitAlkheirModel.Nationality" />
+    <EntitySet Name="Religions" EntityType="BarakeitAlkheirModel.Religion" />
+    <EntitySet Name="RentLicenseEnds" EntityType="BarakeitAlkheirModel.RentLicenseEnd" />
+    <EntitySet Name="RentLicenses" EntityType="BarakeitAlkheirModel.RentLicens" />
+    <EntitySet Name="RentLicensesPayments" EntityType="BarakeitAlkheirModel.RentLicensesPayment" />
+    <EntitySet Name="RentShops" EntityType="BarakeitAlkheirModel.RentShop" />
+    <EntitySet Name="RentShopEnds" EntityType="BarakeitAlkheirModel.RentShopEnd" />
+    <EntitySet Name="RentShopPayments" EntityType="BarakeitAlkheirModel.RentShopPayment" />
+    <EntitySet Name="TransactionDefs" EntityType="BarakeitAlkheirModel.TransactionDef" />
+    <EntitySet Name="UserGroups" EntityType="BarakeitAlkheirModel.UserGroup" />
+    <EntitySet Name="UserGroupEvents" EntityType="BarakeitAlkheirModel.UserGroupEvent" />
+    <EntitySet Name="Users" EntityType="BarakeitAlkheirModel.User" />
+    <AssociationSet Name="FK_AssignDocumentTransactionTask_DocumentTransactionTasks" Association="BarakeitAlkheirModel.FK_AssignDocumentTransactionTask_DocumentTransactionTasks">
+      <End Role="DocumentTransactionTask" EntitySet="DocumentTransactionTasks" />
+      <End Role="AssignDocumentTransactionTask" EntitySet="AssignDocumentTransactionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyAuthorization_AuthorizationPerson" Association="BarakeitAlkheirModel.FK_CompanyAuthorization_AuthorizationPerson">
+      <End Role="AuthorizationPerson" EntitySet="AuthorizationPersons" />
+      <End Role="CompanyAuthorization" EntitySet="CompanyAuthorizations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeSalary_Banks" Association="BarakeitAlkheirModel.FK_EmployeeSalary_Banks">
+      <End Role="Bank" EntitySet="Banks" />
+      <End Role="EmployeeSalary" EntitySet="EmployeeSalaries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CarCustomerRent_Cars" Association="BarakeitAlkheirModel.FK_CarCustomerRent_Cars">
+      <End Role="Car" EntitySet="Cars" />
+      <End Role="CarCustomerRent" EntitySet="CarCustomerRents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CarCustomerRent_Customers" Association="BarakeitAlkheirModel.FK_CarCustomerRent_Customers">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="CarCustomerRent" EntitySet="CarCustomerRents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CarCustomerRentPayment_CarCustomerRent" Association="BarakeitAlkheirModel.FK_CarCustomerRentPayment_CarCustomerRent">
+      <End Role="CarCustomerRent" EntitySet="CarCustomerRents" />
+      <End Role="CarCustomerRentPayment" EntitySet="CarCustomerRentPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CarSupplierRent_Cars" Association="BarakeitAlkheirModel.FK_CarSupplierRent_Cars">
+      <End Role="Car" EntitySet="Cars" />
+      <End Role="CarSupplierRent" EntitySet="CarSupplierRents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CarSupplierRent_CarSuplliers" Association="BarakeitAlkheirModel.FK_CarSupplierRent_CarSuplliers">
+      <End Role="CarSupllier" EntitySet="CarSuplliers" />
+      <End Role="CarSupplierRent" EntitySet="CarSupplierRents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CarSupplierRentPayment_CarSupplierRent" Association="BarakeitAlkheirModel.FK_CarSupplierRentPayment_CarSupplierRent">
+      <End Role="CarSupplierRent" EntitySet="CarSupplierRents" />
+      <End Role="CarSupplierRentPayment" EntitySet="CarSupplierRentPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyAuthorization_Company" Association="BarakeitAlkheirModel.FK_CompanyAuthorization_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="CompanyAuthorization" EntitySet="CompanyAuthorizations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyLicences_Company" Association="BarakeitAlkheirModel.FK_CompanyLicences_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeSponsor_Company" Association="BarakeitAlkheirModel.FK_EmployeeSponsor_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="EmployeeSponsor" EntitySet="EmployeeSponsors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_companyGovermentContract_CompanyLicences" Association="BarakeitAlkheirModel.FK_companyGovermentContract_CompanyLicences">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="companyGovermentContract" EntitySet="companyGovermentContracts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyLicencesEnd_CompanyLicences1" Association="BarakeitAlkheirModel.FK_CompanyLicencesEnd_CompanyLicences1">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="CompanyLicencesEnd" EntitySet="CompanyLicencesEnds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyLicencesRemarks_CompanyLicences1" Association="BarakeitAlkheirModel.FK_CompanyLicencesRemarks_CompanyLicences1">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="CompanyLicencesRemark" EntitySet="CompanyLicencesRemarks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyLicenseDesignation_CompanyLicences" Association="BarakeitAlkheirModel.FK_CompanyLicenseDesignation_CompanyLicences">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="CompanyLicenseDesignation" EntitySet="CompanyLicenseDesignations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeSponsor_CompanyLicences" Association="BarakeitAlkheirModel.FK_EmployeeSponsor_CompanyLicences">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="EmployeeSponsor" EntitySet="EmployeeSponsors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LicensesShop_CompanyLicences" Association="BarakeitAlkheirModel.FK_LicensesShop_CompanyLicences">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="LicensesShop" EntitySet="LicensesShops" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentLicenses_CompanyLicences" Association="BarakeitAlkheirModel.FK_RentLicenses_CompanyLicences">
+      <End Role="CompanyLicence" EntitySet="CompanyLicences" />
+      <End Role="RentLicens" EntitySet="RentLicenses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyLicenseDesignation_Designations" Association="BarakeitAlkheirModel.FK_CompanyLicenseDesignation_Designations">
+      <End Role="Designation" EntitySet="Designations" />
+      <End Role="CompanyLicenseDesignation" EntitySet="CompanyLicenseDesignations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Customers_Nationality" Association="BarakeitAlkheirModel.FK_Customers_Nationality">
+      <End Role="Nationality" EntitySet="Nationalities" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentLicenses_Customers" Association="BarakeitAlkheirModel.FK_RentLicenses_Customers">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="RentLicens" EntitySet="RentLicenses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentShop_Customers" Association="BarakeitAlkheirModel.FK_RentShop_Customers">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="RentShop" EntitySet="RentShops" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Dependents_Employees" Association="BarakeitAlkheirModel.FK_Dependents_Employees">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Dependent" EntitySet="Dependents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeSponsor_Designations" Association="BarakeitAlkheirModel.FK_EmployeeSponsor_Designations">
+      <End Role="Designation" EntitySet="Designations" />
+      <End Role="EmployeeSponsor" EntitySet="EmployeeSponsors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocumentDef_DocumentTypeDefinition" Association="BarakeitAlkheirModel.FK_DocumentDef_DocumentTypeDefinition">
+      <End Role="DocumentTypeDefinition" EntitySet="DocumentTypeDefinitions" />
+      <End Role="DocumentDef" EntitySet="DocumentDefs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Documents_DocumentDef" Association="BarakeitAlkheirModel.FK_Documents_DocumentDef">
+      <End Role="DocumentDef" EntitySet="DocumentDefs" />
+      <End Role="Document" EntitySet="Documents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocumentTransactions_DocumentDef" Association="BarakeitAlkheirModel.FK_DocumentTransactions_DocumentDef">
+      <End Role="DocumentDef" EntitySet="DocumentDefs" />
+      <End Role="DocumentTransaction" EntitySet="DocumentTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocumnetStore_Documents" Association="BarakeitAlkheirModel.FK_DocumnetStore_Documents">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="DocumnetStore" EntitySet="DocumnetStores" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocumentTransactions_TransactionDef" Association="BarakeitAlkheirModel.FK_DocumentTransactions_TransactionDef">
+      <End Role="TransactionDef" EntitySet="TransactionDefs" />
+      <End Role="DocumentTransaction" EntitySet="DocumentTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocumentTransactionSteps_DocumentTransactions" Association="BarakeitAlkheirModel.FK_DocumentTransactionSteps_DocumentTransactions">
+      <End Role="DocumentTransaction" EntitySet="DocumentTransactions" />
+      <End Role="DocumentTransactionStep" EntitySet="DocumentTransactionSteps" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocumentTransactionTasks_DocumentTransactions" Association="BarakeitAlkheirModel.FK_DocumentTransactionTasks_DocumentTransactions">
+      <End Role="DocumentTransaction" EntitySet="DocumentTransactions" />
+      <End Role="DocumentTransactionTask" EntitySet="DocumentTransactionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Educations" Association="BarakeitAlkheirModel.FK_Employees_Educations">
+      <End Role="Education" EntitySet="Educations" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeLicenseShop_Employees" Association="BarakeitAlkheirModel.FK_EmployeeLicenseShop_Employees">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeLicenseShop" EntitySet="EmployeeLicenseShops" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeLicenseShop_LicensesShop" Association="BarakeitAlkheirModel.FK_EmployeeLicenseShop_LicensesShop">
+      <End Role="LicensesShop" EntitySet="LicensesShops" />
+      <End Role="EmployeeLicenseShop" EntitySet="EmployeeLicenseShops" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeePassports_Employees" Association="BarakeitAlkheirModel.FK_EmployeePassports_Employees">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeePassport" EntitySet="EmployeePassports" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_EmployeeStatusDef" Association="BarakeitAlkheirModel.FK_Employees_EmployeeStatusDef">
+      <End Role="EmployeeStatusDef" EntitySet="EmployeeStatusDefs" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Gender1" Association="BarakeitAlkheirModel.FK_Employees_Gender1">
+      <End Role="Gender" EntitySet="Genders" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_MaritalStatus" Association="BarakeitAlkheirModel.FK_Employees_MaritalStatus">
+      <End Role="MaritalStatu" EntitySet="MaritalStatus" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Nationality" Association="BarakeitAlkheirModel.FK_Employees_Nationality">
+      <End Role="Nationality" EntitySet="Nationalities" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Nationality1" Association="BarakeitAlkheirModel.FK_Employees_Nationality1">
+      <End Role="Nationality" EntitySet="Nationalities" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Religions1" Association="BarakeitAlkheirModel.FK_Employees_Religions1">
+      <End Role="Religion" EntitySet="Religions" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeSalary_Employees" Association="BarakeitAlkheirModel.FK_EmployeeSalary_Employees">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeSalary" EntitySet="EmployeeSalaries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeSponsor_Employees" Association="BarakeitAlkheirModel.FK_EmployeeSponsor_Employees">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeSponsor" EntitySet="EmployeeSponsors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeWorkContract_Employees" Association="BarakeitAlkheirModel.FK_EmployeeWorkContract_Employees">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="EmployeeWorkContract" EntitySet="EmployeeWorkContracts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FormEvent_EventsDefinition" Association="BarakeitAlkheirModel.FK_FormEvent_EventsDefinition">
+      <End Role="EventsDefinition" EntitySet="EventsDefinitions" />
+      <End Role="FormEvent" EntitySet="FormEvents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FormEvent_Forms" Association="BarakeitAlkheirModel.FK_FormEvent_Forms">
+      <End Role="FormScrean" EntitySet="FormScreans" />
+      <End Role="FormEvent" EntitySet="FormEvents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserGroupEvent_FormEvent" Association="BarakeitAlkheirModel.FK_UserGroupEvent_FormEvent">
+      <End Role="FormEvent" EntitySet="FormEvents" />
+      <End Role="UserGroupEvent" EntitySet="UserGroupEvents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GovernorateArea_Governorate" Association="BarakeitAlkheirModel.FK_GovernorateArea_Governorate">
+      <End Role="Governorate" EntitySet="Governorates" />
+      <End Role="GovernorateArea" EntitySet="GovernorateAreas" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentShop_LicensesShop" Association="BarakeitAlkheirModel.FK_RentShop_LicensesShop">
+      <End Role="LicensesShop" EntitySet="LicensesShops" />
+      <End Role="RentShop" EntitySet="RentShops" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentLicenseEnd_RentLicenses" Association="BarakeitAlkheirModel.FK_RentLicenseEnd_RentLicenses">
+      <End Role="RentLicens" EntitySet="RentLicenses" />
+      <End Role="RentLicenseEnd" EntitySet="RentLicenseEnds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentLicensesPayment_RentLicenses" Association="BarakeitAlkheirModel.FK_RentLicensesPayment_RentLicenses">
+      <End Role="RentLicens" EntitySet="RentLicenses" />
+      <End Role="RentLicensesPayment" EntitySet="RentLicensesPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentShopEnd_RentShop" Association="BarakeitAlkheirModel.FK_RentShopEnd_RentShop">
+      <End Role="RentShop" EntitySet="RentShops" />
+      <End Role="RentShopEnd" EntitySet="RentShopEnds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RentShopPayment_RentShop" Association="BarakeitAlkheirModel.FK_RentShopPayment_RentShop">
+      <End Role="RentShop" EntitySet="RentShops" />
+      <End Role="RentShopPayment" EntitySet="RentShopPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserGroupEvent_UserGroup" Association="BarakeitAlkheirModel.FK_UserGroupEvent_UserGroup">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="UserGroupEvent" EntitySet="UserGroupEvents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_UserGroup" Association="BarakeitAlkheirModel.FK_Users_UserGroup">
+      <End Role="UserGroup" EntitySet="UserGroups" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="AssignDocumentTransactionTask">
+    <Key>
+      <PropertyRef Name="assignDocTransTaskID" />
+    </Key>
+    <Property Type="Int32" Name="assignDocTransTaskID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="Int32" Name="documentTransTaskID" />
+    <Property Type="DateTime" Name="assignDocTransTask_date" />
+    <Property Type="Int32" Name="assignDocTransTask_noOfDays" />
+    <Property Type="String" Name="assignDocTransTask_Remarks" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="assignDocTransTask_FinishDate" />
+    <Property Type="Boolean" Name="assignDocTransTask_IsClose" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentTransactionTask" Relationship="BarakeitAlkheirModel.FK_AssignDocumentTransactionTask_DocumentTransactionTasks" FromRole="AssignDocumentTransactionTask" ToRole="DocumentTransactionTask" />
+  </EntityType>
+  <EntityType Name="AuthorizationPerson">
+    <Key>
+      <PropertyRef Name="authorizationID" />
+    </Key>
+    <Property Type="Int32" Name="authorizationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="auth_namea1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namea2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namea3" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namea4" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namea5" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namee1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namee2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namee3" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namee4" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_namee5" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="fauth_ullArabicName" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="fauth_ullEnglishName" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_CivilID" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_Designation" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_ContactNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="auth_remarks" MaxLength="75" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="auth_isCurrent" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyAuthorizations" Relationship="BarakeitAlkheirModel.FK_CompanyAuthorization_AuthorizationPerson" FromRole="AuthorizationPerson" ToRole="CompanyAuthorization" />
+  </EntityType>
+  <EntityType Name="Bank">
+    <Key>
+      <PropertyRef Name="bankID" />
+    </Key>
+    <Property Type="Int32" Name="bankID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="bank_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="bank_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="bank_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="bank_accNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="EmployeeSalaries" Relationship="BarakeitAlkheirModel.FK_EmployeeSalary_Banks" FromRole="Bank" ToRole="EmployeeSalary" />
+  </EntityType>
+  <EntityType Name="CarCustomerRent">
+    <Key>
+      <PropertyRef Name="carCustomerRentID" />
+    </Key>
+    <Property Type="Int32" Name="carCustomerRentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="carID" />
+    <Property Type="Int32" Name="customerID" />
+    <Property Type="DateTime" Name="carCustomer_from" />
+    <Property Type="DateTime" Name="carCustomer_to" />
+    <Property Type="Single" Name="carCustomerRent_MonthlyAmount" />
+    <Property Type="Int32" Name="carCustomerRent_DriverID" />
+    <Property Type="String" Name="carCustomerRent_Remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="carCustomerRent_isClosed" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Car" Relationship="BarakeitAlkheirModel.FK_CarCustomerRent_Cars" FromRole="CarCustomerRent" ToRole="Car" />
+    <NavigationProperty Name="Customer" Relationship="BarakeitAlkheirModel.FK_CarCustomerRent_Customers" FromRole="CarCustomerRent" ToRole="Customer" />
+    <NavigationProperty Name="CarCustomerRentPayments" Relationship="BarakeitAlkheirModel.FK_CarCustomerRentPayment_CarCustomerRent" FromRole="CarCustomerRent" ToRole="CarCustomerRentPayment" />
+  </EntityType>
+  <EntityType Name="CarCustomerRentPayment">
+    <Key>
+      <PropertyRef Name="carCustomerRentPaymentID" />
+    </Key>
+    <Property Type="Int32" Name="carCustomerRentPaymentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="carCustomerRentID" />
+    <Property Type="DateTime" Name="carCustomerPayment_ForDate" />
+    <Property Type="Single" Name="carCustomerPayment_amount" />
+    <Property Type="String" Name="carCustomerPayment_VoucherNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="carCustomerPayment_PayDate" />
+    <Property Type="String" Name="carCustomerPayment_Remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CarCustomerRent" Relationship="BarakeitAlkheirModel.FK_CarCustomerRentPayment_CarCustomerRent" FromRole="CarCustomerRentPayment" ToRole="CarCustomerRent" />
+  </EntityType>
+  <EntityType Name="Car">
+    <Key>
+      <PropertyRef Name="carID" />
+    </Key>
+    <Property Type="Int32" Name="carID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="car_No" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="car_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="car_Model" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="car_Brand" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="car_ChesseeNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="car_isAvailable" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CarCustomerRents" Relationship="BarakeitAlkheirModel.FK_CarCustomerRent_Cars" FromRole="Car" ToRole="CarCustomerRent" />
+    <NavigationProperty Name="CarSupplierRents" Relationship="BarakeitAlkheirModel.FK_CarSupplierRent_Cars" FromRole="Car" ToRole="CarSupplierRent" />
+  </EntityType>
+  <EntityType Name="CarSupllier">
+    <Key>
+      <PropertyRef Name="carSuppliserID" />
+    </Key>
+    <Property Type="Int32" Name="carSuppliserID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="carSuppliser_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="carSuppliser_PersonInCharge" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="carSuppliser_Contact" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="carSuppliser_Address" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="carSuppliser_remarks" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CarSupplierRents" Relationship="BarakeitAlkheirModel.FK_CarSupplierRent_CarSuplliers" FromRole="CarSupllier" ToRole="CarSupplierRent" />
+  </EntityType>
+  <EntityType Name="CarSupplierRent">
+    <Key>
+      <PropertyRef Name="carSupplierRentID" />
+    </Key>
+    <Property Type="Int32" Name="carSupplierRentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="carID" />
+    <Property Type="Int32" Name="carSuppliserID" />
+    <Property Type="DateTime" Name="carSupplierRent_from" />
+    <Property Type="DateTime" Name="carSupplierRent_to" />
+    <Property Type="Single" Name="carSupplierRent_totalAmount" />
+    <Property Type="Single" Name="carSupplierRent_MonthlyAmount" />
+    <Property Type="DateTime" Name="carSupplierRent_firstPaymentDate" />
+    <Property Type="Single" Name="carSupplierRent_firstPaymentAmount" />
+    <Property Type="Single" Name="carSupplierRent_lastPaymentAmount" />
+    <Property Type="Boolean" Name="carSupplierRent_isRented" />
+    <Property Type="Boolean" Name="carSupplierRent_isBuyed" />
+    <Property Type="Boolean" Name="carSupplierRent_isClosed" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Car" Relationship="BarakeitAlkheirModel.FK_CarSupplierRent_Cars" FromRole="CarSupplierRent" ToRole="Car" />
+    <NavigationProperty Name="CarSupllier" Relationship="BarakeitAlkheirModel.FK_CarSupplierRent_CarSuplliers" FromRole="CarSupplierRent" ToRole="CarSupllier" />
+    <NavigationProperty Name="CarSupplierRentPayments" Relationship="BarakeitAlkheirModel.FK_CarSupplierRentPayment_CarSupplierRent" FromRole="CarSupplierRent" ToRole="CarSupplierRentPayment" />
+  </EntityType>
+  <EntityType Name="CarSupplierRentPayment">
+    <Key>
+      <PropertyRef Name="carSupplierRentPaymentID" />
+    </Key>
+    <Property Type="Int32" Name="carSupplierRentPaymentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="carSupplierRentID" />
+    <Property Type="DateTime" Name="carSupplierRentPayment_ForDate" />
+    <Property Type="Single" Name="carSupplierRentPayment_amount" />
+    <Property Type="String" Name="carSupplierRentPayment_VoucherNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="carSupplierRentPayment_PayDate" />
+    <Property Type="String" Name="carSupplierRentPayment_Remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CarSupplierRent" Relationship="BarakeitAlkheirModel.FK_CarSupplierRentPayment_CarSupplierRent" FromRole="CarSupplierRentPayment" ToRole="CarSupplierRent" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="companyID" />
+    </Key>
+    <Property Type="Int32" Name="companyID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="comp_nam1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_nam2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_nam3" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_nam4" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_nam5" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_name1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_name2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_name3" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_name4" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_name5" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_arabicName" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_englishName" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_fileNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_uniqueNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_ownerName" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_civilId" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_nationality" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_nationalityNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_Salary" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_Designation" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_contactNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comp_remarks" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyAuthorizations" Relationship="BarakeitAlkheirModel.FK_CompanyAuthorization_Company" FromRole="Company" ToRole="CompanyAuthorization" />
+    <NavigationProperty Name="CompanyLicences" Relationship="BarakeitAlkheirModel.FK_CompanyLicences_Company" FromRole="Company" ToRole="CompanyLicence" />
+    <NavigationProperty Name="EmployeeSponsors" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_Company" FromRole="Company" ToRole="EmployeeSponsor" />
+  </EntityType>
+  <EntityType Name="CompanyAuthorization">
+    <Key>
+      <PropertyRef Name="companyAuthorizationID" />
+    </Key>
+    <Property Type="Int32" Name="companyAuthorizationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyID" />
+    <Property Type="Int32" Name="authorizationID" />
+    <Property Type="Boolean" Name="auth_isCurrent" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="AuthorizationPerson" Relationship="BarakeitAlkheirModel.FK_CompanyAuthorization_AuthorizationPerson" FromRole="CompanyAuthorization" ToRole="AuthorizationPerson" />
+    <NavigationProperty Name="Company" Relationship="BarakeitAlkheirModel.FK_CompanyAuthorization_Company" FromRole="CompanyAuthorization" ToRole="Company" />
+  </EntityType>
+  <EntityType Name="companyGovermentContract">
+    <Key>
+      <PropertyRef Name="govermentContractID" />
+    </Key>
+    <Property Type="Int32" Name="govermentContractID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyLicencesID" />
+    <Property Type="String" Name="gov_contractNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="startDate" />
+    <Property Type="DateTime" Name="endDate" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_companyGovermentContract_CompanyLicences" FromRole="companyGovermentContract" ToRole="CompanyLicence" />
+  </EntityType>
+  <EntityType Name="CompanyLicence">
+    <Key>
+      <PropertyRef Name="companyLicencesID" />
+    </Key>
+    <Property Type="Int32" Name="companyLicencesID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyID" />
+    <Property Type="String" Name="licenseNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="licenseUniqueNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="licenseLinkCode" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="commercialName" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="licensecivilID" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="startDate" />
+    <Property Type="DateTime" Name="endDate" />
+    <Property Type="Int32" Name="noOfSeats" />
+    <Property Type="Boolean" Name="isMainLicences" />
+    <Property Type="Boolean" Name="isActive" />
+    <Property Type="Boolean" Name="isClose" />
+    <Property Type="Boolean" Name="isFack" />
+    <Property Type="Int32" Name="mandoubID" />
+    <Property Type="Int32" Name="governorateID" />
+    <Property Type="String" Name="Mohafaza" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="goverareaID" />
+    <Property Type="String" Name="Mantaqa" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Quet3a" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Share3" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="BuilduingType" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="floor" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="appartment" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="pobox" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="poboxOffice" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="email" MaxLength="30" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="contactNo" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="fulladdress" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Company" Relationship="BarakeitAlkheirModel.FK_CompanyLicences_Company" FromRole="CompanyLicence" ToRole="Company" />
+    <NavigationProperty Name="companyGovermentContracts" Relationship="BarakeitAlkheirModel.FK_companyGovermentContract_CompanyLicences" FromRole="CompanyLicence" ToRole="companyGovermentContract" />
+    <NavigationProperty Name="CompanyLicencesEnds" Relationship="BarakeitAlkheirModel.FK_CompanyLicencesEnd_CompanyLicences1" FromRole="CompanyLicence" ToRole="CompanyLicencesEnd" />
+    <NavigationProperty Name="CompanyLicencesRemarks" Relationship="BarakeitAlkheirModel.FK_CompanyLicencesRemarks_CompanyLicences1" FromRole="CompanyLicence" ToRole="CompanyLicencesRemark" />
+    <NavigationProperty Name="CompanyLicenseDesignations" Relationship="BarakeitAlkheirModel.FK_CompanyLicenseDesignation_CompanyLicences" FromRole="CompanyLicence" ToRole="CompanyLicenseDesignation" />
+    <NavigationProperty Name="EmployeeSponsors" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_CompanyLicences" FromRole="CompanyLicence" ToRole="EmployeeSponsor" />
+    <NavigationProperty Name="LicensesShops" Relationship="BarakeitAlkheirModel.FK_LicensesShop_CompanyLicences" FromRole="CompanyLicence" ToRole="LicensesShop" />
+    <NavigationProperty Name="RentLicenses" Relationship="BarakeitAlkheirModel.FK_RentLicenses_CompanyLicences" FromRole="CompanyLicence" ToRole="RentLicens" />
+  </EntityType>
+  <EntityType Name="CompanyLicencesEnd">
+    <Key>
+      <PropertyRef Name="companyLicencesEndID" />
+    </Key>
+    <Property Type="Int32" Name="companyLicencesEndID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyLicencesID" Nullable="false" />
+    <Property Type="DateTime" Name="companyLicencesEnd_Date" />
+    <Property Type="String" Name="companyLicencesEnd_reasons" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="companyLicencesEnd_isActive" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_CompanyLicencesEnd_CompanyLicences1" FromRole="CompanyLicencesEnd" ToRole="CompanyLicence" />
+  </EntityType>
+  <EntityType Name="CompanyLicencesRemark">
+    <Key>
+      <PropertyRef Name="comLicenseRemID" />
+    </Key>
+    <Property Type="Int32" Name="comLicenseRemID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyLicencesID" />
+    <Property Type="DateTime" Name="comLicenseRem_Date" />
+    <Property Type="String" Name="comLicenseRem_Remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="comLicenseRem_Action" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="comLicenseRem_isActive" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_CompanyLicencesRemarks_CompanyLicences1" FromRole="CompanyLicencesRemark" ToRole="CompanyLicence" />
+  </EntityType>
+  <EntityType Name="CompanyLicenseDesignation">
+    <Key>
+      <PropertyRef Name="companyLicencesDesignationID" />
+    </Key>
+    <Property Type="Int32" Name="companyLicencesDesignationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyLicencesID" />
+    <Property Type="Int32" Name="designationID" />
+    <Property Type="Int32" Name="noOfSeats" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_CompanyLicenseDesignation_CompanyLicences" FromRole="CompanyLicenseDesignation" ToRole="CompanyLicence" />
+    <NavigationProperty Name="Designation" Relationship="BarakeitAlkheirModel.FK_CompanyLicenseDesignation_Designations" FromRole="CompanyLicenseDesignation" ToRole="Designation" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="customerID" />
+    </Key>
+    <Property Type="Int32" Name="customerID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="customer_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="customer_CivilID" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="customer_nationalityID" />
+    <Property Type="DateTime" Name="customer_BirthDate" />
+    <Property Type="String" Name="customer_phoneNumber1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="customer_phoneNumber2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="customer_Address" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="customer_active" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CarCustomerRents" Relationship="BarakeitAlkheirModel.FK_CarCustomerRent_Customers" FromRole="Customer" ToRole="CarCustomerRent" />
+    <NavigationProperty Name="Nationality" Relationship="BarakeitAlkheirModel.FK_Customers_Nationality" FromRole="Customer" ToRole="Nationality" />
+    <NavigationProperty Name="RentLicenses" Relationship="BarakeitAlkheirModel.FK_RentLicenses_Customers" FromRole="Customer" ToRole="RentLicens" />
+    <NavigationProperty Name="RentShops" Relationship="BarakeitAlkheirModel.FK_RentShop_Customers" FromRole="Customer" ToRole="RentShop" />
+  </EntityType>
+  <EntityType Name="Dependent">
+    <Key>
+      <PropertyRef Name="dependentsID" />
+    </Key>
+    <Property Type="Int32" Name="dependentsID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="String" Name="depend_aName" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="depend_eName" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="depend_relation" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="depend_birthday" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="depend_gender" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="depend_nationality" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="depend_religion" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employee" Relationship="BarakeitAlkheirModel.FK_Dependents_Employees" FromRole="Dependent" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Designation">
+    <Key>
+      <PropertyRef Name="designationID" />
+    </Key>
+    <Property Type="Int32" Name="designationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="desig_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="desig_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="desig_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicenseDesignations" Relationship="BarakeitAlkheirModel.FK_CompanyLicenseDesignation_Designations" FromRole="Designation" ToRole="CompanyLicenseDesignation" />
+    <NavigationProperty Name="EmployeeSponsors" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_Designations" FromRole="Designation" ToRole="EmployeeSponsor" />
+  </EntityType>
+  <EntityType Name="DocumentDef">
+    <Key>
+      <PropertyRef Name="documentDefID" />
+    </Key>
+    <Property Type="Int32" Name="documentDefID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="documentDefCode" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="documentTypeDefID" />
+    <Property Type="String" Name="documentDef_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="documentDef_WarningDays" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentTypeDefinition" Relationship="BarakeitAlkheirModel.FK_DocumentDef_DocumentTypeDefinition" FromRole="DocumentDef" ToRole="DocumentTypeDefinition" />
+    <NavigationProperty Name="Documents" Relationship="BarakeitAlkheirModel.FK_Documents_DocumentDef" FromRole="DocumentDef" ToRole="Document" />
+    <NavigationProperty Name="DocumentTransactions" Relationship="BarakeitAlkheirModel.FK_DocumentTransactions_DocumentDef" FromRole="DocumentDef" ToRole="DocumentTransaction" />
+  </EntityType>
+  <EntityType Name="Document">
+    <Key>
+      <PropertyRef Name="documentID" />
+    </Key>
+    <Property Type="Int32" Name="documentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="documentDefID" />
+    <Property Type="DateTime" Name="document_startDate" />
+    <Property Type="DateTime" Name="document_endDate" />
+    <Property Type="String" Name="document_No" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_Type" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_placeOfIssue" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_Status" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_Remarks" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="document_TypeID" />
+    <Property Type="String" Name="document_text1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_text2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_text3" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_text4" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="document_text5" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentDef" Relationship="BarakeitAlkheirModel.FK_Documents_DocumentDef" FromRole="Document" ToRole="DocumentDef" />
+    <NavigationProperty Name="DocumnetStores" Relationship="BarakeitAlkheirModel.FK_DocumnetStore_Documents" FromRole="Document" ToRole="DocumnetStore" />
+  </EntityType>
+  <EntityType Name="DocumentTransaction">
+    <Key>
+      <PropertyRef Name="documentTransID" />
+    </Key>
+    <Property Type="Int32" Name="documentTransID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="documentDefID" />
+    <Property Type="Int32" Name="transDefID" />
+    <Property Type="Single" Name="documentTrans_Amount" />
+    <Property Type="String" Name="documentTrans_Description" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentDef" Relationship="BarakeitAlkheirModel.FK_DocumentTransactions_DocumentDef" FromRole="DocumentTransaction" ToRole="DocumentDef" />
+    <NavigationProperty Name="TransactionDef" Relationship="BarakeitAlkheirModel.FK_DocumentTransactions_TransactionDef" FromRole="DocumentTransaction" ToRole="TransactionDef" />
+    <NavigationProperty Name="DocumentTransactionSteps" Relationship="BarakeitAlkheirModel.FK_DocumentTransactionSteps_DocumentTransactions" FromRole="DocumentTransaction" ToRole="DocumentTransactionStep" />
+    <NavigationProperty Name="DocumentTransactionTasks" Relationship="BarakeitAlkheirModel.FK_DocumentTransactionTasks_DocumentTransactions" FromRole="DocumentTransaction" ToRole="DocumentTransactionTask" />
+  </EntityType>
+  <EntityType Name="DocumentTransactionStep">
+    <Key>
+      <PropertyRef Name="documentTransSetpID" />
+    </Key>
+    <Property Type="Int32" Name="documentTransSetpID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="documentTransID" />
+    <Property Type="String" Name="documentTransSetp_name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="documentTransSetp_Period" />
+    <Property Type="Int32" Name="documentTransSetp_Order" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentTransaction" Relationship="BarakeitAlkheirModel.FK_DocumentTransactionSteps_DocumentTransactions" FromRole="DocumentTransactionStep" ToRole="DocumentTransaction" />
+  </EntityType>
+  <EntityType Name="DocumentTransactionTask">
+    <Key>
+      <PropertyRef Name="documentTransTaskID" />
+    </Key>
+    <Property Type="Int32" Name="documentTransTaskID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="documentTransID" />
+    <Property Type="DateTime" Name="documentTransTask_date" />
+    <Property Type="Int32" Name="documentTransTask_NoOfDays" />
+    <Property Type="Boolean" Name="documentTransTask_Status" />
+    <Property Type="String" Name="documentTransTask_Remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="documentTransTask_Approved" />
+    <Property Type="DateTime" Name="documentTransTask_ApprovedDate" />
+    <Property Type="Boolean" Name="documentTransTask_isClose" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="AssignDocumentTransactionTasks" Relationship="BarakeitAlkheirModel.FK_AssignDocumentTransactionTask_DocumentTransactionTasks" FromRole="DocumentTransactionTask" ToRole="AssignDocumentTransactionTask" />
+    <NavigationProperty Name="DocumentTransaction" Relationship="BarakeitAlkheirModel.FK_DocumentTransactionTasks_DocumentTransactions" FromRole="DocumentTransactionTask" ToRole="DocumentTransaction" />
+  </EntityType>
+  <EntityType Name="DocumentTypeDefinition">
+    <Key>
+      <PropertyRef Name="documentTypeDefID" />
+    </Key>
+    <Property Type="Int32" Name="documentTypeDefID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="documentType_Code" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="documentType_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentDefs" Relationship="BarakeitAlkheirModel.FK_DocumentDef_DocumentTypeDefinition" FromRole="DocumentTypeDefinition" ToRole="DocumentDef" />
+  </EntityType>
+  <EntityType Name="DocumnetStore">
+    <Key>
+      <PropertyRef Name="documentStoreID" />
+    </Key>
+    <Property Type="Int32" Name="documentStoreID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="documentID" />
+    <Property Type="Binary" Name="documentStore_doc" MaxLength="Max" FixedLength="false" />
+    <Property Type="DateTime" Name="documentStore_Date" />
+    <Property Type="String" Name="documentStore_Description" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Document" Relationship="BarakeitAlkheirModel.FK_DocumnetStore_Documents" FromRole="DocumnetStore" ToRole="Document" />
+  </EntityType>
+  <EntityType Name="Education">
+    <Key>
+      <PropertyRef Name="educationID" />
+    </Key>
+    <Property Type="Int32" Name="educationID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="edu_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="edu_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="edu_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employees" Relationship="BarakeitAlkheirModel.FK_Employees_Educations" FromRole="Education" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EmployeeLicenseShop">
+    <Key>
+      <PropertyRef Name="employeeLicShopID" />
+    </Key>
+    <Property Type="Int32" Name="employeeLicShopID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="licencesShopID" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employee" Relationship="BarakeitAlkheirModel.FK_EmployeeLicenseShop_Employees" FromRole="EmployeeLicenseShop" ToRole="Employee" />
+    <NavigationProperty Name="LicensesShop" Relationship="BarakeitAlkheirModel.FK_EmployeeLicenseShop_LicensesShop" FromRole="EmployeeLicenseShop" ToRole="LicensesShop" />
+  </EntityType>
+  <EntityType Name="EmployeePassport">
+    <Key>
+      <PropertyRef Name="passportID" />
+    </Key>
+    <Property Type="Int32" Name="passportID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="String" Name="pass_no" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="pass_issueDate" />
+    <Property Type="DateTime" Name="pass_expiryDate" />
+    <Property Type="String" Name="pass_placeOfIssue" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="pass_type" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="pass_InUsed" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employee" Relationship="BarakeitAlkheirModel.FK_EmployeePassports_Employees" FromRole="EmployeePassport" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="employeeID" />
+    </Key>
+    <Property Type="Int32" Name="employeeID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="emp_No" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_fileNo" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_civilID" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namea1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namea2" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namea3" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namea4" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namea5" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namee1" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namee2" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namee3" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namee4" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namee5" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namefullar" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_namefullen" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_day" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_month" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="emp_year" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="nationality_placeOfBirthID" />
+    <Property Type="Int32" Name="genderID" />
+    <Property Type="Int32" Name="nationalityID" />
+    <Property Type="Int32" Name="religionID" />
+    <Property Type="Int32" Name="educationID" />
+    <Property Type="Int32" Name="maritalID" />
+    <Property Type="Int32" Name="departmentID" />
+    <Property Type="String" Name="emp_bloodType" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="emp_active" />
+    <Property Type="Boolean" Name="emp_isMandoub" />
+    <Property Type="Int32" Name="employeeStatusID" />
+    <Property Type="Int32" Name="companyID" />
+    <Property Type="String" Name="Mohafaza" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Quet3a" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Share3" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Jada" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="BuilduingType" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="floor" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="appartment" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="pobox" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="poboxOffice" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="email" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="homeNo" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="phoneNo" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="fulladdress" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Dependents" Relationship="BarakeitAlkheirModel.FK_Dependents_Employees" FromRole="Employee" ToRole="Dependent" />
+    <NavigationProperty Name="Education" Relationship="BarakeitAlkheirModel.FK_Employees_Educations" FromRole="Employee" ToRole="Education" />
+    <NavigationProperty Name="EmployeeLicenseShops" Relationship="BarakeitAlkheirModel.FK_EmployeeLicenseShop_Employees" FromRole="Employee" ToRole="EmployeeLicenseShop" />
+    <NavigationProperty Name="EmployeePassports" Relationship="BarakeitAlkheirModel.FK_EmployeePassports_Employees" FromRole="Employee" ToRole="EmployeePassport" />
+    <NavigationProperty Name="EmployeeStatusDef" Relationship="BarakeitAlkheirModel.FK_Employees_EmployeeStatusDef" FromRole="Employee" ToRole="EmployeeStatusDef" />
+    <NavigationProperty Name="Gender" Relationship="BarakeitAlkheirModel.FK_Employees_Gender1" FromRole="Employee" ToRole="Gender" />
+    <NavigationProperty Name="MaritalStatu" Relationship="BarakeitAlkheirModel.FK_Employees_MaritalStatus" FromRole="Employee" ToRole="MaritalStatu" />
+    <NavigationProperty Name="Nationality" Relationship="BarakeitAlkheirModel.FK_Employees_Nationality" FromRole="Employee" ToRole="Nationality" />
+    <NavigationProperty Name="Nationality1" Relationship="BarakeitAlkheirModel.FK_Employees_Nationality1" FromRole="Employee" ToRole="Nationality" />
+    <NavigationProperty Name="Religion" Relationship="BarakeitAlkheirModel.FK_Employees_Religions1" FromRole="Employee" ToRole="Religion" />
+    <NavigationProperty Name="EmployeeSalaries" Relationship="BarakeitAlkheirModel.FK_EmployeeSalary_Employees" FromRole="Employee" ToRole="EmployeeSalary" />
+    <NavigationProperty Name="EmployeeSponsors" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_Employees" FromRole="Employee" ToRole="EmployeeSponsor" />
+    <NavigationProperty Name="EmployeeWorkContracts" Relationship="BarakeitAlkheirModel.FK_EmployeeWorkContract_Employees" FromRole="Employee" ToRole="EmployeeWorkContract" />
+  </EntityType>
+  <EntityType Name="EmployeeSalary">
+    <Key>
+      <PropertyRef Name="employeeSalaryID" />
+    </Key>
+    <Property Type="Int32" Name="employeeSalaryID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="Int32" Name="bankID" />
+    <Property Type="String" Name="accountNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="branchName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Single" Name="paidFromSalary" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Bank" Relationship="BarakeitAlkheirModel.FK_EmployeeSalary_Banks" FromRole="EmployeeSalary" ToRole="Bank" />
+    <NavigationProperty Name="Employee" Relationship="BarakeitAlkheirModel.FK_EmployeeSalary_Employees" FromRole="EmployeeSalary" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EmployeeSponsor">
+    <Key>
+      <PropertyRef Name="employeeSponsorID" />
+    </Key>
+    <Property Type="Int32" Name="employeeSponsorID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="Int32" Name="companyID" />
+    <Property Type="Int32" Name="companyLicencesID" />
+    <Property Type="Int32" Name="govermentContractID" />
+    <Property Type="Int32" Name="designationID" />
+    <Property Type="String" Name="employeeSponsor_residencyNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="employeeSponsor_residencyStartDate" />
+    <Property Type="DateTime" Name="employeeSponsor_residencyEndDate" />
+    <Property Type="DateTime" Name="employeeSponsor_entryDate" />
+    <Property Type="String" Name="employeeSponsor_salary" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="employeeSponsor_useDuration" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="employeeSponsor_WorkPermitNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="employeeSponsor_Shou2oun" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="employeeSponsor_Jawazat" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Company" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_Company" FromRole="EmployeeSponsor" ToRole="Company" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_CompanyLicences" FromRole="EmployeeSponsor" ToRole="CompanyLicence" />
+    <NavigationProperty Name="Designation" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_Designations" FromRole="EmployeeSponsor" ToRole="Designation" />
+    <NavigationProperty Name="Employee" Relationship="BarakeitAlkheirModel.FK_EmployeeSponsor_Employees" FromRole="EmployeeSponsor" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EmployeeStatusDef">
+    <Key>
+      <PropertyRef Name="employeeStatusID" />
+    </Key>
+    <Property Type="Int32" Name="employeeStatusID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="employeeStatus_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="employeeStatus_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="employeeStatus_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employees" Relationship="BarakeitAlkheirModel.FK_Employees_EmployeeStatusDef" FromRole="EmployeeStatusDef" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EmployeeWorkContract">
+    <Key>
+      <PropertyRef Name="workContractID" />
+    </Key>
+    <Property Type="Int32" Name="workContractID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="employeeID" />
+    <Property Type="DateTime" Name="wc_date" />
+    <Property Type="DateTime" Name="wc_startingContract" />
+    <Property Type="String" Name="wc_durationType" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="wc_duration" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="wc_payEvery" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employee" Relationship="BarakeitAlkheirModel.FK_EmployeeWorkContract_Employees" FromRole="EmployeeWorkContract" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="EventsDefinition">
+    <Key>
+      <PropertyRef Name="eventID" />
+    </Key>
+    <Property Type="Int32" Name="eventID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="event_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="event_DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="event_Remarks" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="FormEvents" Relationship="BarakeitAlkheirModel.FK_FormEvent_EventsDefinition" FromRole="EventsDefinition" ToRole="FormEvent" />
+  </EntityType>
+  <EntityType Name="FormEvent">
+    <Key>
+      <PropertyRef Name="formEventID" />
+    </Key>
+    <Property Type="Int32" Name="formEventID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="formID" />
+    <Property Type="Int32" Name="eventID" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="EventsDefinition" Relationship="BarakeitAlkheirModel.FK_FormEvent_EventsDefinition" FromRole="FormEvent" ToRole="EventsDefinition" />
+    <NavigationProperty Name="FormScrean" Relationship="BarakeitAlkheirModel.FK_FormEvent_Forms" FromRole="FormEvent" ToRole="FormScrean" />
+    <NavigationProperty Name="UserGroupEvents" Relationship="BarakeitAlkheirModel.FK_UserGroupEvent_FormEvent" FromRole="FormEvent" ToRole="UserGroupEvent" />
+  </EntityType>
+  <EntityType Name="FormScrean">
+    <Key>
+      <PropertyRef Name="formID" />
+    </Key>
+    <Property Type="Int32" Name="formID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="form_IDName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="form_DisplayName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="form_Descriptions" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="FormEvents" Relationship="BarakeitAlkheirModel.FK_FormEvent_Forms" FromRole="FormScrean" ToRole="FormEvent" />
+  </EntityType>
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="genderID" />
+    </Key>
+    <Property Type="Int32" Name="genderID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="gender_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="gender_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="gender_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employees" Relationship="BarakeitAlkheirModel.FK_Employees_Gender1" FromRole="Gender" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Governorate">
+    <Key>
+      <PropertyRef Name="governorateID" />
+    </Key>
+    <Property Type="Int32" Name="governorateID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="gover_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="gover_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="gover_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="GovernorateAreas" Relationship="BarakeitAlkheirModel.FK_GovernorateArea_Governorate" FromRole="Governorate" ToRole="GovernorateArea" />
+  </EntityType>
+  <EntityType Name="GovernorateArea">
+    <Key>
+      <PropertyRef Name="goverareaID" />
+    </Key>
+    <Property Type="Int32" Name="goverareaID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="governorateID" Nullable="false" />
+    <Property Type="String" Name="goverarea_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="goverarea_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="goverarea_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Governorate" Relationship="BarakeitAlkheirModel.FK_GovernorateArea_Governorate" FromRole="GovernorateArea" ToRole="Governorate" />
+  </EntityType>
+  <EntityType Name="LicensesShop">
+    <Key>
+      <PropertyRef Name="licencesShopID" />
+    </Key>
+    <Property Type="Int32" Name="licencesShopID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="companyLicencesID" />
+    <Property Type="String" Name="shop_Code" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="shop_Name" MaxLength="70" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="shop_contact1" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="shop_contact2" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="shop_isCurrent" />
+    <Property Type="Int32" Name="governorateID" />
+    <Property Type="Int32" Name="goverareaID" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_LicensesShop_CompanyLicences" FromRole="LicensesShop" ToRole="CompanyLicence" />
+    <NavigationProperty Name="EmployeeLicenseShops" Relationship="BarakeitAlkheirModel.FK_EmployeeLicenseShop_LicensesShop" FromRole="LicensesShop" ToRole="EmployeeLicenseShop" />
+    <NavigationProperty Name="RentShops" Relationship="BarakeitAlkheirModel.FK_RentShop_LicensesShop" FromRole="LicensesShop" ToRole="RentShop" />
+  </EntityType>
+  <EntityType Name="MaritalStatu">
+    <Key>
+      <PropertyRef Name="maritalStatusID" />
+    </Key>
+    <Property Type="Int32" Name="maritalStatusID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="marital_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="marital_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="marital_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employees" Relationship="BarakeitAlkheirModel.FK_Employees_MaritalStatus" FromRole="MaritalStatu" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Nationality">
+    <Key>
+      <PropertyRef Name="nationalityID" />
+    </Key>
+    <Property Type="Int32" Name="nationalityID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="natio_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="natio_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="natio_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Customers" Relationship="BarakeitAlkheirModel.FK_Customers_Nationality" FromRole="Nationality" ToRole="Customer" />
+    <NavigationProperty Name="Employees" Relationship="BarakeitAlkheirModel.FK_Employees_Nationality" FromRole="Nationality" ToRole="Employee" />
+    <NavigationProperty Name="Employees1" Relationship="BarakeitAlkheirModel.FK_Employees_Nationality1" FromRole="Nationality" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Religion">
+    <Key>
+      <PropertyRef Name="religionID" />
+    </Key>
+    <Property Type="Int32" Name="religionID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="religion_Code" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="religion_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="religion_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Employees" Relationship="BarakeitAlkheirModel.FK_Employees_Religions1" FromRole="Religion" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="RentLicenseEnd">
+    <Key>
+      <PropertyRef Name="rentLicenseEndID" />
+    </Key>
+    <Property Type="Int32" Name="rentLicenseEndID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="rentLicenseID" />
+    <Property Type="DateTime" Name="rentLicEnd_Date" />
+    <Property Type="String" Name="rentLicEnd_reasons" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="RentLicens" Relationship="BarakeitAlkheirModel.FK_RentLicenseEnd_RentLicenses" FromRole="RentLicenseEnd" ToRole="RentLicens" />
+  </EntityType>
+  <EntityType Name="RentLicens">
+    <Key>
+      <PropertyRef Name="rentLicenseID" />
+    </Key>
+    <Property Type="Int32" Name="rentLicenseID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="rentLicenseNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="customerID" />
+    <Property Type="Int32" Name="companyLicencesID" />
+    <Property Type="Int32" Name="licencesShopID" />
+    <Property Type="DateTime" Name="rentLicense_date" />
+    <Property Type="DateTime" Name="rentLicense_from" />
+    <Property Type="DateTime" Name="rentLicense_to" />
+    <Property Type="Single" Name="rentLicense_RentalAmount" />
+    <Property Type="Single" Name="rentLicense_DamanAmount" />
+    <Property Type="Boolean" Name="rentLicense_active" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="CompanyLicence" Relationship="BarakeitAlkheirModel.FK_RentLicenses_CompanyLicences" FromRole="RentLicens" ToRole="CompanyLicence" />
+    <NavigationProperty Name="Customer" Relationship="BarakeitAlkheirModel.FK_RentLicenses_Customers" FromRole="RentLicens" ToRole="Customer" />
+    <NavigationProperty Name="RentLicenseEnds" Relationship="BarakeitAlkheirModel.FK_RentLicenseEnd_RentLicenses" FromRole="RentLicens" ToRole="RentLicenseEnd" />
+    <NavigationProperty Name="RentLicensesPayments" Relationship="BarakeitAlkheirModel.FK_RentLicensesPayment_RentLicenses" FromRole="RentLicens" ToRole="RentLicensesPayment" />
+  </EntityType>
+  <EntityType Name="RentLicensesPayment">
+    <Key>
+      <PropertyRef Name="rentLicensePaymentID" />
+    </Key>
+    <Property Type="Int32" Name="rentLicensePaymentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="rentLicenseID" />
+    <Property Type="String" Name="rentLicPay_VouNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Single" Name="rentLicPay_Amount" />
+    <Property Type="DateTime" Name="rentLicPay_PaymentDate" />
+    <Property Type="DateTime" Name="rentLicPay_ForDate" />
+    <Property Type="Int32" Name="rentLicPay_mandoubID" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="RentLicens" Relationship="BarakeitAlkheirModel.FK_RentLicensesPayment_RentLicenses" FromRole="RentLicensesPayment" ToRole="RentLicens" />
+  </EntityType>
+  <EntityType Name="RentShop">
+    <Key>
+      <PropertyRef Name="rentShopID" />
+    </Key>
+    <Property Type="Int32" Name="rentShopID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="rentShopNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Int32" Name="customerID" />
+    <Property Type="Int32" Name="licencesShopID" />
+    <Property Type="DateTime" Name="rentShop_date" />
+    <Property Type="DateTime" Name="rentShop_from" />
+    <Property Type="DateTime" Name="rentShop_to" />
+    <Property Type="Single" Name="rentShop_RentalAmount" />
+    <Property Type="Single" Name="rentShop_DamanAmount" />
+    <Property Type="Boolean" Name="rentShop_active" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="Customer" Relationship="BarakeitAlkheirModel.FK_RentShop_Customers" FromRole="RentShop" ToRole="Customer" />
+    <NavigationProperty Name="LicensesShop" Relationship="BarakeitAlkheirModel.FK_RentShop_LicensesShop" FromRole="RentShop" ToRole="LicensesShop" />
+    <NavigationProperty Name="RentShopEnds" Relationship="BarakeitAlkheirModel.FK_RentShopEnd_RentShop" FromRole="RentShop" ToRole="RentShopEnd" />
+    <NavigationProperty Name="RentShopPayments" Relationship="BarakeitAlkheirModel.FK_RentShopPayment_RentShop" FromRole="RentShop" ToRole="RentShopPayment" />
+  </EntityType>
+  <EntityType Name="RentShopEnd">
+    <Key>
+      <PropertyRef Name="rentShopEndID" />
+    </Key>
+    <Property Type="Int32" Name="rentShopEndID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="rentShopID" />
+    <Property Type="DateTime" Name="rentShopEnd_Date" />
+    <Property Type="String" Name="rentShopEnd_reasons" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="rentShopEnd_isActive" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="RentShop" Relationship="BarakeitAlkheirModel.FK_RentShopEnd_RentShop" FromRole="RentShopEnd" ToRole="RentShop" />
+  </EntityType>
+  <EntityType Name="RentShopPayment">
+    <Key>
+      <PropertyRef Name="rentLicensePaymentID" />
+    </Key>
+    <Property Type="Int32" Name="rentLicensePaymentID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="rentShopID" />
+    <Property Type="String" Name="rentShopPay_VouNo" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Single" Name="rentShopPay_Amount" />
+    <Property Type="DateTime" Name="rentShopPay_PaymentDate" />
+    <Property Type="DateTime" Name="rentShopPay_ForDate" />
+    <Property Type="Int32" Name="rentShopPay_mandoubID" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="RentShop" Relationship="BarakeitAlkheirModel.FK_RentShopPayment_RentShop" FromRole="RentShopPayment" ToRole="RentShop" />
+  </EntityType>
+  <EntityType Name="TransactionDef">
+    <Key>
+      <PropertyRef Name="transDefID" />
+    </Key>
+    <Property Type="Int32" Name="transDefID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="transDef_code" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="transDef_namea" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="transDef_namee" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="DocumentTransactions" Relationship="BarakeitAlkheirModel.FK_DocumentTransactions_TransactionDef" FromRole="TransactionDef" ToRole="DocumentTransaction" />
+  </EntityType>
+  <EntityType Name="UserGroup">
+    <Key>
+      <PropertyRef Name="userGroupID" />
+    </Key>
+    <Property Type="Int32" Name="userGroupID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="userGroup_Name" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="userGroup_Remarks" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="UserGroupEvents" Relationship="BarakeitAlkheirModel.FK_UserGroupEvent_UserGroup" FromRole="UserGroup" ToRole="UserGroupEvent" />
+    <NavigationProperty Name="Users" Relationship="BarakeitAlkheirModel.FK_Users_UserGroup" FromRole="UserGroup" ToRole="User" />
+  </EntityType>
+  <EntityType Name="UserGroupEvent">
+    <Key>
+      <PropertyRef Name="userGroupEventID" />
+    </Key>
+    <Property Type="Int32" Name="userGroupEventID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="userGroupID" />
+    <Property Type="Int32" Name="formEventID" />
+    <Property Type="Boolean" Name="isEnable" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="FormEvent" Relationship="BarakeitAlkheirModel.FK_UserGroupEvent_FormEvent" FromRole="UserGroupEvent" ToRole="FormEvent" />
+    <NavigationProperty Name="UserGroup" Relationship="BarakeitAlkheirModel.FK_UserGroupEvent_UserGroup" FromRole="UserGroupEvent" ToRole="UserGroup" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="userID" />
+    </Key>
+    <Property Type="Int32" Name="userID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="userGroupID" />
+    <Property Type="String" Name="displayName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="userName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="password" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="Boolean" Name="isSuperUser" />
+    <Property Type="Boolean" Name="isActive" />
+    <Property Type="DateTime" Name="added_Date" />
+    <Property Type="DateTime" Name="edited_Date" />
+    <Property Type="Int32" Name="addedBy" />
+    <Property Type="Int32" Name="editedBy" />
+    <NavigationProperty Name="UserGroup" Relationship="BarakeitAlkheirModel.FK_Users_UserGroup" FromRole="User" ToRole="UserGroup" />
+  </EntityType>
+  <Association Name="FK_AssignDocumentTransactionTask_DocumentTransactionTasks">
+    <End Type="BarakeitAlkheirModel.DocumentTransactionTask" Role="DocumentTransactionTask" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.AssignDocumentTransactionTask" Role="AssignDocumentTransactionTask" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentTransactionTask">
+        <PropertyRef Name="documentTransTaskID" />
+      </Principal>
+      <Dependent Role="AssignDocumentTransactionTask">
+        <PropertyRef Name="documentTransTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyAuthorization_AuthorizationPerson">
+    <End Type="BarakeitAlkheirModel.AuthorizationPerson" Role="AuthorizationPerson" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CompanyAuthorization" Role="CompanyAuthorization" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AuthorizationPerson">
+        <PropertyRef Name="authorizationID" />
+      </Principal>
+      <Dependent Role="CompanyAuthorization">
+        <PropertyRef Name="authorizationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeSalary_Banks">
+    <End Type="BarakeitAlkheirModel.Bank" Role="Bank" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeSalary" Role="EmployeeSalary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Bank">
+        <PropertyRef Name="bankID" />
+      </Principal>
+      <Dependent Role="EmployeeSalary">
+        <PropertyRef Name="bankID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CarCustomerRent_Cars">
+    <End Type="BarakeitAlkheirModel.Car" Role="Car" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CarCustomerRent" Role="CarCustomerRent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Car">
+        <PropertyRef Name="carID" />
+      </Principal>
+      <Dependent Role="CarCustomerRent">
+        <PropertyRef Name="carID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CarCustomerRent_Customers">
+    <End Type="BarakeitAlkheirModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CarCustomerRent" Role="CarCustomerRent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="CarCustomerRent">
+        <PropertyRef Name="customerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CarCustomerRentPayment_CarCustomerRent">
+    <End Type="BarakeitAlkheirModel.CarCustomerRent" Role="CarCustomerRent" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CarCustomerRentPayment" Role="CarCustomerRentPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CarCustomerRent">
+        <PropertyRef Name="carCustomerRentID" />
+      </Principal>
+      <Dependent Role="CarCustomerRentPayment">
+        <PropertyRef Name="carCustomerRentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CarSupplierRent_Cars">
+    <End Type="BarakeitAlkheirModel.Car" Role="Car" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CarSupplierRent" Role="CarSupplierRent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Car">
+        <PropertyRef Name="carID" />
+      </Principal>
+      <Dependent Role="CarSupplierRent">
+        <PropertyRef Name="carID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CarSupplierRent_CarSuplliers">
+    <End Type="BarakeitAlkheirModel.CarSupllier" Role="CarSupllier" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CarSupplierRent" Role="CarSupplierRent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CarSupllier">
+        <PropertyRef Name="carSuppliserID" />
+      </Principal>
+      <Dependent Role="CarSupplierRent">
+        <PropertyRef Name="carSuppliserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CarSupplierRentPayment_CarSupplierRent">
+    <End Type="BarakeitAlkheirModel.CarSupplierRent" Role="CarSupplierRent" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CarSupplierRentPayment" Role="CarSupplierRentPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CarSupplierRent">
+        <PropertyRef Name="carSupplierRentID" />
+      </Principal>
+      <Dependent Role="CarSupplierRentPayment">
+        <PropertyRef Name="carSupplierRentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyAuthorization_Company">
+    <End Type="BarakeitAlkheirModel.Company" Role="Company" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CompanyAuthorization" Role="CompanyAuthorization" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="companyID" />
+      </Principal>
+      <Dependent Role="CompanyAuthorization">
+        <PropertyRef Name="companyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyLicences_Company">
+    <End Type="BarakeitAlkheirModel.Company" Role="Company" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="companyID" />
+      </Principal>
+      <Dependent Role="CompanyLicence">
+        <PropertyRef Name="companyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeSponsor_Company">
+    <End Type="BarakeitAlkheirModel.Company" Role="Company" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeSponsor" Role="EmployeeSponsor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="companyID" />
+      </Principal>
+      <Dependent Role="EmployeeSponsor">
+        <PropertyRef Name="companyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_companyGovermentContract_CompanyLicences">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.companyGovermentContract" Role="companyGovermentContract" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="companyGovermentContract">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyLicencesEnd_CompanyLicences1">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="1" />
+    <End Type="BarakeitAlkheirModel.CompanyLicencesEnd" Role="CompanyLicencesEnd" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="CompanyLicencesEnd">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyLicencesRemarks_CompanyLicences1">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CompanyLicencesRemark" Role="CompanyLicencesRemark" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="CompanyLicencesRemark">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyLicenseDesignation_CompanyLicences">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CompanyLicenseDesignation" Role="CompanyLicenseDesignation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="CompanyLicenseDesignation">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeSponsor_CompanyLicences">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeSponsor" Role="EmployeeSponsor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="EmployeeSponsor">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LicensesShop_CompanyLicences">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.LicensesShop" Role="LicensesShop" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="LicensesShop">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentLicenses_CompanyLicences">
+    <End Type="BarakeitAlkheirModel.CompanyLicence" Role="CompanyLicence" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentLicens" Role="RentLicens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyLicence">
+        <PropertyRef Name="companyLicencesID" />
+      </Principal>
+      <Dependent Role="RentLicens">
+        <PropertyRef Name="companyLicencesID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyLicenseDesignation_Designations">
+    <End Type="BarakeitAlkheirModel.Designation" Role="Designation" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.CompanyLicenseDesignation" Role="CompanyLicenseDesignation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Designation">
+        <PropertyRef Name="designationID" />
+      </Principal>
+      <Dependent Role="CompanyLicenseDesignation">
+        <PropertyRef Name="designationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Customers_Nationality">
+    <End Type="BarakeitAlkheirModel.Nationality" Role="Nationality" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Customer" Role="Customer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Nationality">
+        <PropertyRef Name="nationalityID" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="customer_nationalityID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentLicenses_Customers">
+    <End Type="BarakeitAlkheirModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentLicens" Role="RentLicens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="RentLicens">
+        <PropertyRef Name="customerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentShop_Customers">
+    <End Type="BarakeitAlkheirModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentShop" Role="RentShop" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="customerID" />
+      </Principal>
+      <Dependent Role="RentShop">
+        <PropertyRef Name="customerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Dependents_Employees">
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Dependent" Role="Dependent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="employeeID" />
+      </Principal>
+      <Dependent Role="Dependent">
+        <PropertyRef Name="employeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeSponsor_Designations">
+    <End Type="BarakeitAlkheirModel.Designation" Role="Designation" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeSponsor" Role="EmployeeSponsor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Designation">
+        <PropertyRef Name="designationID" />
+      </Principal>
+      <Dependent Role="EmployeeSponsor">
+        <PropertyRef Name="designationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocumentDef_DocumentTypeDefinition">
+    <End Type="BarakeitAlkheirModel.DocumentTypeDefinition" Role="DocumentTypeDefinition" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.DocumentDef" Role="DocumentDef" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentTypeDefinition">
+        <PropertyRef Name="documentTypeDefID" />
+      </Principal>
+      <Dependent Role="DocumentDef">
+        <PropertyRef Name="documentTypeDefID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Documents_DocumentDef">
+    <End Type="BarakeitAlkheirModel.DocumentDef" Role="DocumentDef" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Document" Role="Document" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentDef">
+        <PropertyRef Name="documentDefID" />
+      </Principal>
+      <Dependent Role="Document">
+        <PropertyRef Name="documentDefID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocumentTransactions_DocumentDef">
+    <End Type="BarakeitAlkheirModel.DocumentDef" Role="DocumentDef" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.DocumentTransaction" Role="DocumentTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentDef">
+        <PropertyRef Name="documentDefID" />
+      </Principal>
+      <Dependent Role="DocumentTransaction">
+        <PropertyRef Name="documentDefID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocumnetStore_Documents">
+    <End Type="BarakeitAlkheirModel.Document" Role="Document" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.DocumnetStore" Role="DocumnetStore" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Document">
+        <PropertyRef Name="documentID" />
+      </Principal>
+      <Dependent Role="DocumnetStore">
+        <PropertyRef Name="documentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocumentTransactions_TransactionDef">
+    <End Type="BarakeitAlkheirModel.TransactionDef" Role="TransactionDef" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.DocumentTransaction" Role="DocumentTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TransactionDef">
+        <PropertyRef Name="transDefID" />
+      </Principal>
+      <Dependent Role="DocumentTransaction">
+        <PropertyRef Name="transDefID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocumentTransactionSteps_DocumentTransactions">
+    <End Type="BarakeitAlkheirModel.DocumentTransaction" Role="DocumentTransaction" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.DocumentTransactionStep" Role="DocumentTransactionStep" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentTransaction">
+        <PropertyRef Name="documentTransID" />
+      </Principal>
+      <Dependent Role="DocumentTransactionStep">
+        <PropertyRef Name="documentTransID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocumentTransactionTasks_DocumentTransactions">
+    <End Type="BarakeitAlkheirModel.DocumentTransaction" Role="DocumentTransaction" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.DocumentTransactionTask" Role="DocumentTransactionTask" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocumentTransaction">
+        <PropertyRef Name="documentTransID" />
+      </Principal>
+      <Dependent Role="DocumentTransactionTask">
+        <PropertyRef Name="documentTransID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Educations">
+    <End Type="BarakeitAlkheirModel.Education" Role="Education" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Education">
+        <PropertyRef Name="educationID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="educationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeLicenseShop_Employees">
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeLicenseShop" Role="EmployeeLicenseShop" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="employeeID" />
+      </Principal>
+      <Dependent Role="EmployeeLicenseShop">
+        <PropertyRef Name="employeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeLicenseShop_LicensesShop">
+    <End Type="BarakeitAlkheirModel.LicensesShop" Role="LicensesShop" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeLicenseShop" Role="EmployeeLicenseShop" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LicensesShop">
+        <PropertyRef Name="licencesShopID" />
+      </Principal>
+      <Dependent Role="EmployeeLicenseShop">
+        <PropertyRef Name="licencesShopID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeePassports_Employees">
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeePassport" Role="EmployeePassport" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="employeeID" />
+      </Principal>
+      <Dependent Role="EmployeePassport">
+        <PropertyRef Name="employeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_EmployeeStatusDef">
+    <End Type="BarakeitAlkheirModel.EmployeeStatusDef" Role="EmployeeStatusDef" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EmployeeStatusDef">
+        <PropertyRef Name="employeeStatusID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="employeeStatusID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Gender1">
+    <End Type="BarakeitAlkheirModel.Gender" Role="Gender" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gender">
+        <PropertyRef Name="genderID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="genderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_MaritalStatus">
+    <End Type="BarakeitAlkheirModel.MaritalStatu" Role="MaritalStatu" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MaritalStatu">
+        <PropertyRef Name="maritalStatusID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="maritalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Nationality">
+    <End Type="BarakeitAlkheirModel.Nationality" Role="Nationality" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Nationality">
+        <PropertyRef Name="nationalityID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="nationalityID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Nationality1">
+    <End Type="BarakeitAlkheirModel.Nationality" Role="Nationality" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Nationality">
+        <PropertyRef Name="nationalityID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="nationality_placeOfBirthID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Religions1">
+    <End Type="BarakeitAlkheirModel.Religion" Role="Religion" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Religion">
+        <PropertyRef Name="religionID" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="religionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeSalary_Employees">
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeSalary" Role="EmployeeSalary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="employeeID" />
+      </Principal>
+      <Dependent Role="EmployeeSalary">
+        <PropertyRef Name="employeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeSponsor_Employees">
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeSponsor" Role="EmployeeSponsor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="employeeID" />
+      </Principal>
+      <Dependent Role="EmployeeSponsor">
+        <PropertyRef Name="employeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeWorkContract_Employees">
+    <End Type="BarakeitAlkheirModel.Employee" Role="Employee" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.EmployeeWorkContract" Role="EmployeeWorkContract" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="employeeID" />
+      </Principal>
+      <Dependent Role="EmployeeWorkContract">
+        <PropertyRef Name="employeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FormEvent_EventsDefinition">
+    <End Type="BarakeitAlkheirModel.EventsDefinition" Role="EventsDefinition" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.FormEvent" Role="FormEvent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EventsDefinition">
+        <PropertyRef Name="eventID" />
+      </Principal>
+      <Dependent Role="FormEvent">
+        <PropertyRef Name="eventID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FormEvent_Forms">
+    <End Type="BarakeitAlkheirModel.FormScrean" Role="FormScrean" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.FormEvent" Role="FormEvent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FormScrean">
+        <PropertyRef Name="formID" />
+      </Principal>
+      <Dependent Role="FormEvent">
+        <PropertyRef Name="formID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserGroupEvent_FormEvent">
+    <End Type="BarakeitAlkheirModel.FormEvent" Role="FormEvent" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.UserGroupEvent" Role="UserGroupEvent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FormEvent">
+        <PropertyRef Name="formEventID" />
+      </Principal>
+      <Dependent Role="UserGroupEvent">
+        <PropertyRef Name="formEventID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GovernorateArea_Governorate">
+    <End Type="BarakeitAlkheirModel.Governorate" Role="Governorate" Multiplicity="1" />
+    <End Type="BarakeitAlkheirModel.GovernorateArea" Role="GovernorateArea" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Governorate">
+        <PropertyRef Name="governorateID" />
+      </Principal>
+      <Dependent Role="GovernorateArea">
+        <PropertyRef Name="governorateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentShop_LicensesShop">
+    <End Type="BarakeitAlkheirModel.LicensesShop" Role="LicensesShop" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentShop" Role="RentShop" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LicensesShop">
+        <PropertyRef Name="licencesShopID" />
+      </Principal>
+      <Dependent Role="RentShop">
+        <PropertyRef Name="licencesShopID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentLicenseEnd_RentLicenses">
+    <End Type="BarakeitAlkheirModel.RentLicens" Role="RentLicens" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentLicenseEnd" Role="RentLicenseEnd" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RentLicens">
+        <PropertyRef Name="rentLicenseID" />
+      </Principal>
+      <Dependent Role="RentLicenseEnd">
+        <PropertyRef Name="rentLicenseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentLicensesPayment_RentLicenses">
+    <End Type="BarakeitAlkheirModel.RentLicens" Role="RentLicens" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentLicensesPayment" Role="RentLicensesPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RentLicens">
+        <PropertyRef Name="rentLicenseID" />
+      </Principal>
+      <Dependent Role="RentLicensesPayment">
+        <PropertyRef Name="rentLicenseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentShopEnd_RentShop">
+    <End Type="BarakeitAlkheirModel.RentShop" Role="RentShop" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentShopEnd" Role="RentShopEnd" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RentShop">
+        <PropertyRef Name="rentShopID" />
+      </Principal>
+      <Dependent Role="RentShopEnd">
+        <PropertyRef Name="rentShopID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RentShopPayment_RentShop">
+    <End Type="BarakeitAlkheirModel.RentShop" Role="RentShop" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.RentShopPayment" Role="RentShopPayment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RentShop">
+        <PropertyRef Name="rentShopID" />
+      </Principal>
+      <Dependent Role="RentShopPayment">
+        <PropertyRef Name="rentShopID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserGroupEvent_UserGroup">
+    <End Type="BarakeitAlkheirModel.UserGroup" Role="UserGroup" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.UserGroupEvent" Role="UserGroupEvent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="userGroupID" />
+      </Principal>
+      <Dependent Role="UserGroupEvent">
+        <PropertyRef Name="userGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_UserGroup">
+    <End Type="BarakeitAlkheirModel.UserGroup" Role="UserGroup" Multiplicity="0..1" />
+    <End Type="BarakeitAlkheirModel.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserGroup">
+        <PropertyRef Name="userGroupID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="userGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

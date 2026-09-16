@@ -1,0 +1,967 @@
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BarakeitAlkheirModelStoreContainer" CdmEntityContainer="BarakeitAlkheirEntities">
+    <EntitySetMapping Name="AssignDocumentTransactionTasks">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.AssignDocumentTransactionTask">
+        <MappingFragment StoreEntitySet="AssignDocumentTransactionTask">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="assignDocTransTask_IsClose" ColumnName="assignDocTransTask_IsClose" />
+          <ScalarProperty Name="assignDocTransTask_FinishDate" ColumnName="assignDocTransTask_FinishDate" />
+          <ScalarProperty Name="assignDocTransTask_Remarks" ColumnName="assignDocTransTask_Remarks" />
+          <ScalarProperty Name="assignDocTransTask_noOfDays" ColumnName="assignDocTransTask_noOfDays" />
+          <ScalarProperty Name="assignDocTransTask_date" ColumnName="assignDocTransTask_date" />
+          <ScalarProperty Name="documentTransTaskID" ColumnName="documentTransTaskID" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="assignDocTransTaskID" ColumnName="assignDocTransTaskID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AuthorizationPersons">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.AuthorizationPerson">
+        <MappingFragment StoreEntitySet="AuthorizationPerson">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="auth_isCurrent" ColumnName="auth_isCurrent" />
+          <ScalarProperty Name="auth_remarks" ColumnName="auth_remarks" />
+          <ScalarProperty Name="auth_ContactNo" ColumnName="auth_ContactNo" />
+          <ScalarProperty Name="auth_Designation" ColumnName="auth_Designation" />
+          <ScalarProperty Name="auth_CivilID" ColumnName="auth_CivilID" />
+          <ScalarProperty Name="fauth_ullEnglishName" ColumnName="fauth_ullEnglishName" />
+          <ScalarProperty Name="fauth_ullArabicName" ColumnName="fauth_ullArabicName" />
+          <ScalarProperty Name="auth_namee5" ColumnName="auth_namee5" />
+          <ScalarProperty Name="auth_namee4" ColumnName="auth_namee4" />
+          <ScalarProperty Name="auth_namee3" ColumnName="auth_namee3" />
+          <ScalarProperty Name="auth_namee2" ColumnName="auth_namee2" />
+          <ScalarProperty Name="auth_namee1" ColumnName="auth_namee1" />
+          <ScalarProperty Name="auth_namea5" ColumnName="auth_namea5" />
+          <ScalarProperty Name="auth_namea4" ColumnName="auth_namea4" />
+          <ScalarProperty Name="auth_namea3" ColumnName="auth_namea3" />
+          <ScalarProperty Name="auth_namea2" ColumnName="auth_namea2" />
+          <ScalarProperty Name="auth_namea1" ColumnName="auth_namea1" />
+          <ScalarProperty Name="authorizationID" ColumnName="authorizationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Banks">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Bank">
+        <MappingFragment StoreEntitySet="Banks">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="bank_accNo" ColumnName="bank_accNo" />
+          <ScalarProperty Name="bank_namee" ColumnName="bank_namee" />
+          <ScalarProperty Name="bank_namea" ColumnName="bank_namea" />
+          <ScalarProperty Name="bank_Code" ColumnName="bank_Code" />
+          <ScalarProperty Name="bankID" ColumnName="bankID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CarCustomerRents">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CarCustomerRent">
+        <MappingFragment StoreEntitySet="CarCustomerRent">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="carCustomerRent_isClosed" ColumnName="carCustomerRent_isClosed" />
+          <ScalarProperty Name="carCustomerRent_Remarks" ColumnName="carCustomerRent_Remarks" />
+          <ScalarProperty Name="carCustomerRent_DriverID" ColumnName="carCustomerRent_DriverID" />
+          <ScalarProperty Name="carCustomerRent_MonthlyAmount" ColumnName="carCustomerRent_MonthlyAmount" />
+          <ScalarProperty Name="carCustomer_to" ColumnName="carCustomer_to" />
+          <ScalarProperty Name="carCustomer_from" ColumnName="carCustomer_from" />
+          <ScalarProperty Name="customerID" ColumnName="customerID" />
+          <ScalarProperty Name="carID" ColumnName="carID" />
+          <ScalarProperty Name="carCustomerRentID" ColumnName="carCustomerRentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CarCustomerRentPayments">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CarCustomerRentPayment">
+        <MappingFragment StoreEntitySet="CarCustomerRentPayment">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="carCustomerPayment_Remarks" ColumnName="carCustomerPayment_Remarks" />
+          <ScalarProperty Name="carCustomerPayment_PayDate" ColumnName="carCustomerPayment_PayDate" />
+          <ScalarProperty Name="carCustomerPayment_VoucherNo" ColumnName="carCustomerPayment_VoucherNo" />
+          <ScalarProperty Name="carCustomerPayment_amount" ColumnName="carCustomerPayment_amount" />
+          <ScalarProperty Name="carCustomerPayment_ForDate" ColumnName="carCustomerPayment_ForDate" />
+          <ScalarProperty Name="carCustomerRentID" ColumnName="carCustomerRentID" />
+          <ScalarProperty Name="carCustomerRentPaymentID" ColumnName="carCustomerRentPaymentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cars">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Car">
+        <MappingFragment StoreEntitySet="Cars">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="car_isAvailable" ColumnName="car_isAvailable" />
+          <ScalarProperty Name="car_ChesseeNo" ColumnName="car_ChesseeNo" />
+          <ScalarProperty Name="car_Brand" ColumnName="car_Brand" />
+          <ScalarProperty Name="car_Model" ColumnName="car_Model" />
+          <ScalarProperty Name="car_Name" ColumnName="car_Name" />
+          <ScalarProperty Name="car_No" ColumnName="car_No" />
+          <ScalarProperty Name="carID" ColumnName="carID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CarSuplliers">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CarSupllier">
+        <MappingFragment StoreEntitySet="CarSuplliers">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="carSuppliser_remarks" ColumnName="carSuppliser_remarks" />
+          <ScalarProperty Name="carSuppliser_Address" ColumnName="carSuppliser_Address" />
+          <ScalarProperty Name="carSuppliser_Contact" ColumnName="carSuppliser_Contact" />
+          <ScalarProperty Name="carSuppliser_PersonInCharge" ColumnName="carSuppliser_PersonInCharge" />
+          <ScalarProperty Name="carSuppliser_Name" ColumnName="carSuppliser_Name" />
+          <ScalarProperty Name="carSuppliserID" ColumnName="carSuppliserID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CarSupplierRents">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CarSupplierRent">
+        <MappingFragment StoreEntitySet="CarSupplierRent">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="carSupplierRent_isClosed" ColumnName="carSupplierRent_isClosed" />
+          <ScalarProperty Name="carSupplierRent_isBuyed" ColumnName="carSupplierRent_isBuyed" />
+          <ScalarProperty Name="carSupplierRent_isRented" ColumnName="carSupplierRent_isRented" />
+          <ScalarProperty Name="carSupplierRent_lastPaymentAmount" ColumnName="carSupplierRent_lastPaymentAmount" />
+          <ScalarProperty Name="carSupplierRent_firstPaymentAmount" ColumnName="carSupplierRent_firstPaymentAmount" />
+          <ScalarProperty Name="carSupplierRent_firstPaymentDate" ColumnName="carSupplierRent_firstPaymentDate" />
+          <ScalarProperty Name="carSupplierRent_MonthlyAmount" ColumnName="carSupplierRent_MonthlyAmount" />
+          <ScalarProperty Name="carSupplierRent_totalAmount" ColumnName="carSupplierRent_totalAmount" />
+          <ScalarProperty Name="carSupplierRent_to" ColumnName="carSupplierRent_to" />
+          <ScalarProperty Name="carSupplierRent_from" ColumnName="carSupplierRent_from" />
+          <ScalarProperty Name="carSuppliserID" ColumnName="carSuppliserID" />
+          <ScalarProperty Name="carID" ColumnName="carID" />
+          <ScalarProperty Name="carSupplierRentID" ColumnName="carSupplierRentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CarSupplierRentPayments">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CarSupplierRentPayment">
+        <MappingFragment StoreEntitySet="CarSupplierRentPayment">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="carSupplierRentPayment_Remarks" ColumnName="carSupplierRentPayment_Remarks" />
+          <ScalarProperty Name="carSupplierRentPayment_PayDate" ColumnName="carSupplierRentPayment_PayDate" />
+          <ScalarProperty Name="carSupplierRentPayment_VoucherNo" ColumnName="carSupplierRentPayment_VoucherNo" />
+          <ScalarProperty Name="carSupplierRentPayment_amount" ColumnName="carSupplierRentPayment_amount" />
+          <ScalarProperty Name="carSupplierRentPayment_ForDate" ColumnName="carSupplierRentPayment_ForDate" />
+          <ScalarProperty Name="carSupplierRentID" ColumnName="carSupplierRentID" />
+          <ScalarProperty Name="carSupplierRentPaymentID" ColumnName="carSupplierRentPaymentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Company">
+        <MappingFragment StoreEntitySet="Company">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="comp_remarks" ColumnName="comp_remarks" />
+          <ScalarProperty Name="comp_contactNo" ColumnName="comp_contactNo" />
+          <ScalarProperty Name="comp_Designation" ColumnName="comp_Designation" />
+          <ScalarProperty Name="comp_Salary" ColumnName="comp_Salary" />
+          <ScalarProperty Name="comp_nationalityNo" ColumnName="comp_nationalityNo" />
+          <ScalarProperty Name="comp_nationality" ColumnName="comp_nationality" />
+          <ScalarProperty Name="comp_civilId" ColumnName="comp_civilId" />
+          <ScalarProperty Name="comp_ownerName" ColumnName="comp_ownerName" />
+          <ScalarProperty Name="comp_uniqueNo" ColumnName="comp_uniqueNo" />
+          <ScalarProperty Name="comp_fileNo" ColumnName="comp_fileNo" />
+          <ScalarProperty Name="comp_englishName" ColumnName="comp_englishName" />
+          <ScalarProperty Name="comp_arabicName" ColumnName="comp_arabicName" />
+          <ScalarProperty Name="comp_name5" ColumnName="comp_name5" />
+          <ScalarProperty Name="comp_name4" ColumnName="comp_name4" />
+          <ScalarProperty Name="comp_name3" ColumnName="comp_name3" />
+          <ScalarProperty Name="comp_name2" ColumnName="comp_name2" />
+          <ScalarProperty Name="comp_name1" ColumnName="comp_name1" />
+          <ScalarProperty Name="comp_nam5" ColumnName="comp_nam5" />
+          <ScalarProperty Name="comp_nam4" ColumnName="comp_nam4" />
+          <ScalarProperty Name="comp_nam3" ColumnName="comp_nam3" />
+          <ScalarProperty Name="comp_nam2" ColumnName="comp_nam2" />
+          <ScalarProperty Name="comp_nam1" ColumnName="comp_nam1" />
+          <ScalarProperty Name="companyID" ColumnName="companyID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompanyAuthorizations">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CompanyAuthorization">
+        <MappingFragment StoreEntitySet="CompanyAuthorization">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="auth_isCurrent" ColumnName="auth_isCurrent" />
+          <ScalarProperty Name="authorizationID" ColumnName="authorizationID" />
+          <ScalarProperty Name="companyID" ColumnName="companyID" />
+          <ScalarProperty Name="companyAuthorizationID" ColumnName="companyAuthorizationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="companyGovermentContracts">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.companyGovermentContract">
+        <MappingFragment StoreEntitySet="companyGovermentContract">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="endDate" ColumnName="endDate" />
+          <ScalarProperty Name="startDate" ColumnName="startDate" />
+          <ScalarProperty Name="gov_contractNo" ColumnName="gov_contractNo" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="govermentContractID" ColumnName="govermentContractID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompanyLicences">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CompanyLicence">
+        <MappingFragment StoreEntitySet="CompanyLicences">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="fulladdress" ColumnName="fulladdress" />
+          <ScalarProperty Name="contactNo" ColumnName="contactNo" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="poboxOffice" ColumnName="poboxOffice" />
+          <ScalarProperty Name="pobox" ColumnName="pobox" />
+          <ScalarProperty Name="appartment" ColumnName="appartment" />
+          <ScalarProperty Name="floor" ColumnName="floor" />
+          <ScalarProperty Name="BuilduingType" ColumnName="BuilduingType" />
+          <ScalarProperty Name="Share3" ColumnName="Share3" />
+          <ScalarProperty Name="Quet3a" ColumnName="Quet3a" />
+          <ScalarProperty Name="Mantaqa" ColumnName="Mantaqa" />
+          <ScalarProperty Name="goverareaID" ColumnName="goverareaID" />
+          <ScalarProperty Name="Mohafaza" ColumnName="Mohafaza" />
+          <ScalarProperty Name="governorateID" ColumnName="governorateID" />
+          <ScalarProperty Name="mandoubID" ColumnName="mandoubID" />
+          <ScalarProperty Name="isFack" ColumnName="isFack" />
+          <ScalarProperty Name="isClose" ColumnName="isClose" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="isMainLicences" ColumnName="isMainLicences" />
+          <ScalarProperty Name="noOfSeats" ColumnName="noOfSeats" />
+          <ScalarProperty Name="endDate" ColumnName="endDate" />
+          <ScalarProperty Name="startDate" ColumnName="startDate" />
+          <ScalarProperty Name="licensecivilID" ColumnName="licensecivilID" />
+          <ScalarProperty Name="commercialName" ColumnName="commercialName" />
+          <ScalarProperty Name="licenseLinkCode" ColumnName="licenseLinkCode" />
+          <ScalarProperty Name="licenseUniqueNo" ColumnName="licenseUniqueNo" />
+          <ScalarProperty Name="licenseNo" ColumnName="licenseNo" />
+          <ScalarProperty Name="companyID" ColumnName="companyID" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompanyLicencesEnds">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CompanyLicencesEnd">
+        <MappingFragment StoreEntitySet="CompanyLicencesEnd">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="companyLicencesEnd_isActive" ColumnName="companyLicencesEnd_isActive" />
+          <ScalarProperty Name="companyLicencesEnd_reasons" ColumnName="companyLicencesEnd_reasons" />
+          <ScalarProperty Name="companyLicencesEnd_Date" ColumnName="companyLicencesEnd_Date" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="companyLicencesEndID" ColumnName="companyLicencesEndID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompanyLicencesRemarks">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CompanyLicencesRemark">
+        <MappingFragment StoreEntitySet="CompanyLicencesRemarks">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="comLicenseRem_isActive" ColumnName="comLicenseRem_isActive" />
+          <ScalarProperty Name="comLicenseRem_Action" ColumnName="comLicenseRem_Action" />
+          <ScalarProperty Name="comLicenseRem_Remarks" ColumnName="comLicenseRem_Remarks" />
+          <ScalarProperty Name="comLicenseRem_Date" ColumnName="comLicenseRem_Date" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="comLicenseRemID" ColumnName="comLicenseRemID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompanyLicenseDesignations">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.CompanyLicenseDesignation">
+        <MappingFragment StoreEntitySet="CompanyLicenseDesignation">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="noOfSeats" ColumnName="noOfSeats" />
+          <ScalarProperty Name="designationID" ColumnName="designationID" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="companyLicencesDesignationID" ColumnName="companyLicencesDesignationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Customer">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="customer_active" ColumnName="customer_active" />
+          <ScalarProperty Name="customer_Address" ColumnName="customer_Address" />
+          <ScalarProperty Name="customer_phoneNumber2" ColumnName="customer_phoneNumber2" />
+          <ScalarProperty Name="customer_phoneNumber1" ColumnName="customer_phoneNumber1" />
+          <ScalarProperty Name="customer_BirthDate" ColumnName="customer_BirthDate" />
+          <ScalarProperty Name="customer_nationalityID" ColumnName="customer_nationalityID" />
+          <ScalarProperty Name="customer_CivilID" ColumnName="customer_CivilID" />
+          <ScalarProperty Name="customer_Name" ColumnName="customer_Name" />
+          <ScalarProperty Name="customerID" ColumnName="customerID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Dependents">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Dependent">
+        <MappingFragment StoreEntitySet="Dependents">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="depend_religion" ColumnName="depend_religion" />
+          <ScalarProperty Name="depend_nationality" ColumnName="depend_nationality" />
+          <ScalarProperty Name="depend_gender" ColumnName="depend_gender" />
+          <ScalarProperty Name="depend_birthday" ColumnName="depend_birthday" />
+          <ScalarProperty Name="depend_relation" ColumnName="depend_relation" />
+          <ScalarProperty Name="depend_eName" ColumnName="depend_eName" />
+          <ScalarProperty Name="depend_aName" ColumnName="depend_aName" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="dependentsID" ColumnName="dependentsID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Designations">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Designation">
+        <MappingFragment StoreEntitySet="Designations">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="desig_namee" ColumnName="desig_namee" />
+          <ScalarProperty Name="desig_namea" ColumnName="desig_namea" />
+          <ScalarProperty Name="desig_Code" ColumnName="desig_Code" />
+          <ScalarProperty Name="designationID" ColumnName="designationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentDefs">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.DocumentDef">
+        <MappingFragment StoreEntitySet="DocumentDef">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="documentDef_WarningDays" ColumnName="documentDef_WarningDays" />
+          <ScalarProperty Name="documentDef_Name" ColumnName="documentDef_Name" />
+          <ScalarProperty Name="documentTypeDefID" ColumnName="documentTypeDefID" />
+          <ScalarProperty Name="documentDefCode" ColumnName="documentDefCode" />
+          <ScalarProperty Name="documentDefID" ColumnName="documentDefID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Documents">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Document">
+        <MappingFragment StoreEntitySet="Documents">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="document_text5" ColumnName="document_text5" />
+          <ScalarProperty Name="document_text4" ColumnName="document_text4" />
+          <ScalarProperty Name="document_text3" ColumnName="document_text3" />
+          <ScalarProperty Name="document_text2" ColumnName="document_text2" />
+          <ScalarProperty Name="document_text1" ColumnName="document_text1" />
+          <ScalarProperty Name="document_TypeID" ColumnName="document_TypeID" />
+          <ScalarProperty Name="document_Remarks" ColumnName="document_Remarks" />
+          <ScalarProperty Name="document_Status" ColumnName="document_Status" />
+          <ScalarProperty Name="document_placeOfIssue" ColumnName="document_placeOfIssue" />
+          <ScalarProperty Name="document_Type" ColumnName="document_Type" />
+          <ScalarProperty Name="document_No" ColumnName="document_No" />
+          <ScalarProperty Name="document_endDate" ColumnName="document_endDate" />
+          <ScalarProperty Name="document_startDate" ColumnName="document_startDate" />
+          <ScalarProperty Name="documentDefID" ColumnName="documentDefID" />
+          <ScalarProperty Name="documentID" ColumnName="documentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentTransactions">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.DocumentTransaction">
+        <MappingFragment StoreEntitySet="DocumentTransactions">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="documentTrans_Description" ColumnName="documentTrans_Description" />
+          <ScalarProperty Name="documentTrans_Amount" ColumnName="documentTrans_Amount" />
+          <ScalarProperty Name="transDefID" ColumnName="transDefID" />
+          <ScalarProperty Name="documentDefID" ColumnName="documentDefID" />
+          <ScalarProperty Name="documentTransID" ColumnName="documentTransID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentTransactionSteps">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.DocumentTransactionStep">
+        <MappingFragment StoreEntitySet="DocumentTransactionSteps">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="documentTransSetp_Order" ColumnName="documentTransSetp_Order" />
+          <ScalarProperty Name="documentTransSetp_Period" ColumnName="documentTransSetp_Period" />
+          <ScalarProperty Name="documentTransSetp_name" ColumnName="documentTransSetp_name" />
+          <ScalarProperty Name="documentTransID" ColumnName="documentTransID" />
+          <ScalarProperty Name="documentTransSetpID" ColumnName="documentTransSetpID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentTransactionTasks">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.DocumentTransactionTask">
+        <MappingFragment StoreEntitySet="DocumentTransactionTasks">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="documentTransTask_isClose" ColumnName="documentTransTask_isClose" />
+          <ScalarProperty Name="documentTransTask_ApprovedDate" ColumnName="documentTransTask_ApprovedDate" />
+          <ScalarProperty Name="documentTransTask_Approved" ColumnName="documentTransTask_Approved" />
+          <ScalarProperty Name="documentTransTask_Remarks" ColumnName="documentTransTask_Remarks" />
+          <ScalarProperty Name="documentTransTask_Status" ColumnName="documentTransTask_Status" />
+          <ScalarProperty Name="documentTransTask_NoOfDays" ColumnName="documentTransTask_NoOfDays" />
+          <ScalarProperty Name="documentTransTask_date" ColumnName="documentTransTask_date" />
+          <ScalarProperty Name="documentTransID" ColumnName="documentTransID" />
+          <ScalarProperty Name="documentTransTaskID" ColumnName="documentTransTaskID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumentTypeDefinitions">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.DocumentTypeDefinition">
+        <MappingFragment StoreEntitySet="DocumentTypeDefinition">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="documentType_Name" ColumnName="documentType_Name" />
+          <ScalarProperty Name="documentType_Code" ColumnName="documentType_Code" />
+          <ScalarProperty Name="documentTypeDefID" ColumnName="documentTypeDefID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocumnetStores">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.DocumnetStore">
+        <MappingFragment StoreEntitySet="DocumnetStore">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="documentStore_Description" ColumnName="documentStore_Description" />
+          <ScalarProperty Name="documentStore_Date" ColumnName="documentStore_Date" />
+          <ScalarProperty Name="documentStore_doc" ColumnName="documentStore_doc" />
+          <ScalarProperty Name="documentID" ColumnName="documentID" />
+          <ScalarProperty Name="documentStoreID" ColumnName="documentStoreID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Educations">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Education">
+        <MappingFragment StoreEntitySet="Educations">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="edu_namee" ColumnName="edu_namee" />
+          <ScalarProperty Name="edu_namea" ColumnName="edu_namea" />
+          <ScalarProperty Name="edu_Code" ColumnName="edu_Code" />
+          <ScalarProperty Name="educationID" ColumnName="educationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeLicenseShops">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EmployeeLicenseShop">
+        <MappingFragment StoreEntitySet="EmployeeLicenseShop">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="licencesShopID" ColumnName="licencesShopID" />
+          <ScalarProperty Name="employeeLicShopID" ColumnName="employeeLicShopID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeePassports">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EmployeePassport">
+        <MappingFragment StoreEntitySet="EmployeePassports">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="pass_InUsed" ColumnName="pass_InUsed" />
+          <ScalarProperty Name="pass_type" ColumnName="pass_type" />
+          <ScalarProperty Name="pass_placeOfIssue" ColumnName="pass_placeOfIssue" />
+          <ScalarProperty Name="pass_expiryDate" ColumnName="pass_expiryDate" />
+          <ScalarProperty Name="pass_issueDate" ColumnName="pass_issueDate" />
+          <ScalarProperty Name="pass_no" ColumnName="pass_no" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="passportID" ColumnName="passportID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Employee">
+        <MappingFragment StoreEntitySet="Employees">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="fulladdress" ColumnName="fulladdress" />
+          <ScalarProperty Name="phoneNo" ColumnName="phoneNo" />
+          <ScalarProperty Name="homeNo" ColumnName="homeNo" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="poboxOffice" ColumnName="poboxOffice" />
+          <ScalarProperty Name="pobox" ColumnName="pobox" />
+          <ScalarProperty Name="appartment" ColumnName="appartment" />
+          <ScalarProperty Name="floor" ColumnName="floor" />
+          <ScalarProperty Name="BuilduingType" ColumnName="BuilduingType" />
+          <ScalarProperty Name="Jada" ColumnName="Jada" />
+          <ScalarProperty Name="Share3" ColumnName="Share3" />
+          <ScalarProperty Name="Quet3a" ColumnName="Quet3a" />
+          <ScalarProperty Name="Mohafaza" ColumnName="Mohafaza" />
+          <ScalarProperty Name="companyID" ColumnName="companyID" />
+          <ScalarProperty Name="employeeStatusID" ColumnName="employeeStatusID" />
+          <ScalarProperty Name="emp_isMandoub" ColumnName="emp_isMandoub" />
+          <ScalarProperty Name="emp_active" ColumnName="emp_active" />
+          <ScalarProperty Name="emp_bloodType" ColumnName="emp_bloodType" />
+          <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+          <ScalarProperty Name="maritalID" ColumnName="maritalID" />
+          <ScalarProperty Name="educationID" ColumnName="educationID" />
+          <ScalarProperty Name="religionID" ColumnName="religionID" />
+          <ScalarProperty Name="nationalityID" ColumnName="nationalityID" />
+          <ScalarProperty Name="genderID" ColumnName="genderID" />
+          <ScalarProperty Name="nationality_placeOfBirthID" ColumnName="nationality_placeOfBirthID" />
+          <ScalarProperty Name="emp_year" ColumnName="emp_year" />
+          <ScalarProperty Name="emp_month" ColumnName="emp_month" />
+          <ScalarProperty Name="emp_day" ColumnName="emp_day" />
+          <ScalarProperty Name="emp_namefullen" ColumnName="emp_namefullen" />
+          <ScalarProperty Name="emp_namefullar" ColumnName="emp_namefullar" />
+          <ScalarProperty Name="emp_namee5" ColumnName="emp_namee5" />
+          <ScalarProperty Name="emp_namee4" ColumnName="emp_namee4" />
+          <ScalarProperty Name="emp_namee3" ColumnName="emp_namee3" />
+          <ScalarProperty Name="emp_namee2" ColumnName="emp_namee2" />
+          <ScalarProperty Name="emp_namee1" ColumnName="emp_namee1" />
+          <ScalarProperty Name="emp_namea5" ColumnName="emp_namea5" />
+          <ScalarProperty Name="emp_namea4" ColumnName="emp_namea4" />
+          <ScalarProperty Name="emp_namea3" ColumnName="emp_namea3" />
+          <ScalarProperty Name="emp_namea2" ColumnName="emp_namea2" />
+          <ScalarProperty Name="emp_namea1" ColumnName="emp_namea1" />
+          <ScalarProperty Name="emp_civilID" ColumnName="emp_civilID" />
+          <ScalarProperty Name="emp_fileNo" ColumnName="emp_fileNo" />
+          <ScalarProperty Name="emp_No" ColumnName="emp_No" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeSalaries">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EmployeeSalary">
+        <MappingFragment StoreEntitySet="EmployeeSalary">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="paidFromSalary" ColumnName="paidFromSalary" />
+          <ScalarProperty Name="branchName" ColumnName="branchName" />
+          <ScalarProperty Name="accountNo" ColumnName="accountNo" />
+          <ScalarProperty Name="bankID" ColumnName="bankID" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="employeeSalaryID" ColumnName="employeeSalaryID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeSponsors">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EmployeeSponsor">
+        <MappingFragment StoreEntitySet="EmployeeSponsor">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="employeeSponsor_Jawazat" ColumnName="employeeSponsor_Jawazat" />
+          <ScalarProperty Name="employeeSponsor_Shou2oun" ColumnName="employeeSponsor_Shou2oun" />
+          <ScalarProperty Name="employeeSponsor_WorkPermitNo" ColumnName="employeeSponsor_WorkPermitNo" />
+          <ScalarProperty Name="employeeSponsor_useDuration" ColumnName="employeeSponsor_useDuration" />
+          <ScalarProperty Name="employeeSponsor_salary" ColumnName="employeeSponsor_salary" />
+          <ScalarProperty Name="employeeSponsor_entryDate" ColumnName="employeeSponsor_entryDate" />
+          <ScalarProperty Name="employeeSponsor_residencyEndDate" ColumnName="employeeSponsor_residencyEndDate" />
+          <ScalarProperty Name="employeeSponsor_residencyStartDate" ColumnName="employeeSponsor_residencyStartDate" />
+          <ScalarProperty Name="employeeSponsor_residencyNo" ColumnName="employeeSponsor_residencyNo" />
+          <ScalarProperty Name="designationID" ColumnName="designationID" />
+          <ScalarProperty Name="govermentContractID" ColumnName="govermentContractID" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="companyID" ColumnName="companyID" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="employeeSponsorID" ColumnName="employeeSponsorID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeStatusDefs">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EmployeeStatusDef">
+        <MappingFragment StoreEntitySet="EmployeeStatusDef">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="employeeStatus_namee" ColumnName="employeeStatus_namee" />
+          <ScalarProperty Name="employeeStatus_namea" ColumnName="employeeStatus_namea" />
+          <ScalarProperty Name="employeeStatus_Code" ColumnName="employeeStatus_Code" />
+          <ScalarProperty Name="employeeStatusID" ColumnName="employeeStatusID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmployeeWorkContracts">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EmployeeWorkContract">
+        <MappingFragment StoreEntitySet="EmployeeWorkContract">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="wc_payEvery" ColumnName="wc_payEvery" />
+          <ScalarProperty Name="wc_duration" ColumnName="wc_duration" />
+          <ScalarProperty Name="wc_durationType" ColumnName="wc_durationType" />
+          <ScalarProperty Name="wc_startingContract" ColumnName="wc_startingContract" />
+          <ScalarProperty Name="wc_date" ColumnName="wc_date" />
+          <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+          <ScalarProperty Name="workContractID" ColumnName="workContractID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EventsDefinitions">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.EventsDefinition">
+        <MappingFragment StoreEntitySet="EventsDefinition">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="event_Remarks" ColumnName="event_Remarks" />
+          <ScalarProperty Name="event_DisplayName" ColumnName="event_DisplayName" />
+          <ScalarProperty Name="event_Name" ColumnName="event_Name" />
+          <ScalarProperty Name="eventID" ColumnName="eventID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FormEvents">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.FormEvent">
+        <MappingFragment StoreEntitySet="FormEvent">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="eventID" ColumnName="eventID" />
+          <ScalarProperty Name="formID" ColumnName="formID" />
+          <ScalarProperty Name="formEventID" ColumnName="formEventID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FormScreans">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.FormScrean">
+        <MappingFragment StoreEntitySet="FormScrean">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="form_Descriptions" ColumnName="form_Descriptions" />
+          <ScalarProperty Name="form_DisplayName" ColumnName="form_DisplayName" />
+          <ScalarProperty Name="form_IDName" ColumnName="form_IDName" />
+          <ScalarProperty Name="formID" ColumnName="formID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Genders">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Gender">
+        <MappingFragment StoreEntitySet="Gender">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="gender_namee" ColumnName="gender_namee" />
+          <ScalarProperty Name="gender_namea" ColumnName="gender_namea" />
+          <ScalarProperty Name="gender_Code" ColumnName="gender_Code" />
+          <ScalarProperty Name="genderID" ColumnName="genderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Governorates">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Governorate">
+        <MappingFragment StoreEntitySet="Governorate">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="gover_namee" ColumnName="gover_namee" />
+          <ScalarProperty Name="gover_namea" ColumnName="gover_namea" />
+          <ScalarProperty Name="gover_Code" ColumnName="gover_Code" />
+          <ScalarProperty Name="governorateID" ColumnName="governorateID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GovernorateAreas">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.GovernorateArea">
+        <MappingFragment StoreEntitySet="GovernorateArea">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="goverarea_namee" ColumnName="goverarea_namee" />
+          <ScalarProperty Name="goverarea_namea" ColumnName="goverarea_namea" />
+          <ScalarProperty Name="goverarea_Code" ColumnName="goverarea_Code" />
+          <ScalarProperty Name="governorateID" ColumnName="governorateID" />
+          <ScalarProperty Name="goverareaID" ColumnName="goverareaID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LicensesShops">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.LicensesShop">
+        <MappingFragment StoreEntitySet="LicensesShop">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="goverareaID" ColumnName="goverareaID" />
+          <ScalarProperty Name="governorateID" ColumnName="governorateID" />
+          <ScalarProperty Name="shop_isCurrent" ColumnName="shop_isCurrent" />
+          <ScalarProperty Name="shop_contact2" ColumnName="shop_contact2" />
+          <ScalarProperty Name="shop_contact1" ColumnName="shop_contact1" />
+          <ScalarProperty Name="shop_Name" ColumnName="shop_Name" />
+          <ScalarProperty Name="shop_Code" ColumnName="shop_Code" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="licencesShopID" ColumnName="licencesShopID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MaritalStatus">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.MaritalStatu">
+        <MappingFragment StoreEntitySet="MaritalStatus">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="marital_namee" ColumnName="marital_namee" />
+          <ScalarProperty Name="marital_namea" ColumnName="marital_namea" />
+          <ScalarProperty Name="marital_Code" ColumnName="marital_Code" />
+          <ScalarProperty Name="maritalStatusID" ColumnName="maritalStatusID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Nationalities">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Nationality">
+        <MappingFragment StoreEntitySet="Nationality">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="natio_namee" ColumnName="natio_namee" />
+          <ScalarProperty Name="natio_namea" ColumnName="natio_namea" />
+          <ScalarProperty Name="natio_Code" ColumnName="natio_Code" />
+          <ScalarProperty Name="nationalityID" ColumnName="nationalityID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Religions">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.Religion">
+        <MappingFragment StoreEntitySet="Religions">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="religion_namee" ColumnName="religion_namee" />
+          <ScalarProperty Name="religion_namea" ColumnName="religion_namea" />
+          <ScalarProperty Name="religion_Code" ColumnName="religion_Code" />
+          <ScalarProperty Name="religionID" ColumnName="religionID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentLicenseEnds">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.RentLicenseEnd">
+        <MappingFragment StoreEntitySet="RentLicenseEnd">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="rentLicEnd_reasons" ColumnName="rentLicEnd_reasons" />
+          <ScalarProperty Name="rentLicEnd_Date" ColumnName="rentLicEnd_Date" />
+          <ScalarProperty Name="rentLicenseID" ColumnName="rentLicenseID" />
+          <ScalarProperty Name="rentLicenseEndID" ColumnName="rentLicenseEndID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentLicenses">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.RentLicens">
+        <MappingFragment StoreEntitySet="RentLicenses">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="rentLicense_active" ColumnName="rentLicense_active" />
+          <ScalarProperty Name="rentLicense_DamanAmount" ColumnName="rentLicense_DamanAmount" />
+          <ScalarProperty Name="rentLicense_RentalAmount" ColumnName="rentLicense_RentalAmount" />
+          <ScalarProperty Name="rentLicense_to" ColumnName="rentLicense_to" />
+          <ScalarProperty Name="rentLicense_from" ColumnName="rentLicense_from" />
+          <ScalarProperty Name="rentLicense_date" ColumnName="rentLicense_date" />
+          <ScalarProperty Name="licencesShopID" ColumnName="licencesShopID" />
+          <ScalarProperty Name="companyLicencesID" ColumnName="companyLicencesID" />
+          <ScalarProperty Name="customerID" ColumnName="customerID" />
+          <ScalarProperty Name="rentLicenseNo" ColumnName="rentLicenseNo" />
+          <ScalarProperty Name="rentLicenseID" ColumnName="rentLicenseID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentLicensesPayments">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.RentLicensesPayment">
+        <MappingFragment StoreEntitySet="RentLicensesPayment">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="rentLicPay_mandoubID" ColumnName="rentLicPay_mandoubID" />
+          <ScalarProperty Name="rentLicPay_ForDate" ColumnName="rentLicPay_ForDate" />
+          <ScalarProperty Name="rentLicPay_PaymentDate" ColumnName="rentLicPay_PaymentDate" />
+          <ScalarProperty Name="rentLicPay_Amount" ColumnName="rentLicPay_Amount" />
+          <ScalarProperty Name="rentLicPay_VouNo" ColumnName="rentLicPay_VouNo" />
+          <ScalarProperty Name="rentLicenseID" ColumnName="rentLicenseID" />
+          <ScalarProperty Name="rentLicensePaymentID" ColumnName="rentLicensePaymentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentShops">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.RentShop">
+        <MappingFragment StoreEntitySet="RentShop">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="rentShop_active" ColumnName="rentShop_active" />
+          <ScalarProperty Name="rentShop_DamanAmount" ColumnName="rentShop_DamanAmount" />
+          <ScalarProperty Name="rentShop_RentalAmount" ColumnName="rentShop_RentalAmount" />
+          <ScalarProperty Name="rentShop_to" ColumnName="rentShop_to" />
+          <ScalarProperty Name="rentShop_from" ColumnName="rentShop_from" />
+          <ScalarProperty Name="rentShop_date" ColumnName="rentShop_date" />
+          <ScalarProperty Name="licencesShopID" ColumnName="licencesShopID" />
+          <ScalarProperty Name="customerID" ColumnName="customerID" />
+          <ScalarProperty Name="rentShopNo" ColumnName="rentShopNo" />
+          <ScalarProperty Name="rentShopID" ColumnName="rentShopID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentShopEnds">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.RentShopEnd">
+        <MappingFragment StoreEntitySet="RentShopEnd">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="rentShopEnd_isActive" ColumnName="rentShopEnd_isActive" />
+          <ScalarProperty Name="rentShopEnd_reasons" ColumnName="rentShopEnd_reasons" />
+          <ScalarProperty Name="rentShopEnd_Date" ColumnName="rentShopEnd_Date" />
+          <ScalarProperty Name="rentShopID" ColumnName="rentShopID" />
+          <ScalarProperty Name="rentShopEndID" ColumnName="rentShopEndID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentShopPayments">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.RentShopPayment">
+        <MappingFragment StoreEntitySet="RentShopPayment">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="rentShopPay_mandoubID" ColumnName="rentShopPay_mandoubID" />
+          <ScalarProperty Name="rentShopPay_ForDate" ColumnName="rentShopPay_ForDate" />
+          <ScalarProperty Name="rentShopPay_PaymentDate" ColumnName="rentShopPay_PaymentDate" />
+          <ScalarProperty Name="rentShopPay_Amount" ColumnName="rentShopPay_Amount" />
+          <ScalarProperty Name="rentShopPay_VouNo" ColumnName="rentShopPay_VouNo" />
+          <ScalarProperty Name="rentShopID" ColumnName="rentShopID" />
+          <ScalarProperty Name="rentLicensePaymentID" ColumnName="rentLicensePaymentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TransactionDefs">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.TransactionDef">
+        <MappingFragment StoreEntitySet="TransactionDef">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="transDef_namee" ColumnName="transDef_namee" />
+          <ScalarProperty Name="transDef_namea" ColumnName="transDef_namea" />
+          <ScalarProperty Name="transDef_code" ColumnName="transDef_code" />
+          <ScalarProperty Name="transDefID" ColumnName="transDefID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserGroups">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.UserGroup">
+        <MappingFragment StoreEntitySet="UserGroup">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="userGroup_Remarks" ColumnName="userGroup_Remarks" />
+          <ScalarProperty Name="userGroup_Name" ColumnName="userGroup_Name" />
+          <ScalarProperty Name="userGroupID" ColumnName="userGroupID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserGroupEvents">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.UserGroupEvent">
+        <MappingFragment StoreEntitySet="UserGroupEvent">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="isEnable" ColumnName="isEnable" />
+          <ScalarProperty Name="formEventID" ColumnName="formEventID" />
+          <ScalarProperty Name="userGroupID" ColumnName="userGroupID" />
+          <ScalarProperty Name="userGroupEventID" ColumnName="userGroupEventID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="BarakeitAlkheirModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="editedBy" ColumnName="editedBy" />
+          <ScalarProperty Name="addedBy" ColumnName="addedBy" />
+          <ScalarProperty Name="edited_Date" ColumnName="edited_Date" />
+          <ScalarProperty Name="added_Date" ColumnName="added_Date" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="isSuperUser" ColumnName="isSuperUser" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="userName" ColumnName="userName" />
+          <ScalarProperty Name="displayName" ColumnName="displayName" />
+          <ScalarProperty Name="userGroupID" ColumnName="userGroupID" />
+          <ScalarProperty Name="userID" ColumnName="userID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
