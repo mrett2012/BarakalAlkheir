@@ -14,13 +14,13 @@ New-Item -ItemType Directory -Force -Path $buildBin,$buildObj | Out-Null
 $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
 $msbuild = & $vswhere -latest -products '*' -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
 if (-not $msbuild) { throw 'Visual Studio MSBuild was not found.' }
-$csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework/v4.0.30319/csc.exe'
 & $msbuild (Join-Path $projectRoot 'BarakatAlkhreir/BarakalAlkheir.csproj') /t:Rebuild /p:Configuration=Debug /p:Platform=x86 "/p:ReferencePath=$projectRoot\BarakatAlkhreir\bin\Debug" "/p:OutDir=$buildBin\" "/p:IntermediateOutputPath=$buildObj\" /nologo /verbosity:minimal > (Join-Path $buildRoot 'build.log') 2>&1
 if($LASTEXITCODE -ne 0){ Get-Content (Join-Path $buildRoot 'build.log'); throw 'Application build failed' }
 $testExe = Join-Path $buildBin 'LicenceRental.Tests.exe'
-[string[]]$compilerOptions = if ($PrepareInteractive) { @('/define:INTERACTIVE') } else { @() }
-& $csc @compilerOptions /nologo /target:exe /platform:x86 "/out:$testExe" /r:System.Core.dll /r:System.Data.dll /r:System.Data.Entity.dll /r:System.Transactions.dll /r:System.Xml.Linq.dll /r:System.Runtime.Serialization.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll "/r:$buildBin/BarakalAlkheir.exe" "/r:$buildBin/Telerik.WinControls.dll" "/r:$buildBin/Telerik.WinControls.UI.dll" "/r:$buildBin/TelerikCommon.dll" "/r:$buildBin/Telerik.WinControls.GridView.dll" (Join-Path $PSScriptRoot 'LicenceRental.Tests.cs')
-if($LASTEXITCODE -ne 0){throw 'Regression harness compilation failed'}
+$harnessObj = Join-Path $buildRoot 'harness-obj'
+$interactive = if ($PrepareInteractive) { 'true' } else { 'false' }
+& $msbuild (Join-Path $PSScriptRoot 'LicenceRental.Tests.csproj') /t:Rebuild /p:Configuration=Debug /p:Platform=x86 "/p:BuildBin=$buildBin" "/p:IntermediateOutputPath=$harnessObj\" "/p:Interactive=$interactive" /nologo /verbosity:minimal > (Join-Path $buildRoot 'harness-build.log') 2>&1
+if($LASTEXITCODE -ne 0){ Get-Content (Join-Path $buildRoot 'harness-build.log'); throw 'Regression harness compilation failed' }
 if(-not $Integration -and -not $PrepareInteractive){ & $testExe; if($LASTEXITCODE -ne 0){throw 'Regression checks failed'}; return }
 
 # Derive an empty fixture from the active EDMX, never from a customer database/backup.
