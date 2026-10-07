@@ -116,7 +116,8 @@
             // 
             // txtdocument_endDate
             // 
-            this.txtdocument_endDate.CustomFormat = "dd/MM/yyyy";
+            this.txtdocument_endDate.Culture = AppDateFormat.Culture;
+            this.txtdocument_endDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtdocument_endDate.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtdocument_endDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtdocument_endDate.Location = new System.Drawing.Point(92, 47);
@@ -133,7 +134,8 @@
             // 
             // txtdocument_startDate
             // 
-            this.txtdocument_startDate.CustomFormat = "dd/MM/yyyy";
+            this.txtdocument_startDate.Culture = AppDateFormat.Culture;
+            this.txtdocument_startDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtdocument_startDate.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtdocument_startDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtdocument_startDate.Location = new System.Drawing.Point(418, 45);

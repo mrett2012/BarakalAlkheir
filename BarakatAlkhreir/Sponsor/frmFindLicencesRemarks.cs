@@ -84,6 +84,11 @@ namespace BarakalAlkheir.Sponsor
 
         private void frmFindLicencesRemarks_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmFindLicencesRemarks_LoadData);
+        }
+
+        private void frmFindLicencesRemarks_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 getData();

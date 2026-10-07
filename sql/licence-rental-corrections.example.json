@@ -1,0 +1,22 @@
+[
+  {
+    "table": "RentLicensesPayment",
+    "id": 0,
+    "operation": "update",
+    "reason": "REPLACE with the approved receipt evidence and decision reference",
+    "changes": { "rentLicenseID": 0, "rentLicencesDetailsID": 0 }
+  },
+  {
+    "table": "RentLicensesDetails",
+    "id": 0,
+    "operation": "update",
+    "reason": "REPLACE with the approved paid-status decision; absence of a receipt is not proof of nonpayment",
+    "changes": { "rd_isPaid": false }
+  },
+  {
+    "table": "RentLicensesPayment",
+    "id": 0,
+    "operation": "delete",
+    "reason": "REPLACE with evidence that this exact receipt is a duplicate, not a second collection"
+  }
+]

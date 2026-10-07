@@ -124,7 +124,7 @@
             // 
             // txtrentLicPay_ForDate
             // 
-            this.txtrentLicPay_ForDate.CustomFormat = "MMMM - yyyy";
+            this.txtrentLicPay_ForDate.CustomFormat = "MM'/'yyyy";
             this.txtrentLicPay_ForDate.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtrentLicPay_ForDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtrentLicPay_ForDate.Location = new System.Drawing.Point(419, 143);
@@ -134,7 +134,7 @@
             // 
             // txtrentLicPay_PaymentDate
             // 
-            this.txtrentLicPay_PaymentDate.CustomFormat = "dd / MM / yyyy";
+            this.txtrentLicPay_PaymentDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtrentLicPay_PaymentDate.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtrentLicPay_PaymentDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtrentLicPay_PaymentDate.Location = new System.Drawing.Point(419, 117);

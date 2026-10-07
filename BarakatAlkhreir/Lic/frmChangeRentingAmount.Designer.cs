@@ -77,7 +77,7 @@
             // txtFrom1
             // 
             this.txtFrom1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFrom1.CustomFormat = "dd/MM/yyyy";
+            this.txtFrom1.CustomFormat = AppDateFormat.PickerFormat;
             this.txtFrom1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFrom1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtFrom1.Location = new System.Drawing.Point(297, 8);
@@ -187,12 +187,14 @@
             gridViewTextBoxColumn1.IsVisible = false;
             gridViewTextBoxColumn1.Name = "gvrentLicencesDetailsID";
             gridViewTextBoxColumn2.FieldName = "rd_fromDate";
-            gridViewTextBoxColumn2.FormatString = "{0:dd-MM-yyyy}";
+            gridViewTextBoxColumn2.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn2.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn2.HeaderText = "rd_fromDate";
             gridViewTextBoxColumn2.Name = "gvrd_fromDate";
             gridViewTextBoxColumn2.Width = 120;
             gridViewTextBoxColumn3.FieldName = "rd_toDate";
-            gridViewTextBoxColumn3.FormatString = "{0:dd-MM-yyyy}";
+            gridViewTextBoxColumn3.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn3.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn3.HeaderText = "rd_toDate";
             gridViewTextBoxColumn3.Name = "gvrd_toDate";
             gridViewTextBoxColumn3.Width = 120;

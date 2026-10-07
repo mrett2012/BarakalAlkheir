@@ -280,17 +280,23 @@ namespace BarakalAlkheir.emp
 
         private void frmEmployeeMain_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmEmployeeMain_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmEmployeeMain_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                PublicClass.bindEmployeeStatus(cmbEmploeeStatus);
+                await PublicClass.bindEmployeeStatusAsync(cmbEmploeeStatus);
                 cmbEmploeeStatus.SelectedIndex = 0;
 
-                PublicClass.bindTransactionDef1(cmbtransDefID);
+                await PublicClass.bindTransactionDef1Async(cmbtransDefID);
                 cmbtransDefID.SelectedIndex = 0;
                 txtDate1.Text = DateTime.Now.ToShortDateString();
                 txtDate2.Text = DateTime.Now.ToShortDateString();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

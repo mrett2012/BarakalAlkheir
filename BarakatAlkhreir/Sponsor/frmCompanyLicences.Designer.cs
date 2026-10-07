@@ -212,13 +212,15 @@
             gridViewTextBoxColumn3.ReadOnly = true;
             gridViewTextBoxColumn3.Width = 300;
             gridViewTextBoxColumn4.FieldName = "startDate";
-            gridViewTextBoxColumn4.FormatString = "{0:d}";
+            gridViewTextBoxColumn4.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn4.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn4.HeaderText = "تاريخ الاصدار";
             gridViewTextBoxColumn4.Name = "gvstartDate";
             gridViewTextBoxColumn4.ReadOnly = true;
             gridViewTextBoxColumn4.Width = 120;
             gridViewTextBoxColumn5.FieldName = "endDate";
-            gridViewTextBoxColumn5.FormatString = "{0:d}";
+            gridViewTextBoxColumn5.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn5.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn5.HeaderText = "تاريخ الانتهاء";
             gridViewTextBoxColumn5.Name = "gvendDate";
             gridViewTextBoxColumn5.ReadOnly = true;
@@ -334,7 +336,7 @@
             // 
             // txtendDate
             // 
-            this.txtendDate.CustomFormat = "dd/MM/yyyy";
+            this.txtendDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtendDate.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtendDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtendDate.Location = new System.Drawing.Point(28, 80);
@@ -344,7 +346,7 @@
             // 
             // txtstartDate
             // 
-            this.txtstartDate.CustomFormat = "dd/MM/yyyy";
+            this.txtstartDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtstartDate.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtstartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtstartDate.Location = new System.Drawing.Point(445, 80);
@@ -876,12 +878,14 @@
             gridViewTextBoxColumn8.Name = "gvdocument_No";
             gridViewTextBoxColumn8.Width = 150;
             gridViewTextBoxColumn9.FieldName = "document_startDate";
-            gridViewTextBoxColumn9.FormatString = "{0:d}";
+            gridViewTextBoxColumn9.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn9.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn9.HeaderText = "تاريخ الاصدار";
             gridViewTextBoxColumn9.Name = "gvdocument_startDate";
             gridViewTextBoxColumn9.Width = 130;
             gridViewTextBoxColumn10.FieldName = "document_endDate";
-            gridViewTextBoxColumn10.FormatString = "{0:d}";
+            gridViewTextBoxColumn10.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn10.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn10.HeaderText = "تاريخ الانتهاء";
             gridViewTextBoxColumn10.Name = "gvdocument_endDate";
             gridViewTextBoxColumn10.Width = 130;

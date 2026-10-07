@@ -42,14 +42,19 @@ namespace BarakalAlkheir.Definitions
 
         private void frmCars_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmCars_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmCars_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                pageCar.Controls.Add(mainbar);
+                await mainbar.AddToAsync(pageCar);
 
                 
                 mainbarDocument.Dock = DockStyle.Top;
-                PageCarDocument.Controls.Add(mainbarDocument);
+                await mainbarDocument.AddToAsync(PageCarDocument);
 
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
@@ -81,10 +86,11 @@ namespace BarakalAlkheir.Definitions
 
                 disableControls();
 
-                getData();
+                await getDataAsync();
                 bindData();
                 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -357,6 +363,20 @@ namespace BarakalAlkheir.Definitions
         }
 
 
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+                {
+                    return (from c in db.Cars  select c).ToList();
+                }
+            }, rows =>
+            {
+                lstCar = rows;
+                GView.DataSource = lstCar;
+            });
+        }
         private void getData()
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())

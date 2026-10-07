@@ -15,8 +15,8 @@
 - Solution: `BarakalAlkheir.sln`; active project: `BarakatAlkhreir/BarakalAlkheir.csproj`.
 - Namespace and executable name: `BarakalAlkheir`; EF context/database name: `BarakeitAlkheirEntities` / `BarakeitAlkheir`.
 - Preserve these existing spelling differences in paths, namespaces, entities, and database identifiers.
-- Target: full .NET Framework 4.0, x86, legacy non-SDK C# project. The solution header identifies Visual Studio 2013.
-- Dependencies include Telerik WinForms 2011.3.11.1219, Crystal Reports assemblies 13.0.3500.0, framework Entity Framework, and Excel COM interop.
+- Target: full .NET Framework 4.8, x86, legacy non-SDK C# project. Use Visual Studio 2022 MSBuild; the solution header still identifies Visual Studio 2013.
+- Dependencies include Telerik WinForms 2026.3.812.48 (Bin48), Telerik.Licensing 1.9.1, Crystal Reports assemblies 13.0.3500.0, framework Entity Framework, and Excel COM interop. See docs/TELERIK-UPGRADE.md for restore, licensing, and validation.
 - At initialization on 2026-09-16 this directory had no Git metadata. Check current status before relying on Git history, diffs, or rollback.
 
 ## Source map
@@ -58,11 +58,14 @@
 
 ## Build and validation
 
-Use legacy Windows MSBuild with separate output/intermediate directories. Run this from the workspace root in PowerShell, replacing `task` with an appropriate task name:
+Restore NuGet packages first. Use Visual Studio MSBuild with separate output/intermediate directories. Run this from the workspace root in PowerShell, replacing `task` with an appropriate task name:
 
 ```powershell
 $projectRoot = (Get-Location).Path
-& "$env:WINDIR\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" `
+$vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+$msbuild = & $vswhere -latest -products '*' -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
+if (-not $msbuild) { throw 'Visual Studio MSBuild was not found.' }
+& $msbuild `
   "$projectRoot\BarakatAlkhreir\BarakalAlkheir.csproj" `
   /t:Build /p:Configuration=Debug /p:Platform=x86 `
   "/p:ReferencePath=$projectRoot\BarakatAlkhreir\bin\Debug" `
@@ -71,10 +74,10 @@ $projectRoot = (Get-Location).Path
   /nologo /verbosity:minimal
 ```
 
-- This command pattern succeeded during initialization using the bundled DLLs. Without `ReferencePath`, Telerik, Crystal Reports, and Flash references were unresolved on this machine.
+- This pattern builds with the installed Telerik 2026 Q3 Bin48 assemblies and the restored licensing package. `ReferencePath` supplies the preserved bundled Crystal Reports and Flash dependencies; Telerik references use exact versions and explicit hint paths.
 - `Microsoft.VisualBasic.PowerPacks.Vs` 10.0.0.0 remained an unresolved reference warning; the reference-assisted build still returned exit code 0. Other compiler warnings also remain; this is not a warning-free baseline.
 - Restricted execution initially denied MSBuild access to the installed SDK directory. The successful run had permission to access installed SDKs. Distinguish this environment restriction from a source compilation failure.
-- No automated test project, CI configuration, or migration runner was found. Choose focused manual checks for changed behavior after compilation.
+- Standalone regression harnesses are in `tests/`, including Telerik constructor/rendering checks. No CI configuration or migration runner was found. Choose focused manual checks for changed behavior after compilation.
 - Isolated build output is for compilation verification. It does not have the report directory layout expected by the current viewer and is not a validated deployable package.
 - For UI changes, check form load, navigation, add/edit/cancel/save/delete, Arabic layout, and relevant permission roles. For money/workflow changes, also check related records, rollback, paid/closed flags, and affected reports against a designated test database.
 - Do not claim database connectivity, login, SQL compatibility, report rendering, printing, or Excel export passed based solely on a build.

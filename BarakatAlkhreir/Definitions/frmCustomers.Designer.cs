@@ -209,7 +209,8 @@
             // 
             // txtcustomer_BirthDate
             // 
-            this.txtcustomer_BirthDate.CustomFormat = "dd/MM/yyyy";
+            this.txtcustomer_BirthDate.Culture = AppDateFormat.Culture;
+            this.txtcustomer_BirthDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtcustomer_BirthDate.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
             this.txtcustomer_BirthDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtcustomer_BirthDate.Location = new System.Drawing.Point(73, 12);

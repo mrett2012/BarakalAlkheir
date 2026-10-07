@@ -28,10 +28,15 @@ namespace BarakalAlkheir.Lic
 
         private void frmChangeRentingAmount_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmChangeRentingAmount_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmChangeRentingAmount_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar1.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar1);
+                await mainbar1.AddToAsync(this);
 
 
                 mainbar1.btnAdd.Visible = false;
@@ -56,6 +61,7 @@ namespace BarakalAlkheir.Lic
                 bindData1();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -64,7 +70,7 @@ namespace BarakalAlkheir.Lic
 
         void btnEdit_Click1(object sender, EventArgs e)
         {
-            if (lblID1.Text != "-1")
+            if (rentlic != null && rentlic.rentLicense_active == true)
             {
                 change1 = "edit";
                 enableControls1();
@@ -82,66 +88,23 @@ namespace BarakalAlkheir.Lic
         {
             try
             {
-                int rowsAffected = 0;
-                if (change1 == "edit")
-                {
-                    using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-                    {
-                        using (TransactionScope ts = new TransactionScope())
-                        {
-                            int bbID = int.Parse(lblID1.Text);
-                            RentLicens bb = (from c in db.RentLicenses
-                                             where c.rentLicenseID == _rentLicenseID
-                                             select c).FirstOrDefault();
-                            bb.rentLicense_RentalAmount = float.Parse(txtRentalAmountNew.Text);
-
-                            bb.edited_Date = DateTime.Now;
-                            bb.editedBy = MainClass.userID;
-
-                            //db.RentLicenses.AddObject(bb);
-                            rowsAffected = db.SaveChanges();
-
-
-
-
-
-
-                            DateTime newDate = DateTime.Parse(txtFrom1.Text);
-                            // get unpaid rentLicencesDetails
-                            List<RentLicensesDetail> rld = (from c in db.RentLicensesDetails
-                                                            where c.rentLicenseID == _rentLicenseID
-                                                            && c.rd_fromDate >= newDate && c.rd_isPaid == false
-                                                            select c).ToList();
-                            foreach (var item in rld)
-                            {
-                                item.edited_Date = DateTime.Now;
-                                item.editedBy = MainClass.userID;
-                                item.rd_amount = float.Parse(this.txtRentalAmountNew.Text);
-                                db.SaveChanges();
-                            }
-
-
-
-
-                            db.AcceptAllChanges();
-                            ts.Complete();
-
-
-                        }
-                    }
-                }
-
-
+                if (change1 != "edit" || rentlic == null) return;
+                new LicenseRentalWorkflow().ChangeRate(_rentLicenseID, txtFrom1.Value.Date,
+                    LicenseRentalRules.ParsePositiveAmount(txtRentalAmountNew.Text), rentlic.edited_Date);
+                change1 = "";
                 disableControls1();
                 getData1();
-                change1 = "";
                 bindData1();
             }
-            catch (Exception ex)
+            catch (RentalChangedException ex)
             {
                 MessageBox.Show(ex.Message);
+                change1 = "";
+                disableControls1();
+                getData1();
+                bindData1();
             }
-
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         void btnExit_Click1(object sender, EventArgs e)
@@ -185,14 +148,14 @@ namespace BarakalAlkheir.Lic
         {
             if (rentlic != null)
             {
-                txtFrom1.Text = rentlic.rentLicense_from.Value.ToShortDateString();
+                txtFrom1.Value = rentlic.rentLicense_from ?? DateTime.Today;
                 txtRentalAmountOld.Text = rentlic.rentLicense_RentalAmount.Value.ToString();
                 txtRentalAmountNew.Text = "0";
 
             }
             else
             {
-                txtFrom1.Text = DateTime.Now.ToShortDateString();
+                txtFrom1.Value = DateTime.Today;
                 txtRentalAmountOld.Text = "";
                 txtRentalAmountNew.Text = "0";
             }

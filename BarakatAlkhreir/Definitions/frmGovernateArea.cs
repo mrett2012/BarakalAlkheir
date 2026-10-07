@@ -28,10 +28,15 @@ namespace BarakalAlkheir.Definitions
 
         private void frmGovernateArea_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmGovernateArea_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmGovernateArea_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -47,11 +52,12 @@ namespace BarakalAlkheir.Definitions
 
                 disableControls();
 
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
 
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

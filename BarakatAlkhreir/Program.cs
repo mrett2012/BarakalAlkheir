@@ -13,6 +13,7 @@ namespace BarakalAlkheir
         [STAThread]
         static void Main()
         {
+            AppDateFormat.ApplyToCurrentThread();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new frmMain());

@@ -33,13 +33,18 @@ namespace BarakalAlkheir.Sponsor
 
         private void frmCompanyLicences_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmCompanyLicences_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmCompanyLicences_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                pageLicences.Controls.Add(mainbar);
+                await mainbar.AddToAsync(pageLicences);
                 
                 mainbarDocument.Dock = DockStyle.Top;
-                pageLicencesDocuments.Controls.Add(mainbarDocument);
+                await mainbarDocument.AddToAsync(pageLicencesDocuments);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -69,14 +74,14 @@ namespace BarakalAlkheir.Sponsor
 
 
                 disableControls();
-                PublicClass.bindCompany(cmbcompanyID);
-                PublicClass.bindMandoub(cmbMandoub);
-                PublicClass.bindLicenseActivity(cmbLicenseActivity);
-                PublicClass.bindGovernorate(txtMohafaza);
-                PublicClass.bindGovernorateArea(txtMantaqa, -1);
+                await PublicClass.bindCompanyAsync(cmbcompanyID);
+                await PublicClass.bindMandoubAsync(cmbMandoub);
+                await PublicClass.bindLicenseActivityAsync(cmbLicenseActivity);
+                await PublicClass.bindGovernorateAsync(txtMohafaza);
+                await PublicClass.bindGovernorateAreaAsync(txtMantaqa, -1);
                 txtMantaqa.SelectedIndex = 0;
 
-                getData();
+                await getDataAsync();
                 
                 if (_companyLicencesID != -1)
                 {
@@ -85,7 +90,8 @@ namespace BarakalAlkheir.Sponsor
                 bindData();
                 
             }
-                catch (Exception ex)
+                catch (OperationCanceledException) { }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -618,6 +624,20 @@ namespace BarakalAlkheir.Sponsor
             GView.Enabled = false;
         }
 
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+                {
+                    return (from c in db.CompanyLicences  select c).ToList();
+                }
+            }, rows =>
+            {
+                lstCompanyLicence = rows;
+                GView.DataSource = lstCompanyLicence;
+            });
+        }
         private void getData()
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())

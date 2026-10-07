@@ -102,43 +102,48 @@ namespace BarakalAlkheir.emp
 
         private void frmEmployees_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmEmployees_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmEmployees_LoadData(object sender, EventArgs e)
+        {
             try
             {
 
                 mainbaremployee.Dock = DockStyle.Top;
-                pageEmployee.Controls.Add(mainbaremployee);
+                await mainbaremployee.AddToAsync(pageEmployee);
                 
                 mainbarAddress.Dock = DockStyle.Top;
-                pageAddress.Controls.Add(mainbarAddress);
+                await mainbarAddress.AddToAsync(pageAddress);
 
                 mainbaroldSponsor.Dock = DockStyle.Top;
-                this.pageOldSponsor.Controls.Add(mainbaroldSponsor);
+                await mainbaroldSponsor.AddToAsync(pageOldSponsor);
 
 
                 this.mainbarUpdatePrint.Dock = DockStyle.Top;
-                this.pageUpdatePrint.Controls.Add(mainbarUpdatePrint);
+                await mainbarUpdatePrint.AddToAsync(pageUpdatePrint);
 
                 mainbarSponsor.Dock = DockStyle.Top;
-                pageSponsor.Controls.Add(mainbarSponsor);
+                await mainbarSponsor.AddToAsync(pageSponsor);
 
                 mainbarPassport.Dock = DockStyle.Top;
-                PagePassport.Controls.Add(mainbarPassport);
+                await mainbarPassport.AddToAsync(PagePassport);
 
                 mainbarsSalary.Dock = DockStyle.Top;
-                pageSalary.Controls.Add(mainbarsSalary);
+                await mainbarsSalary.AddToAsync(pageSalary);
 
                 mainbarWorkContract.Dock = DockStyle.Top;
-                pageWorkContract.Controls.Add(mainbarWorkContract);
+                await mainbarWorkContract.AddToAsync(pageWorkContract);
 
                 mainbarLicenseShop.Dock = DockStyle.Top;
-                PageShop.Controls.Add(mainbarLicenseShop);
+                await mainbarLicenseShop.AddToAsync(PageShop);
 
 
                 mainbarDependent.Dock = DockStyle.Top;
-                pageDependent.Controls.Add(mainbarDependent);
+                await mainbarDependent.AddToAsync(pageDependent);
                 
                 mainbarDocument.Dock = DockStyle.Top;
-                PageEmployeeDocument.Controls.Add(mainbarDocument);
+                await mainbarDocument.AddToAsync(PageEmployeeDocument);
 
                 mainbaremployee.btnAdd.Click += new EventHandler(btnAdd_Click1);
                 mainbaremployee.btnEdit.Click += new EventHandler(btnEdit_Click1);
@@ -330,29 +335,29 @@ namespace BarakalAlkheir.emp
                 disableAddressControlsOldSponsor();
 
                 // load data into employees
-                PublicClass.bindEducations(cmbeducationID);
-                PublicClass.bindGenders(cmbGender);
-                PublicClass.bindEmployeeStatus(cmbEmploeeStatus);
-                PublicClass.bindNationality(cmbnationality_placeOfBirthID);
-                PublicClass.bindNationality(cmbnationalityID);
-                PublicClass.bindMaritalStatus(cmbmaritalID);
-                PublicClass.bindReligions(cmbreligionID);
-                PublicClass.bindCompany(cmbcompanyID);
-                PublicClass.bindDesignations(cmbdesignationID);
-                PublicClass.bindBanks(cmbbankID);
+                await PublicClass.bindEducationsAsync(cmbeducationID);
+                await PublicClass.bindGendersAsync(cmbGender);
+                await PublicClass.bindEmployeeStatusAsync(cmbEmploeeStatus);
+                await PublicClass.bindNationalityAsync(cmbnationality_placeOfBirthID);
+                await PublicClass.bindNationalityAsync(cmbnationalityID);
+                await PublicClass.bindMaritalStatusAsync(cmbmaritalID);
+                await PublicClass.bindReligionsAsync(cmbreligionID);
+                await PublicClass.bindCompanyAsync(cmbcompanyID);
+                await PublicClass.bindDesignationsAsync(cmbdesignationID);
+                await PublicClass.bindBanksAsync(cmbbankID);
 
-                PublicClass.bindGenders(txtdepend_gender);
-                PublicClass.bindNationality(txtdepend_nationality);
-                PublicClass.bindReligions(txtdepend_religion);
-                PublicClass.bindNationality(cmbpass_placeOfIssue);
+                await PublicClass.bindGendersAsync(txtdepend_gender);
+                await PublicClass.bindNationalityAsync(txtdepend_nationality);
+                await PublicClass.bindReligionsAsync(txtdepend_religion);
+                await PublicClass.bindNationalityAsync(cmbpass_placeOfIssue);
 
-                PublicClass.bindGovernorate(txtemployeeSponsor_Shou2oun);
+                await PublicClass.bindGovernorateAsync(txtemployeeSponsor_Shou2oun);
                 txtemployeeSponsor_Shou2oun.SelectedIndex = 0;
 
-                PublicClass.bindGovernorate(txtemployeeSponsor_Jawazat);
+                await PublicClass.bindGovernorateAsync(txtemployeeSponsor_Jawazat);
                 txtemployeeSponsor_Jawazat.SelectedIndex = 0;
 
-                getData1();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData1);
                 if (_employeeID != -1)
                 {
                     position1 = lstEmployee.FindIndex(cc => cc.employeeID == _employeeID);
@@ -392,6 +397,7 @@ namespace BarakalAlkheir.emp
                 pageEmployee.Select();
                // timer1.Start();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -1556,7 +1562,7 @@ namespace BarakalAlkheir.emp
                             //}
 
 
-                        bb.emp_appDate =  txtAppDate.Text;
+                        bb.emp_appDate = AppDateFormat.Format(txtAppDate.Value);
                         bb.emp_appType = txtAppType.Text;
                         bb.emp_res1 = r1;
                         bb.emp_res2 = r2;
@@ -1638,7 +1644,11 @@ namespace BarakalAlkheir.emp
         {
             if (lstEmployee.Count > 0)
             {
-                txtAppDate.Text = lstEmployee[position1].emp_appDate;
+                DateTime applicationDate;
+                if (AppDateFormat.TryParseStoredDate(lstEmployee[position1].emp_appDate, out applicationDate))
+                    txtAppDate.Value = applicationDate;
+                else
+                    txtAppDate.Text = lstEmployee[position1].emp_appDate;
                 txtAppType.Text = lstEmployee[position1].emp_appType;
                 choose3.Text = lstEmployee[position1].emp_res3;
 
@@ -4722,7 +4732,7 @@ namespace BarakalAlkheir.emp
 
 
                     //print Type
-                    dr["emp_appDate"] = ee.emp_appDate;
+                    dr["emp_appDate"] = AppDateFormat.FormatStoredDate(ee.emp_appDate);
                     dr["emp_appType"] = ee.emp_appType;
                     dr["choose1"] = ee.emp_res1;
                     dr["choose2"] = ee.emp_res2;
@@ -4942,7 +4952,7 @@ namespace BarakalAlkheir.emp
                         }
                         if (es.employeeSponsor_entryDate.HasValue)
                         {
-                            dr["res_EntryDate"] = es.employeeSponsor_entryDate.Value.ToString("yyyy/MM/dd");
+                            dr["res_EntryDate"] = AppDateFormat.Format(es.employeeSponsor_entryDate.Value);
                         }
 
                         dr["res_Salary"] = es.employeeSponsor_salary;

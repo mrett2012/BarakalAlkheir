@@ -16,6 +16,7 @@ namespace BarakalAlkheir.Lic
         public frmPaymentReport()
         {
             InitializeComponent();
+            chkShowOldPayment.Enabled = true;
         }
 
         private void btnFilteredCompanyLicenses_Click(object sender, EventArgs e)
@@ -26,20 +27,14 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    int month1 = DateTime.Parse(txtDate1.Text).Month;
-                    int year1 = DateTime.Parse(txtDate1.Text).Year;
+                    int month1 = txtDate1.Value.Date.Month;
+                    int year1 = txtDate1.Value.Date.Year;
                     int day1 = DateTime.DaysInMonth(year1, month1);
 
-                    DateTime firstDay1 = DateTime.Parse(MainClass.StartRentDay + "/" + month1 + "/" + year1);
-                    DateTime lastDay1 = firstDay1.AddMonths(1).AddDays(-1);
 
-
-                    int month2 = DateTime.Parse(txtDate2.Text).Month;
-                    int year2 = DateTime.Parse(txtDate2.Text).Year;
+                    int month2 = txtDate2.Value.Date.Month;
+                    int year2 = txtDate2.Value.Date.Year;
                     int day2 = DateTime.DaysInMonth(year2, month2);
-
-                    DateTime firstDay2 = DateTime.Parse(MainClass.StartRentDay + "/" + month2 + "/" + year2);
-                    DateTime lastDay2 = firstDay2.AddMonths(1).AddDays(-1);
 
 
 
@@ -48,14 +43,15 @@ namespace BarakalAlkheir.Lic
                                 on c.companyLicencesID equals d.companyLicencesID
                                join ee in db.RentLicensesPayments
                                on d.rentLicenseID equals ee.rentLicenseID
-                               join ee1 in db.Employees on ee.rentLicPay_mandoubID equals ee1.employeeID
+                               join collector in db.Employees on ee.rentLicPay_mandoubID equals collector.employeeID into collectors
+                               from ee1 in collectors.DefaultIfEmpty()
                                orderby ee.rentLicPay_ForDate
 
                                select new
                                {
                                    companyLicencesID = c.companyLicencesID,
-                                   governorateID = c.governorateID.Value,
-                                   goverareaID = c.goverareaID.Value,
+                                   governorateID = c.governorateID ?? -1,
+                                   goverareaID = c.goverareaID ?? -1,
                                    governorateName = c.Mohafaza,
                                    goverareaName = c.Mantaqa,
                                    licenseLinkCode = c.licenseLinkCode,
@@ -63,13 +59,13 @@ namespace BarakalAlkheir.Lic
                                    commercialName = c.commercialName,
                                    rentLicenseNo = d.rentLicenseNo,
                                    customer_Name = d.Customer.customer_Name,
-                                   mandoub = ee1.emp_namefullar,
-                                   mandoubID = ee1.employeeID,
+                                   mandoub = ee1 == null ? "مندوب غير معروف" : ee1.emp_namefullar,
+                                   mandoubID = ee1 == null ? -1 : ee1.employeeID,
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
                                    ForDate = ee.rentLicPay_ForDate,
                                    PaymentDate = ee.rentLicPay_PaymentDate,
-                                   Amount = ee.rentLicPay_Amount.Value ,
+                                   Amount = ee.rentLicPay_Amount ?? 0,
                                    rentLicPay_VouNo = ee.rentLicPay_VouNo,
                                    rentLicense_active = d.rentLicense_active
 
@@ -84,25 +80,13 @@ namespace BarakalAlkheir.Lic
                     }
 
 
-                    if (chkDateFrom.Checked && chkDateTo.Checked)
-                    {
-
-                        val = val.Where(cc => cc.ForDate >= firstDay1 && cc.ForDate <= lastDay2).ToList();
-
-                        title += "من : "+txtDate1.Text +" الى : " + txtDate2.Text;
-
-                    }
-                    else
-                    {
-                        if (chkDateFrom.Checked)
-                        {
-                            val = val.Where(cc => cc.ForDate >= firstDay1 && cc.ForDate <= lastDay1).ToList();
-
-                            title += "لشهر : " + txtDate1.Text;
-                        }
-                    }
-
-                    
+                    if (chkDateFrom.Checked && chkDateTo.Checked && txtDate1.Value.Date > txtDate2.Value.Date)
+                        throw new InvalidOperationException("فترة التقرير غير صحيحة");
+                    val = val.Where(c => LicenseRentalReports.InPeriod(c.ForDate, false,
+                        chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null,
+                        chkDateTo.Checked ? (DateTime?)txtDate2.Value : (chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null))).ToList();
+                    if (chkDateFrom.Checked) title += " من: " + txtDate1.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    if (chkDateTo.Checked) title += " إلى: " + txtDate2.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                     if (chkChooseGovernorate.Checked)
                     {
                         int GovID = int.Parse(cmbGovernorate.SelectedValue.ToString());
@@ -114,28 +98,16 @@ namespace BarakalAlkheir.Lic
                             val = val.Where(cc => cc.goverareaID == govAreaID).ToList();
                         }
                     }
-                    if (chkChooseLicences.Checked)
-                    {
-                        if (chkShowOldPayment.Checked)
-                        {
-                            int _licID = int.Parse(lblLicenseID.Text);
-                            val = val.Where(cc => cc.companyLicencesID == _licID).ToList();
-                        }else
-                        {
-                            int _licID = int.Parse(lblLicenseID.Text);
-                            val = val.Where(cc => cc.companyLicencesID == _licID && cc.rentLicense_active==true).ToList();
-                        }
-                    }
-                    
-
+                    if (!chkShowOldPayment.Checked) val = val.Where(c => c.rentLicense_active == true).ToList();
+                    if (chkChooseLicences.Checked) val = val.Where(c => c.companyLicencesID == int.Parse(lblLicenseID.Text)).ToList();
                     var newVal = from c in val
                                  select new
                                {
                                    companyLicencesID = c.companyLicencesID,
-                                   governorateID = c.goverareaID,
-                                   goverareaID = c.governorateID,
+                                   governorateID = c.governorateID,
+                                   goverareaID = c.goverareaID,
                                    governorateName = c.governorateName,
-                                   goverareaName = c.governorateName,
+                                   goverareaName = c.goverareaName,
                                    licenseLinkCode = c.licenseLinkCode,
                                    licenseNo = c.licenseNo,
                                    commercialName = c.commercialName,
@@ -145,7 +117,7 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = c.mandoubID,
                                    rentLicense_from = c.rentLicense_from,
                                    rentLicense_to = c.rentLicense_to,
-                                   ForDate = c.ForDate.Value.ToString("MMMM - yyyy"),
+                                   ForDate = c.ForDate.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
                                    PaymentDate = c.PaymentDate,
                                    Amount = c.Amount,
                                    rentLicPay_VouNo =  c.rentLicPay_VouNo
@@ -172,11 +144,11 @@ namespace BarakalAlkheir.Lic
 
                         dr["mandoub"]=item.mandoub;
                         dr["mandoubID"]=item.mandoubID.ToString();
-                        dr["rentLicense_from"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["rentLicense_to"] = item.rentLicense_to.Value.ToShortDateString();
+                        dr["rentLicense_from"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["ForDate"] = item.ForDate;
 
-                        dr["PaymentDate"]=item.PaymentDate.Value.ToShortDateString();
+                        dr["PaymentDate"]=LicenseRentalRules.FormatDate(item.PaymentDate.Value);
                         dr["Amount"]=item.Amount;
                         dr["extra1"]=item.rentLicPay_VouNo;
                         dr["extra2"]="";
@@ -240,18 +212,24 @@ namespace BarakalAlkheir.Lic
 
         private void frmPaymentReport_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmPaymentReport_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmPaymentReport_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                PublicClass.bindGovernorate(cmbGovernorate);
-                PublicClass.bindMandoub(cmbMandoub);
+                await PublicClass.bindGovernorateAsync(cmbGovernorate);
+                await PublicClass.bindMandoubAsync(cmbMandoub);
                 cmbMandoub.SelectedIndex = 0;
                 cmbGovernorate.SelectedIndex = 0;
-                txtDate1.Text = DateTime.Now.ToShortDateString();
-                txtDate2.Text = DateTime.Now.ToShortDateString();
+                txtDate1.Value = DateTime.Today;
+                txtDate2.Value = DateTime.Today;
 
-                this.txtdatefrom.Text = DateTime.Now.ToShortDateString();
-                this.txtdateto.Text = DateTime.Now.ToShortDateString();
+                this.txtdatefrom.Value = DateTime.Today;
+                this.txtdateto.Value = DateTime.Today;
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -347,7 +325,7 @@ namespace BarakalAlkheir.Lic
             else
             {
                 btnFindShop.Enabled = false;
-                chkShowOldPayment.Enabled = false;
+                chkShowOldPayment.Enabled = true;
             }
         }
 
@@ -355,6 +333,7 @@ namespace BarakalAlkheir.Lic
         {
             Sponsor.frmfindLicences frm = new Sponsor.frmfindLicences(false, true);
             frm.isCurrentRentedLicencesInclude = true;
+            frm.isAllLicences = chkShowOldPayment.Checked;
             frm.ShowDialog();
             if (frm.found)
             {
@@ -374,20 +353,14 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    int month1 = DateTime.Parse(txtDate1.Text).Month;
-                    int year1 = DateTime.Parse(txtDate1.Text).Year;
+                    int month1 = txtDate1.Value.Date.Month;
+                    int year1 = txtDate1.Value.Date.Year;
                     int day1 = DateTime.DaysInMonth(year1, month1);
 
-                    DateTime firstDay1 = DateTime.Parse(MainClass.StartRentDay + "/" + month1 + "/" + year1);
-                    DateTime lastDay1 = firstDay1.AddMonths(1).AddDays(-1);
 
-
-                    int month2 = DateTime.Parse(txtDate2.Text).Month;
-                    int year2 = DateTime.Parse(txtDate2.Text).Year;
+                    int month2 = txtDate2.Value.Date.Month;
+                    int year2 = txtDate2.Value.Date.Year;
                     int day2 = DateTime.DaysInMonth(year2, month2);
-
-                    DateTime firstDay2 = DateTime.Parse(MainClass.StartRentDay + "/" + month2 + "/" + year2);
-                    DateTime lastDay2 = firstDay2.AddMonths(1).AddDays(-1);
 
 
 
@@ -396,12 +369,12 @@ namespace BarakalAlkheir.Lic
                                 on c.companyLicencesID equals d.companyLicencesID
                                join ee in db.RentLicensesDetails
                                on d.rentLicenseID equals ee.rentLicenseID
-                               where ee.rd_isPaid==false
+
                                select new
                                {
                                    companyLicencesID = c.companyLicencesID,
-                                   governorateID = c.governorateID.Value,
-                                   goverareaID = c.goverareaID.Value,
+                                   governorateID = c.governorateID ?? -1,
+                                   goverareaID = c.goverareaID ?? -1,
                                    governorateName = c.Mohafaza,
                                    goverareaName = c.Mantaqa,
                                    licenseLinkCode = c.licenseLinkCode,
@@ -413,9 +386,11 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = "",
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
-                                   ForDate = ee.rd_fromDate,
+                                   DetailId = ee.rentLicencesDetailsID,
+                                    rentLicense_active = d.rentLicense_active,
+                                    ForDate = ee.rd_fromDate,
                                    PaymentDate = ee.rd_toDate,
-                                   Amount = ee.rd_amount.Value,
+                                   Amount = ee.rd_amount ?? 0,
                                    rentLicPay_VouNo = ""
 
                                }).ToList();
@@ -429,25 +404,13 @@ namespace BarakalAlkheir.Lic
                     //}
 
 
-                    if (chkDateFrom.Checked && chkDateTo.Checked)
-                    {
-
-                        val = val.Where(cc => cc.ForDate >= firstDay1 && cc.ForDate <= lastDay2).ToList();
-
-                        title += "من : " + txtDate1.Text + " الى : " + txtDate2.Text;
-
-                    }
-                    else
-                    {
-                        if (chkDateFrom.Checked)
-                        {
-                            val = val.Where(cc => cc.ForDate >= firstDay1 && cc.ForDate <= lastDay1).ToList();
-
-                            title += "لشهر : " + txtDate1.Text;
-                        }
-                    }
-
-
+                    if (chkDateFrom.Checked && chkDateTo.Checked && txtDate1.Value.Date > txtDate2.Value.Date)
+                        throw new InvalidOperationException("فترة التقرير غير صحيحة");
+                    val = val.Where(c => LicenseRentalReports.InPeriod(c.ForDate, true,
+                        chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null,
+                        chkDateTo.Checked ? (DateTime?)txtDate2.Value : (chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null))).ToList();
+                    if (chkDateFrom.Checked) title += " من: " + txtDate1.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    if (chkDateTo.Checked) title += " إلى: " + txtDate2.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                     if (chkChooseGovernorate.Checked)
                     {
                         int GovID = int.Parse(cmbGovernorate.SelectedValue.ToString());
@@ -466,14 +429,17 @@ namespace BarakalAlkheir.Lic
                     }
 
 
+                    var paidTotals = LicenseRentalReports.PaidByInstalment(db);
+                    if (!chkShowOldPayment.Checked) val = val.Where(c => c.rentLicense_active == true).ToList();
+                    val = val.Where(c => LicenseRentalRules.Amount(c.Amount) > LicenseRentalReports.Paid(paidTotals, c.DetailId)).ToList();
                     var newVal = from c in val
                                  select new
                                  {
                                      companyLicencesID = c.companyLicencesID,
-                                     governorateID = c.goverareaID,
-                                     goverareaID = c.governorateID,
+                                     governorateID = c.governorateID,
+                                     goverareaID = c.goverareaID,
                                      governorateName = c.governorateName,
-                                     goverareaName = c.governorateName,
+                                     goverareaName = c.goverareaName,
                                      licenseLinkCode = c.licenseLinkCode,
                                      licenseNo = c.licenseNo,
                                      commercialName = c.commercialName,
@@ -485,7 +451,7 @@ namespace BarakalAlkheir.Lic
                                      rentLicense_to = c.rentLicense_to,
                                      ForDate = c.ForDate,
                                      PaymentDate = c.PaymentDate,
-                                     Amount = c.Amount,
+                                     Amount = LicenseRentalRules.Amount(c.Amount) - LicenseRentalReports.Paid(paidTotals, c.DetailId),
                                      rentLicPay_VouNo = c.rentLicPay_VouNo
 
                                  };
@@ -510,11 +476,11 @@ namespace BarakalAlkheir.Lic
 
                         dr["mandoub"] = item.mandoub;
                         dr["mandoubID"] = item.mandoubID.ToString();
-                        dr["rentLicense_from"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["rentLicense_to"] = item.rentLicense_to.Value.ToShortDateString();
-                        dr["ForDate"] = item.ForDate.Value.ToShortDateString();
+                        dr["rentLicense_from"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
+                        dr["ForDate"] = LicenseRentalRules.FormatDate(item.ForDate.Value);
 
-                        dr["PaymentDate"] = item.PaymentDate.Value.ToShortDateString();
+                        dr["PaymentDate"] = LicenseRentalRules.FormatDate(item.PaymentDate.Value);
                         dr["Amount"] = item.Amount;
                         dr["extra1"] = item.rentLicPay_VouNo;
                         dr["extra2"] = "";
@@ -554,20 +520,14 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    int month1 = DateTime.Parse(txtDate1.Text).Month;
-                    int year1 = DateTime.Parse(txtDate1.Text).Year;
+                    int month1 = txtDate1.Value.Date.Month;
+                    int year1 = txtDate1.Value.Date.Year;
                     int day1 = DateTime.DaysInMonth(year1, month1);
 
-                    DateTime firstDay1 = DateTime.Parse(MainClass.StartRentDay + "/" + month1 + "/" + year1);
-                    DateTime lastDay1 = firstDay1.AddMonths(1).AddDays(-1);
 
-
-                    int month2 = DateTime.Parse(txtDate2.Text).Month;
-                    int year2 = DateTime.Parse(txtDate2.Text).Year;
+                    int month2 = txtDate2.Value.Date.Month;
+                    int year2 = txtDate2.Value.Date.Year;
                     int day2 = DateTime.DaysInMonth(year2, month2);
-
-                    DateTime firstDay2 = DateTime.Parse(MainClass.StartRentDay + "/" + month2 + "/" + year2);
-                    DateTime lastDay2 = firstDay2.AddMonths(1).AddDays(-1);
 
 
 
@@ -580,8 +540,8 @@ namespace BarakalAlkheir.Lic
                                select new
                                {
                                    companyLicencesID = c.companyLicencesID,
-                                   governorateID = c.governorateID.Value,
-                                   goverareaID = c.goverareaID.Value,
+                                   governorateID = c.governorateID ?? -1,
+                                   goverareaID = c.goverareaID ?? -1,
                                    governorateName = c.Mohafaza,
                                    goverareaName = c.Mantaqa,
                                    licenseLinkCode = c.licenseLinkCode,
@@ -593,9 +553,11 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = "",
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
-                                   ForDate = ee.rd_fromDate,
+                                   DetailId = ee.rentLicencesDetailsID,
+                                    rentLicense_active = d.rentLicense_active,
+                                    ForDate = ee.rd_fromDate,
                                    PaymentDate = ee.rd_toDate,
-                                   Amount = ee.rd_amount.Value,
+                                   Amount = ee.rd_amount ?? 0,
                                    rentLicPay_VouNo = "" ,
                                    rd_isPaid = ee.rd_isPaid
 
@@ -610,25 +572,13 @@ namespace BarakalAlkheir.Lic
                     //}
 
 
-                    if (chkDateFrom.Checked && chkDateTo.Checked)
-                    {
-
-                        val = val.Where(cc => cc.ForDate >= firstDay1 && cc.ForDate <= lastDay2).ToList();
-
-                        title += "من : " + txtDate1.Text + " الى : " + txtDate2.Text;
-
-                    }
-                    else
-                    {
-                        if (chkDateFrom.Checked)
-                        {
-                            val = val.Where(cc => cc.ForDate >= firstDay1 && cc.ForDate <= lastDay1).ToList();
-
-                            title += "لشهر : " + txtDate1.Text;
-                        }
-                    }
-
-
+                    if (chkDateFrom.Checked && chkDateTo.Checked && txtDate1.Value.Date > txtDate2.Value.Date)
+                        throw new InvalidOperationException("فترة التقرير غير صحيحة");
+                    val = val.Where(c => LicenseRentalReports.InPeriod(c.ForDate, true,
+                        chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null,
+                        chkDateTo.Checked ? (DateTime?)txtDate2.Value : (chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null))).ToList();
+                    if (chkDateFrom.Checked) title += " من: " + txtDate1.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    if (chkDateTo.Checked) title += " إلى: " + txtDate2.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
                     if (chkChooseGovernorate.Checked)
                     {
                         int GovID = int.Parse(cmbGovernorate.SelectedValue.ToString());
@@ -647,14 +597,16 @@ namespace BarakalAlkheir.Lic
                     }
 
 
+                    var paidTotals = LicenseRentalReports.PaidByInstalment(db);
+                    if (!chkShowOldPayment.Checked) val = val.Where(c => c.rentLicense_active == true).ToList();
                     var newVal = from c in val
                                  select new
                                  {
                                      companyLicencesID = c.companyLicencesID,
-                                     governorateID = c.goverareaID,
-                                     goverareaID = c.governorateID,
+                                     governorateID = c.governorateID,
+                                     goverareaID = c.goverareaID,
                                      governorateName = c.governorateName,
-                                     goverareaName = c.governorateName,
+                                     goverareaName = c.goverareaName,
                                      licenseLinkCode = c.licenseLinkCode,
                                      licenseNo = c.licenseNo,
                                      commercialName = c.commercialName,
@@ -668,7 +620,7 @@ namespace BarakalAlkheir.Lic
                                      PaymentDate = c.PaymentDate,
                                      Amount = c.Amount,
                                      rentLicPay_VouNo = c.rentLicPay_VouNo,
-                                     rd_isPaid = c.rd_isPaid
+                                     rd_isPaid = (bool?)(LicenseRentalReports.Paid(paidTotals, c.DetailId) == LicenseRentalRules.Amount(c.Amount))
 
                                  };
 
@@ -692,11 +644,11 @@ namespace BarakalAlkheir.Lic
 
                         dr["mandoub"] = item.mandoub;
                         dr["mandoubID"] = item.mandoubID.ToString();
-                        dr["rentLicense_from"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["rentLicense_to"] = item.rentLicense_to.Value.ToShortDateString();
-                        dr["ForDate"] = item.ForDate.Value.ToShortDateString();
+                        dr["rentLicense_from"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
+                        dr["ForDate"] = LicenseRentalRules.FormatDate(item.ForDate.Value);
 
-                        dr["PaymentDate"] = item.PaymentDate.Value.ToShortDateString();
+                        dr["PaymentDate"] = LicenseRentalRules.FormatDate(item.PaymentDate.Value);
                         dr["Amount"] = item.Amount;
                         dr["extra1"] = item.rentLicPay_VouNo;
                         if (item.rd_isPaid.Value)
@@ -750,8 +702,8 @@ namespace BarakalAlkheir.Lic
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
 
-                    DateTime from = DateTime.Parse(txtdatefrom.Text);
-                    DateTime to = DateTime.Parse(txtdateto.Text);
+                    DateTime from = txtdatefrom.Value.Date;
+                    DateTime to = txtdateto.Value.Date;
 
 
 
@@ -761,13 +713,14 @@ namespace BarakalAlkheir.Lic
                                 on c.companyLicencesID equals d.companyLicencesID
                                join ee in db.RentLicensesPayments
                                on d.rentLicenseID equals ee.rentLicenseID
-                               join ee1 in db.Employees on ee.rentLicPay_mandoubID equals ee1.employeeID
+                               join collector in db.Employees on ee.rentLicPay_mandoubID equals collector.employeeID into collectors
+                               from ee1 in collectors.DefaultIfEmpty()
                  
                                select new
                                {
                                    companyLicencesID = c.companyLicencesID,
-                                   governorateID = c.governorateID.Value,
-                                   goverareaID = c.goverareaID.Value,
+                                   governorateID = c.governorateID ?? -1,
+                                   goverareaID = c.goverareaID ?? -1,
                                    governorateName = c.Mohafaza,
                                    goverareaName = c.Mantaqa,
                                    licenseLinkCode = c.licenseLinkCode,
@@ -775,13 +728,14 @@ namespace BarakalAlkheir.Lic
                                    commercialName = c.commercialName,
                                    rentLicenseNo = d.rentLicenseNo,
                                    customer_Name = d.Customer.customer_Name,
-                                   mandoub = ee1.emp_namefullar,
-                                   mandoubID = ee1.employeeID,
+                                   mandoub = ee1 == null ? "مندوب غير معروف" : ee1.emp_namefullar,
+                                   mandoubID = ee1 == null ? -1 : ee1.employeeID,
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
+                                   rentLicense_active = d.rentLicense_active,
                                    ForDate = ee.rentLicPay_ForDate,
                                    PaymentDate = ee.rentLicPay_PaymentDate,
-                                   Amount = ee.rentLicPay_Amount.Value ,
+                                   Amount = ee.rentLicPay_Amount ?? 0,
                                    rentLicPay_VouNo = ee.rentLicPay_VouNo
 
                                }).ToList();
@@ -795,7 +749,7 @@ namespace BarakalAlkheir.Lic
                     }
 
 
-                        val = val.Where(cc => cc.PaymentDate >= from && cc.PaymentDate <= to).ToList();
+                        val = val.Where(cc => cc.PaymentDate >= from && cc.PaymentDate < to.AddDays(1)).ToList();
 
                         title += "من : " + txtdatefrom.Text + " الى : " + txtdateto.Text;
 
@@ -821,14 +775,15 @@ namespace BarakalAlkheir.Lic
                     }
                     
 
+                    if (!chkShowOldPayment.Checked) val = val.Where(c => c.rentLicense_active == true).ToList();
                     var newVal = from c in val
                                  select new
                                {
                                    companyLicencesID = c.companyLicencesID,
-                                   governorateID = c.goverareaID,
-                                   goverareaID = c.governorateID,
+                                   governorateID = c.governorateID,
+                                   goverareaID = c.goverareaID,
                                    governorateName = c.governorateName,
-                                   goverareaName = c.governorateName,
+                                   goverareaName = c.goverareaName,
                                    licenseLinkCode = c.licenseLinkCode,
                                    licenseNo = c.licenseNo,
                                    commercialName = c.commercialName,
@@ -838,8 +793,8 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = c.mandoubID,
                                    rentLicense_from = c.rentLicense_from,
                                    rentLicense_to = c.rentLicense_to,
-                                   ForDate = c.ForDate.Value.ToString("MMMM - yyyy"),
-                                   PaymentDate = c.PaymentDate.Value.ToShortDateString(),
+                                   ForDate = c.ForDate.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                                   PaymentDate = LicenseRentalRules.FormatDate(c.PaymentDate.Value),
                                    Amount = c.Amount,
                                    rentLicPay_VouNo =  c.rentLicPay_VouNo
 
@@ -865,8 +820,8 @@ namespace BarakalAlkheir.Lic
 
                         dr["mandoub"]=item.mandoub;
                         dr["mandoubID"]=item.mandoubID.ToString();
-                        dr["rentLicense_from"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["rentLicense_to"] = item.rentLicense_to.Value.ToShortDateString();
+                        dr["rentLicense_from"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["ForDate"] = item.ForDate;
 
                         dr["PaymentDate"]=item.PaymentDate;

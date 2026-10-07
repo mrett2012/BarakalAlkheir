@@ -26,6 +26,11 @@ namespace BarakalAlkheir.CarsM
 
         private void frmRentingPaymentDetails_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmRentingPaymentDetails_LoadData);
+        }
+
+        private void frmRentingPaymentDetails_LoadData(object sender, EventArgs e)
+        {
             
             try
             {

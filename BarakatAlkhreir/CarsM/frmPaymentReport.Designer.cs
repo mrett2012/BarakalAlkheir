@@ -341,6 +341,7 @@
             // 
             // txtDate2
             // 
+            this.txtDate2.Culture = AppDateFormat.Culture;
             this.txtDate2.CustomFormat = "MMMM -    yyyy";
             this.txtDate2.Enabled = false;
             this.txtDate2.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -359,6 +360,7 @@
             // 
             // txtDate1
             // 
+            this.txtDate1.Culture = AppDateFormat.Culture;
             this.txtDate1.CustomFormat = "MMMM -    yyyy";
             this.txtDate1.Enabled = false;
             this.txtDate1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -479,7 +481,8 @@
             // 
             // txtdateto
             // 
-            this.txtdateto.CustomFormat = "dd/MM/yyyy";
+            this.txtdateto.Culture = AppDateFormat.Culture;
+            this.txtdateto.CustomFormat = AppDateFormat.PickerFormat;
             this.txtdateto.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtdateto.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtdateto.Location = new System.Drawing.Point(35, 401);
@@ -496,7 +499,8 @@
             // 
             // txtdatefrom
             // 
-            this.txtdatefrom.CustomFormat = "dd/MM/yyyy";
+            this.txtdatefrom.Culture = AppDateFormat.Culture;
+            this.txtdatefrom.CustomFormat = AppDateFormat.PickerFormat;
             this.txtdatefrom.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtdatefrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtdatefrom.Location = new System.Drawing.Point(35, 375);

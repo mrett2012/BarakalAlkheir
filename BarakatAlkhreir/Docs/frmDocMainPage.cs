@@ -50,6 +50,11 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocMainPage_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocMainPage_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocMainPage_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 txtDate1.Text = DateTime.Now.ToShortDateString();
@@ -57,12 +62,12 @@ namespace BarakalAlkheir.Docs
                 txtdateto.Text = DateTime.Now.ToShortDateString();
 
                 //txtDate2.Text = DateTime.Now.ToShortDateString();
-                PublicClass.bindDocumentTypeDef(cmbDocumentTypeDefinition);
+                await PublicClass.bindDocumentTypeDefAsync(cmbDocumentTypeDefinition);
                 cmbDocumentTypeDefinition.SelectedIndex = 0;
                 
                 if (!MainClass.isSuperUser)
                 {
-                    if (MainFile.isVisibleSecurity("frmTransactionDocumentsTasks"))
+                    if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isVisibleSecurity("frmTransactionDocumentsTasks"))))
                     {
                         btnTransactionTasks.Enabled = true;
                     }
@@ -71,7 +76,7 @@ namespace BarakalAlkheir.Docs
                         btnTransactionTasks.Enabled = false;
                     }
 
-                    if (MainFile.isVisibleSecurity("frmTransactionDocumentsTasksSteps"))
+                    if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isVisibleSecurity("frmTransactionDocumentsTasksSteps"))))
                     {
                         btnTransactionFollowSteps.Enabled = true;
                     }
@@ -79,7 +84,7 @@ namespace BarakalAlkheir.Docs
                     {
                         btnTransactionFollowSteps.Enabled = false;
                     }
-                    if (MainFile.isVisibleSecurity("frmEmployeeExpiryDocuments"))
+                    if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isVisibleSecurity("frmEmployeeExpiryDocuments"))))
                     {
                         btnEmployeeExpiryDocument.Enabled = true;
                     }
@@ -87,7 +92,7 @@ namespace BarakalAlkheir.Docs
                     {
                         btnEmployeeExpiryDocument.Enabled = false;
                     }
-                    if (MainFile.isVisibleSecurity("frmCompanyLicensesExpiryDocuments"))
+                    if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isVisibleSecurity("frmCompanyLicensesExpiryDocuments"))))
                     {
                         btnCompanyLicensesExpiryDocument.Enabled = true;
                     }
@@ -95,7 +100,7 @@ namespace BarakalAlkheir.Docs
                     {
                         btnCompanyLicensesExpiryDocument.Enabled = false;
                     }
-                    if (MainFile.isVisibleSecurity("frmTransactionDocumentsTasksNotPaid"))
+                    if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isVisibleSecurity("frmTransactionDocumentsTasksNotPaid"))))
                     {
                         btnDocumentTransactionMustPay.Enabled = true;
                     }
@@ -104,7 +109,7 @@ namespace BarakalAlkheir.Docs
                         btnDocumentTransactionMustPay.Enabled = false;
                     }
 
-                    if (MainFile.isVisibleSecurity("frmCarsExpiryDocuments"))
+                    if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isVisibleSecurity("frmCarsExpiryDocuments"))))
                     {
                         btnCarDocumentExpiryDate.Enabled = true;
                     }
@@ -115,6 +120,7 @@ namespace BarakalAlkheir.Docs
 
                 }
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
 

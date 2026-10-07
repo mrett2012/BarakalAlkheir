@@ -18,332 +18,313 @@ namespace BarakalAlkheir.Docs
         public frmTransactionDocumentsTasksNotPaid()
         {
             InitializeComponent();
+            DocumentListLookup.ConfigureGrid(GView);
         }
 
         private void frmEmployeeExpiryDocuments_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmEmployeeExpiryDocuments_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmEmployeeExpiryDocuments_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                getData1();
-                getData();
-                getData2();
+                GView.Rows.Clear();
+                await getData1Async();
+                await getDataAsync();
+                await getData2Async();
                 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
 
-        private void getData()
+
+
+        private async System.Threading.Tasks.Task getDataAsync(bool background = true)
         {
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+            await BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
             {
-
-                var val = from c3 in db.DocumentTypeDefinitions
-                          join c4 in db.DocumentDefs
-                          on c3.documentTypeDefID equals c4.documentTypeDefID
-                          join c1 in db.Documents
-                          on c4.documentDefID equals c1.documentDefID
-                          join c6 in db.CompanyLicences
-                          on c1.document_TypeID equals c6.companyLicencesID
-                          join cc in db.DocumentTransactionTasks on c1.documentID equals cc.documentID
-                          join cc1 in db.DocumentTransactions on cc.documentTransID equals cc1.documentTransID
-                          where c3.documentType_Code == "02" &&
-                          c1.document_endDate != null &&
-                          c6.isFack == false &&
-                          c6.isActive == true &&
-                          cc.documentTransTask_Approved ==true &&
-                          cc.documentTransTask_isPaid==false
-                          orderby c1.document_endDate                  
-                          select new
-                          {
-                              c3.documentTypeDefID,
-                              c4.documentDefID,
-                              c6.companyLicencesID,
-                              c1.documentID,
-                              //c2.employeeID,
-                              c3.documentType_Name,                            
-                              c4.documentDef_Name,                             
-                              c1.document_endDate,
-                              c6.licenseUniqueNo,
-                              c6.licenseNo,
-                              cc.documentTransTaskID,
-                              c6.commercialName,
-                              noOfDays = c4.documentDef_WarningDays.Value,
-                              cc1.documentTrans_Amount,
-                              cc1.documentTransID
-                          };
-
-                var val1 = val.ToList();
-                
-                foreach (var item in val1)
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    GView.Rows.AddNew();
-                    GView.Rows[GView.Rows.Count - 1].Cells[0].Value = item.documentTypeDefID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[1].Value = item.documentDefID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[2].Value = item.companyLicencesID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[3].Value = item.documentID;
-                    //GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.employeeID;
 
-                    GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.documentDef_Name;
-                    GView.Rows[GView.Rows.Count - 1].Cells[5].Value = item.licenseNo;
-                    GView.Rows[GView.Rows.Count - 1].Cells[6].Value = item.licenseUniqueNo;
-                    GView.Rows[GView.Rows.Count - 1].Cells[7].Value = item.commercialName;
-                    GView.Rows[GView.Rows.Count - 1].Cells[8].Value = item.document_endDate.Value.ToShortDateString();
-                    GView.Rows[GView.Rows.Count - 1].Cells[9].Value = item.document_endDate.Value.Subtract(DateTime.Now).Days;
-                    GView.Rows[GView.Rows.Count - 1].Cells[10].Value = getDocumentTransaction(item.documentID);
-                    GView.Rows[GView.Rows.Count - 1].Cells[11].Value = item.documentTrans_Amount.Value.ToString();
-                    GView.Rows[GView.Rows.Count - 1].Cells[13].Value = item.documentTransTaskID.ToString();
-                    if (isHasRemarks(item.companyLicencesID))
-                    {
-                        GView.CurrentView.CurrentRow.DrawFill = true;
-                        //GView.CurrentView.CurrentRow.BackColor = Color.Red;
-                        
-                    }
-                    if (isHasRental(item.companyLicencesID))
-                    {
-                        GView.CurrentView.CurrentRow.DrawFill = true;
-                        //GView.CurrentView.CurrentRow.BackColor = Color.Cyan;
-                        
-                    }
+                    var val = from c3 in db.DocumentTypeDefinitions
+                              join c4 in db.DocumentDefs
+                              on c3.documentTypeDefID equals c4.documentTypeDefID
+                              join c1 in db.Documents
+                              on c4.documentDefID equals c1.documentDefID
+                              join c6 in db.CompanyLicences
+                              on c1.document_TypeID equals c6.companyLicencesID
+                              join cc in db.DocumentTransactionTasks on c1.documentID equals cc.documentID
+                              join cc1 in db.DocumentTransactions on cc.documentTransID equals cc1.documentTransID
+                              where c3.documentType_Code == "02" &&
+                              c1.document_endDate != null &&
+                              c6.isFack == false &&
+                              c6.isActive == true &&
+                              cc.documentTransTask_Approved ==true &&
+                              cc.documentTransTask_isPaid==false
+                              orderby c1.document_endDate
+                              select new
+                              {
+                                  c3.documentTypeDefID,
+                                  c4.documentDefID,
+                                  c6.companyLicencesID,
+                                  c1.documentID,
+                                  //c2.employeeID,
+                                  c3.documentType_Name,
+                                  c4.documentDef_Name,
+                                  c1.document_endDate,
+                                  c6.licenseUniqueNo,
+                                  c6.licenseNo,
+                                  cc.documentTransTaskID,
+                                  c6.commercialName,
+                                  noOfDays = (c4.documentDef_WarningDays ?? 0),
+                                  cc1.documentTrans_Amount,
+                                  cc1.documentTransID
+                              };
 
+                    var val1 = val.ToList();
+                    return DocumentListLookup.Create(db, val1, item => item.documentID, item => item.companyLicencesID, false);
                 }
-            }
-
-
-        }
-
-        private bool isHasRental(int _companyLicencesID)
-        {
-            bool temp = false;
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+            }, loaded =>
             {
-                var val = (from c in db.RentLicenses
-                           where (c.companyLicencesID == _companyLicencesID)
-                           join d in db.RentLicensesDetails on c.rentLicenseID equals d.rentLicenseID
-                           where d.rd_fromDate < DateTime.Now
-                           && d.rd_isPaid == false
-                           select c).ToList();
-                if (val.Count > 0)
+                GView.BeginUpdate();
+                try
                 {
-                    temp = true;
-                }
-
-            }
-            return temp;
-        }
-
-        private void getData1()
-        {
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-            {
-                var val = from c3 in db.DocumentTypeDefinitions
-                          join c4 in db.DocumentDefs
-                          on c3.documentTypeDefID equals c4.documentTypeDefID
-                          join c1 in db.Documents
-                          on c4.documentDefID equals c1.documentDefID
-                          join c2 in db.Employees
-                          on c1.document_TypeID equals c2.employeeID
-                          //join cc11 in db.EmployeeSponsors on c2.employeeID equals cc11.employeeID
-                          //join c6 in db.CompanyLicences
-                          //on cc11.companyLicencesID equals c6.companyLicencesID
-                          join c5 in db.EmployeeLicenseShops on c2.employeeID equals c5.employeeID
-                          join cc5 in db.LicensesShops on c5.licencesShopID equals cc5.licencesShopID
-                          join c6 in db.CompanyLicences on cc5.companyLicencesID equals c6.companyLicencesID
-                          join cc in db.DocumentTransactionTasks on c1.documentID equals cc.documentID
-                          join cc1 in db.DocumentTransactions on cc.documentTransID equals cc1.documentTransID
-                          where c3.documentType_Code == "01" &&
-                          c1.document_endDate != null &&
-                          cc.documentTransTask_Approved == true &&
-                          cc.documentTransTask_isPaid == false 
-                          orderby c1.document_endDate  
-                          select new
-                          {
-                              c3.documentTypeDefID,
-                              c4.documentDefID,
-                              c6.companyLicencesID,
-                              c1.documentID,
-                              c2.employeeID,
-                              c3.documentType_Name,
-                              cc.documentTransTaskID,
-                              c4.documentDef_Name,
-
-                              c1.document_endDate,
-
-                              c2.emp_namefullar,
-                              c2.emp_No,
-
-                              c6.commercialName,
-                              noOfDays = c4.documentDef_WarningDays.Value,
-                              cc1.documentTrans_Amount,
-                              cc1.documentTransID
-                          };
-                //BindingSource bs = new BindingSource();
-                //bs.Add(val.ToList().Where(p => p.document_endDate <= DateTime.Now.AddDays(p.noOfDays)));
-                var val1 = val.ToList();
-                //GView1.DataSource = val1.ToList();
-
-                foreach (var item in val1)
-                {
-                    GView.Rows.AddNew();
-                    GView.Rows[GView.Rows.Count - 1].Cells[0].Value = item.documentTypeDefID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[1].Value = item.documentDefID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[2].Value = item.companyLicencesID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[3].Value = item.documentID;
-                    //GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.employeeID;
-
-                    GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.documentDef_Name;
-                    GView.Rows[GView.Rows.Count - 1].Cells[5].Value = item.emp_No;
-                    GView.Rows[GView.Rows.Count - 1].Cells[6].Value = item.emp_namefullar;
-                    GView.Rows[GView.Rows.Count - 1].Cells[7].Value = item.commercialName;
-                    GView.Rows[GView.Rows.Count - 1].Cells[8].Value = item.document_endDate.Value.ToShortDateString();
-                    GView.Rows[GView.Rows.Count - 1].Cells[9].Value = item.document_endDate.Value.Subtract(DateTime.Now).Days;
-                    GView.Rows[GView.Rows.Count - 1].Cells[10].Value = getDocumentTransaction(item.documentID);
-                    GView.Rows[GView.Rows.Count - 1].Cells[11].Value = item.documentTrans_Amount.Value.ToString();
-                    GView.Rows[GView.Rows.Count - 1].Cells[13].Value = item.documentTransTaskID.ToString();
-                    if (isHasRemarks(item.companyLicencesID))
+                    foreach (var item in loaded.Rows)
                     {
-                        GView.CurrentView.CurrentRow.DrawFill = true;
-                        //GView.CurrentView.CurrentRow.BackColor = Color.Red;
+                        GView.Rows.AddNew();
+                        GView.Rows[GView.Rows.Count - 1].Cells[0].Value = item.documentTypeDefID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[1].Value = item.documentDefID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[2].Value = item.companyLicencesID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[3].Value = item.documentID;
+                        //GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.employeeID;
 
-                    }
-                    if (isHasRental(item.companyLicencesID))
-                    {
-                        GView.CurrentView.CurrentRow.DrawFill = true;
-                        //GView.CurrentView.CurrentRow.BackColor = Color.Cyan;
+                        GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.documentDef_Name;
+                        GView.Rows[GView.Rows.Count - 1].Cells[5].Value = item.licenseNo;
+                        GView.Rows[GView.Rows.Count - 1].Cells[6].Value = item.licenseUniqueNo;
+                        GView.Rows[GView.Rows.Count - 1].Cells[7].Value = item.commercialName;
+                        GView.Rows[GView.Rows.Count - 1].Cells[8].Value = item.document_endDate.HasValue ? item.document_endDate.Value.ToShortDateString() : string.Empty;
+                        GView.Rows[GView.Rows.Count - 1].Cells[9].Value = item.document_endDate.HasValue ? (object)item.document_endDate.Value.Subtract(DateTime.Now).Days : null;
+                        GView.Rows[GView.Rows.Count - 1].Cells[10].Value = loaded.Lookup.Transactions(item.documentID);
+                        GView.Rows[GView.Rows.Count - 1].Cells[11].Value = item.documentTrans_Amount.ToString();
+                        GView.Rows[GView.Rows.Count - 1].Cells[13].Value = item.documentTransTaskID.ToString();
+                        if (loaded.Lookup.HasRemarks(item.companyLicencesID))
+                        {
+                            GView.Rows[GView.Rows.Count - 1].Tag = true;
+                            //GView.CurrentView.CurrentRow.BackColor = Color.Red;
+
+                        }
+                        if (loaded.Lookup.HasRental(item.companyLicencesID))
+                        {
+                            GView.Rows[GView.Rows.Count - 1].Tag = true;
+                            //GView.CurrentView.CurrentRow.BackColor = Color.Cyan;
+
+                        }
 
                     }
                 }
-            }
-
-
+                finally { GView.EndUpdate(); }
+            }, background);
         }
 
-        private void getData2()
+
+
+
+
+        private async System.Threading.Tasks.Task getData1Async(bool background = true)
         {
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+            await BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
             {
-                var val = from c3 in db.DocumentTypeDefinitions
-                          join c4 in db.DocumentDefs
-                          on c3.documentTypeDefID equals c4.documentTypeDefID
-                          join c1 in db.Documents
-                          on c4.documentDefID equals c1.documentDefID
-                          join c6 in db.Cars
-                          on c1.document_TypeID equals c6.carID
-                          join cc in db.DocumentTransactionTasks on c1.documentID equals cc.documentID
-                          join cc1 in db.DocumentTransactions on cc.documentTransID equals cc1.documentTransID
-                          where c3.documentType_Code == "04" &&
-                          c1.document_endDate != null &&
-                          cc.documentTransTask_Approved == true &&
-                          cc.documentTransTask_isPaid == false &&
-                          cc.documentTransTask_isClose == false
-                          orderby c1.document_endDate
-                          select new
-                          {
-                              c3.documentTypeDefID,
-                              c4.documentDefID,
-                              c6.carID,
-                              c1.documentID,
-                              //c2.employeeID,
-                              c3.documentType_Name,
-                              c4.documentDef_Name,
-                              c1.document_endDate,
-                              c6.car_No,
-                              c6.car_Name,
-
-                              c6.car_Model,
-                              noOfDays = c4.documentDef_WarningDays.Value,
-                              cc.documentTransTaskID,
-                              cc1.documentTrans_Amount,
-                              cc1.documentTransID
-                          };
-
-                var val1 = val.ToList().Where(p => p.document_endDate <= DateTime.Now.AddDays(p.noOfDays));
-
-
-                foreach (var item in val1)
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    GView.Rows.AddNew();
-                    GView.Rows[GView.Rows.Count - 1].Cells[0].Value = item.documentTypeDefID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[1].Value = item.documentDefID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[2].Value = item.carID;
-                    GView.Rows[GView.Rows.Count - 1].Cells[3].Value = item.documentID;
-                    //GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.employeeID;
+                    var val = from c3 in db.DocumentTypeDefinitions
+                              join c4 in db.DocumentDefs
+                              on c3.documentTypeDefID equals c4.documentTypeDefID
+                              join c1 in db.Documents
+                              on c4.documentDefID equals c1.documentDefID
+                              join c2 in db.Employees
+                              on c1.document_TypeID equals c2.employeeID
+                              //join cc11 in db.EmployeeSponsors on c2.employeeID equals cc11.employeeID
+                              //join c6 in db.CompanyLicences
+                              //on cc11.companyLicencesID equals c6.companyLicencesID
+                              join c5 in db.EmployeeLicenseShops on c2.employeeID equals c5.employeeID
+                              join cc5 in db.LicensesShops on c5.licencesShopID equals cc5.licencesShopID
+                              join c6 in db.CompanyLicences on cc5.companyLicencesID equals c6.companyLicencesID
+                              join cc in db.DocumentTransactionTasks on c1.documentID equals cc.documentID
+                              join cc1 in db.DocumentTransactions on cc.documentTransID equals cc1.documentTransID
+                              where c3.documentType_Code == "01" &&
+                              c1.document_endDate != null &&
+                              cc.documentTransTask_Approved == true &&
+                              cc.documentTransTask_isPaid == false
+                              orderby c1.document_endDate
+                              select new
+                              {
+                                  c3.documentTypeDefID,
+                                  c4.documentDefID,
+                                  c6.companyLicencesID,
+                                  c1.documentID,
+                                  c2.employeeID,
+                                  c3.documentType_Name,
+                                  cc.documentTransTaskID,
+                                  c4.documentDef_Name,
 
-                    GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.documentDef_Name;
-                    GView.Rows[GView.Rows.Count - 1].Cells[5].Value = item.car_No;
-                    GView.Rows[GView.Rows.Count - 1].Cells[6].Value = item.car_Model;
-                    GView.Rows[GView.Rows.Count - 1].Cells[7].Value = item.car_Name;
-                    GView.Rows[GView.Rows.Count - 1].Cells[8].Value = item.document_endDate.Value.ToShortDateString();
-                    GView.Rows[GView.Rows.Count - 1].Cells[9].Value = item.document_endDate.Value.Subtract(DateTime.Now).Days;
-                    GView.Rows[GView.Rows.Count - 1].Cells[10].Value = getDocumentTransaction(item.documentID);
+                                  c1.document_endDate,
 
-                    GView.Rows[GView.Rows.Count - 1].Cells[11].Value = item.documentTrans_Amount.Value.ToString();
-                    GView.Rows[GView.Rows.Count - 1].Cells[13].Value = item.documentTransTaskID.ToString();
-                    //if (isHasRemarks(item.companyLicencesID))
-                    //{
-                    //    GView.CurrentView.CurrentRow.DrawFill = true;
-                    //    GView.CurrentView.CurrentRow.BackColor = Color.Red;
-                    //    GView.Rows[GView.Rows.Count - 1].Cells["gvRemarks"].Value = "ملاحظة";
-                    //}
+                                  c2.emp_namefullar,
+                                  c2.emp_No,
 
-                    //if (isHasRental(item.companyLicencesID))
-                    //{
-                    //    GView.CurrentView.CurrentRow.DrawFill = true;
-                    //    GView.CurrentView.CurrentRow.BackColor = Color.Cyan;
-                    //    GView.Rows[GView.Rows.Count - 1].Cells["gvRemarks"].Value += "  ايجار";
-
-                    //}
+                                  c6.commercialName,
+                                  noOfDays = (c4.documentDef_WarningDays ?? 0),
+                                  cc1.documentTrans_Amount,
+                                  cc1.documentTransID
+                              };
+                    //BindingSource bs = new BindingSource();
+                    //bs.Add(val.ToList().Where(p => p.document_endDate <= DateTime.Now.AddDays(p.noOfDays)));
+                    var val1 = val.ToList();
+                    //GView1.DataSource = val1.ToList();
+                    return DocumentListLookup.Create(db, val1, item => item.documentID, item => item.companyLicencesID, false);
                 }
-            }
+            }, loaded =>
+            {
+                GView.BeginUpdate();
+                try
+                {
+                    foreach (var item in loaded.Rows)
+                    {
+                        GView.Rows.AddNew();
+                        GView.Rows[GView.Rows.Count - 1].Cells[0].Value = item.documentTypeDefID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[1].Value = item.documentDefID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[2].Value = item.companyLicencesID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[3].Value = item.documentID;
+                        //GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.employeeID;
 
+                        GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.documentDef_Name;
+                        GView.Rows[GView.Rows.Count - 1].Cells[5].Value = item.emp_No;
+                        GView.Rows[GView.Rows.Count - 1].Cells[6].Value = item.emp_namefullar;
+                        GView.Rows[GView.Rows.Count - 1].Cells[7].Value = item.commercialName;
+                        GView.Rows[GView.Rows.Count - 1].Cells[8].Value = item.document_endDate.HasValue ? item.document_endDate.Value.ToShortDateString() : string.Empty;
+                        GView.Rows[GView.Rows.Count - 1].Cells[9].Value = item.document_endDate.HasValue ? (object)item.document_endDate.Value.Subtract(DateTime.Now).Days : null;
+                        GView.Rows[GView.Rows.Count - 1].Cells[10].Value = loaded.Lookup.Transactions(item.documentID);
+                        GView.Rows[GView.Rows.Count - 1].Cells[11].Value = item.documentTrans_Amount.ToString();
+                        GView.Rows[GView.Rows.Count - 1].Cells[13].Value = item.documentTransTaskID.ToString();
+                        if (loaded.Lookup.HasRemarks(item.companyLicencesID))
+                        {
+                            GView.Rows[GView.Rows.Count - 1].Tag = true;
+                            //GView.CurrentView.CurrentRow.BackColor = Color.Red;
 
+                        }
+                        if (loaded.Lookup.HasRental(item.companyLicencesID))
+                        {
+                            GView.Rows[GView.Rows.Count - 1].Tag = true;
+                            //GView.CurrentView.CurrentRow.BackColor = Color.Cyan;
+
+                        }
+                    }
+                }
+                finally { GView.EndUpdate(); }
+            }, background);
         }
 
 
-        private string getDocumentTransaction(int docID)
+
+        private async System.Threading.Tasks.Task getData2Async(bool background = true)
         {
-            string temp = "";
-
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+            await BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
             {
-                var val = (from c in db.DocumentTransactionTasks
-                           join c1 in db.DocumentTransactions on c.documentTransID equals c1.documentTransID
-                           join c2 in db.TransactionDefs on c1.transDefID equals c2.transDefID
-                           where c.documentID == docID
-                           select new
-                           {
-                               c2.transDef_namea
-                           }).ToList();
-
-                foreach (var item in val)
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    temp +="-"+ item.transDef_namea ;
-                }
-            }
+                    var val = from c3 in db.DocumentTypeDefinitions
+                              join c4 in db.DocumentDefs
+                              on c3.documentTypeDefID equals c4.documentTypeDefID
+                              join c1 in db.Documents
+                              on c4.documentDefID equals c1.documentDefID
+                              join c6 in db.Cars
+                              on c1.document_TypeID equals c6.carID
+                              join cc in db.DocumentTransactionTasks on c1.documentID equals cc.documentID
+                              join cc1 in db.DocumentTransactions on cc.documentTransID equals cc1.documentTransID
+                              where c3.documentType_Code == "04" &&
+                              c1.document_endDate != null &&
+                              cc.documentTransTask_Approved == true &&
+                              cc.documentTransTask_isPaid == false &&
+                              cc.documentTransTask_isClose == false
+                              orderby c1.document_endDate
+                              select new
+                              {
+                                  c3.documentTypeDefID,
+                                  c4.documentDefID,
+                                  c6.carID,
+                                  c1.documentID,
+                                  //c2.employeeID,
+                                  c3.documentType_Name,
+                                  c4.documentDef_Name,
+                                  c1.document_endDate,
+                                  c6.car_No,
+                                  c6.car_Name,
 
-            return temp;
+                                  c6.car_Model,
+                                  noOfDays = (c4.documentDef_WarningDays ?? 0),
+                                  cc.documentTransTaskID,
+                                  cc1.documentTrans_Amount,
+                                  cc1.documentTransID
+                              };
+
+                    DateTime now = DateTime.Now;
+                    var val1 = val.Where(p => p.document_endDate <= System.Data.Objects.EntityFunctions.AddDays(now, p.noOfDays)).ToList();
+                    return DocumentListLookup.Create(db, val1, item => item.documentID, null, false);
+                }
+            }, loaded =>
+            {
+                GView.BeginUpdate();
+                try
+                {
+                    foreach (var item in loaded.Rows)
+                    {
+                        GView.Rows.AddNew();
+                        GView.Rows[GView.Rows.Count - 1].Cells[0].Value = item.documentTypeDefID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[1].Value = item.documentDefID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[2].Value = item.carID;
+                        GView.Rows[GView.Rows.Count - 1].Cells[3].Value = item.documentID;
+                        //GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.employeeID;
+
+                        GView.Rows[GView.Rows.Count - 1].Cells[4].Value = item.documentDef_Name;
+                        GView.Rows[GView.Rows.Count - 1].Cells[5].Value = item.car_No;
+                        GView.Rows[GView.Rows.Count - 1].Cells[6].Value = item.car_Model;
+                        GView.Rows[GView.Rows.Count - 1].Cells[7].Value = item.car_Name;
+                        GView.Rows[GView.Rows.Count - 1].Cells[8].Value = item.document_endDate.HasValue ? item.document_endDate.Value.ToShortDateString() : string.Empty;
+                        GView.Rows[GView.Rows.Count - 1].Cells[9].Value = item.document_endDate.HasValue ? (object)item.document_endDate.Value.Subtract(DateTime.Now).Days : null;
+                        GView.Rows[GView.Rows.Count - 1].Cells[10].Value = loaded.Lookup.Transactions(item.documentID);
+
+                        GView.Rows[GView.Rows.Count - 1].Cells[11].Value = item.documentTrans_Amount.ToString();
+                        GView.Rows[GView.Rows.Count - 1].Cells[13].Value = item.documentTransTaskID.ToString();
+                        //if (loaded.Lookup.HasRemarks(item.companyLicencesID))
+                        //{
+                        //    GView.Rows[GView.Rows.Count - 1].Tag = true;
+                        //    GView.CurrentView.CurrentRow.BackColor = Color.Red;
+                        //    GView.Rows[GView.Rows.Count - 1].Cells["gvRemarks"].Value = "ملاحظة";
+                        //}
+
+                        //if (loaded.Lookup.HasRental(item.companyLicencesID))
+                        //{
+                        //    GView.Rows[GView.Rows.Count - 1].Tag = true;
+                        //    GView.CurrentView.CurrentRow.BackColor = Color.Cyan;
+                        //    GView.Rows[GView.Rows.Count - 1].Cells["gvRemarks"].Value += "  ايجار";
+
+                        //}
+                    }
+                }
+                finally { GView.EndUpdate(); }
+            }, background);
         }
 
-        private bool isHasRemarks(int lID)
-        {
-            bool temp = false;
 
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-            {
-                var val = (from c in db.CompanyLicencesRemarks
-                           where c.companyLicencesID == lID &&
-                           c.comLicenseRem_isActive == true
-                           select c).ToList();
-                if (val.Count > 0)
-                {
-                    return true;
-                }
-            }
 
-            return temp;
-        }
+
+
 
         private void GView_MouseDown(object sender, MouseEventArgs e)
         {
@@ -453,7 +434,7 @@ namespace BarakalAlkheir.Docs
             
         }
 
-        private void GView_Click(object sender, EventArgs e)
+        private async void GView_Click(object sender, EventArgs e)
         {
             try
             {
@@ -470,7 +451,8 @@ namespace BarakalAlkheir.Docs
                         frm.isAlreadyApproved = true;
                         frm.ShowDialog();
                         GView.Rows.Clear();
-                        frmEmployeeExpiryDocuments_Load(sender, e);
+
+                    await BarakalAlkheir.components.FormLoading.RunAsync(this, () => frmEmployeeExpiryDocuments_LoadData(sender, e));
                     }
                 }
             }

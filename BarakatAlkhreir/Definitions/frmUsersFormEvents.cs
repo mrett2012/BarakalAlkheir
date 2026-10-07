@@ -27,10 +27,15 @@ namespace BarakalAlkheir.Definitions
 
         private void frmUsersFormEvents_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmUsersFormEvents_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmUsersFormEvents_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);            
@@ -53,7 +58,7 @@ namespace BarakalAlkheir.Definitions
                 gview.Columns[1].ReadOnly = true;
 
                 disableControls();
-                PublicClass.bindUserGroup(cmbuserGroupID);
+                await PublicClass.bindUserGroupAsync(cmbuserGroupID);
                 cmbuserGroupID.SelectedIndex = 0;
 
                 loadScreens();
@@ -67,6 +72,7 @@ namespace BarakalAlkheir.Definitions
                 //bindData();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

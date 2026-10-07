@@ -34,10 +34,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocuments_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocuments_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocuments_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -53,10 +58,10 @@ namespace BarakalAlkheir.Docs
 
                 disableControls();
 
-                PublicClass.bindNationality(cmbdocument_placeOfIssue);
-                PublicClass.bindDocumentDef(cmbdocumentDefID, documentTypeDefID);
+                await PublicClass.bindNationalityAsync(cmbdocument_placeOfIssue);
+                await PublicClass.bindDocumentDefAsync(cmbdocumentDefID, documentTypeDefID);
 
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 
                 Document lst = lstDocument.Find(c => c.documentID == documentID);
                 if(lst != null)
@@ -66,6 +71,7 @@ namespace BarakalAlkheir.Docs
                 timer1.Start();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

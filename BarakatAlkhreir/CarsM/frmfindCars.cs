@@ -37,11 +37,17 @@ namespace BarakalAlkheir.CarsM
 
         private void frmfindLicences_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmfindLicences_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmfindLicences_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

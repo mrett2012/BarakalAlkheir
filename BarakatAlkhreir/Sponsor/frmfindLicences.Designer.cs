@@ -169,7 +169,8 @@
             gridViewTextBoxColumn23.ReadOnly = true;
             gridViewTextBoxColumn23.Width = 120;
             gridViewTextBoxColumn24.FieldName = "endDate";
-            gridViewTextBoxColumn24.FormatString = "{0:d}";
+            gridViewTextBoxColumn24.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn24.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn24.HeaderText = "تاريخ الانتهاء";
             gridViewTextBoxColumn24.Name = "gvendDate";
             gridViewTextBoxColumn24.ReadOnly = true;

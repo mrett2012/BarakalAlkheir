@@ -27,10 +27,15 @@ namespace BarakalAlkheir.Definitions
 
         private void frmUsers_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmUsers_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmUsers_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -45,12 +50,13 @@ namespace BarakalAlkheir.Definitions
                 mainbar.btnExit.Click += new EventHandler(btnExit_Click);
 
                 disableControls();
-                PublicClass.bindUserGroup(cmbuserGroupID);
+                await PublicClass.bindUserGroupAsync(cmbuserGroupID);
 
-                getData();
+                await getDataAsync();
                 bindData();
                 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -278,6 +284,20 @@ namespace BarakalAlkheir.Definitions
             GView.Enabled = false;
         }
 
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+                {
+                    return (from c in db.Users  select c).ToList();
+                }
+            }, rows =>
+            {
+                lstUser = rows;
+                GView.DataSource = lstUser;
+            });
+        }
         private void getData()
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())

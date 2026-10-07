@@ -78,8 +78,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = item.rentLicenseNo;
                         dr["six"] = item.customer_Name;
-                        dr["seven"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["eight"] = item.rentLicense_to.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"]="";
 
@@ -164,8 +164,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = "";
                         dr["six"] = "";
-                        dr["seven"] = item.startDate.Value.ToShortDateString();
-                        dr["eight"] = item.endDate.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.startDate.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.endDate.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = "";
 
@@ -228,8 +228,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = "";
                         dr["six"] = "";
-                        dr["seven"] = item.startDate.Value.ToShortDateString();
-                        dr["eight"] = item.endDate.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.startDate.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.endDate.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = "";
 
@@ -269,7 +269,7 @@ namespace BarakalAlkheir.Lic
                     int year = DateTime.Now.Year;
                     int day = DateTime.DaysInMonth(year,month);
 
-                    DateTime lastDay = DateTime.Parse(day + "/" + month + "/" + year);
+                    DateTime lastDay = new DateTime(year, month, day);
 
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
@@ -303,8 +303,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = item.rentLicenseNo;
                         dr["six"] = item.customer_Name;
-                        dr["seven"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["eight"] = item.rentLicense_to.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = "";
 
@@ -341,11 +341,11 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    int month = DateTime.Parse(txtDate.Text).Month;
-                    int year = DateTime.Parse(txtDate.Text).Year;
+                    int month = txtDate.Value.Date.Month;
+                    int year = txtDate.Value.Date.Year;
                     int day = DateTime.DaysInMonth(year, month);
 
-                    DateTime lastDay = DateTime.Parse(day + "/" + month + "/" + year);
+                    DateTime lastDay = new DateTime(year, month, day);
 
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
@@ -381,8 +381,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = item.rentLicenseNo;
                         dr["six"] = item.customer_Name;
-                        dr["seven"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["eight"] = item.rentLicense_to.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = "";
 
@@ -411,7 +411,12 @@ namespace BarakalAlkheir.Lic
 
         private void frmLicenseMainPage_Load(object sender, EventArgs e)
         {
-            txtDate.Text = DateTime.Now.ToString();
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmLicenseMainPage_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmLicenseMainPage_LoadData(object sender, EventArgs e)
+        {
+            txtDate.Value = DateTime.Today;
 
             cmbGovernorate.Enabled = false;
             cmbGovernorateArea.Enabled = false;
@@ -420,16 +425,16 @@ namespace BarakalAlkheir.Lic
             cmbMandoub.Enabled = false;
             PanelChooseStatus.Enabled = false;
             btnFindCustomer1.Enabled = false;
-            PublicClass.bindGovernorate(cmbGovernorate);
-            PublicClass.bindMandoub(cmbMandoub);
-            PublicClass.bindLicenseActivity(cmbLicenseActivity);
+            await PublicClass.bindGovernorateAsync(cmbGovernorate);
+            await PublicClass.bindMandoubAsync(cmbMandoub);
+            await PublicClass.bindLicenseActivityAsync(cmbLicenseActivity);
             cmbMandoub.SelectedIndex = 0;
             cmbGovernorate.SelectedIndex = 0;
             cmbLicenseActivity.SelectedIndex = 0;
 
             if (!MainClass.isSuperUser)
             {
-                if (MainFile.isDeleteSecurity("تقارير الرخص التجارية"))
+                if ((await BarakalAlkheir.components.FormLoading.ReadAsync(this, () => MainFile.isDeleteSecurity("تقارير الرخص التجارية"))))
                 {
                     
                 }
@@ -450,21 +455,19 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    int month = DateTime.Parse(txtDate.Text).Month;
-                    int year = DateTime.Parse(txtDate.Text).Year;
+                    int month = txtDate.Value.Date.Month;
+                    int year = txtDate.Value.Date.Year;
                     int day = DateTime.DaysInMonth(year, month);
 
-                    DateTime firstDay = DateTime.Parse(MainClass.StartRentDay + "/" + month + "/" + year);
-                    DateTime lastDay = firstDay.AddMonths(-1).AddDays(1);
+                    DateTime firstDay = LicenseRentalRules.PeriodEndExclusive(txtDate.Value);
+                    DateTime lastDay = LicenseRentalRules.PeriodStart(txtDate.Value);
 
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
                                 on c.companyLicencesID equals d.companyLicencesID
-                               join ee in db.RentLicensesDetails on d.rentLicenseID equals ee.rentLicenseID
-                               join eee in db.RentLicensesPayments on ee.rentLicencesDetailsID equals eee.rentLicencesDetailsID
-                               where ee.rd_fromDate >= lastDay
-                                && ee.rd_fromDate <= firstDay
-                                && ee.rd_isPaid == true
+                               join eee in db.RentLicensesPayments on d.rentLicenseID equals eee.rentLicenseID
+                               where eee.rentLicPay_ForDate >= new DateTime(year, month, 1)
+                                && eee.rentLicPay_ForDate < new DateTime(year, month, 1).AddMonths(1)
                                select new
                                {
                                    rentLicPay_VouNo = eee.rentLicPay_VouNo,
@@ -475,7 +478,7 @@ namespace BarakalAlkheir.Lic
                                    customer_Name = d.Customer.customer_Name,
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
-                                   rd_amount = ee.rd_amount.Value,
+                                   rd_amount = eee.rentLicPay_Amount ?? 0,
                                    Mohafaza = c.Mohafaza ,
                                    
                                    
@@ -494,8 +497,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = item.rentLicenseNo;
                         dr["six"] = item.customer_Name;
-                        dr["seven"] = item.rentLicense_from.Value.ToShortDateString();
-                        dr["eight"] = item.rentLicense_to.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.rentLicense_from.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = item.rd_amount;
 
@@ -511,7 +514,7 @@ namespace BarakalAlkheir.Lic
                     frmHumanResouceReportViewer rv = new frmHumanResouceReportViewer();
                     rv.printReport = "rentLicence";
                     rv.ds = ds;
-                    rv.title = "ايجار الرخص المنتهية خلال شهر : " + txtDate.Text;
+                    rv.title = "الإيجار المحصل لشهر : " + txtDate.Text;
                     rv.ShowDialog();
                 }
             }
@@ -531,12 +534,12 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    int month = DateTime.Parse(txtDate.Text).Month;
-                    int year = DateTime.Parse(txtDate.Text).Year;
+                    int month = txtDate.Value.Date.Month;
+                    int year = txtDate.Value.Date.Year;
                     int day = DateTime.DaysInMonth(year, month);
 
-                    DateTime firstDay = DateTime.Parse(MainClass.StartRentDay + "/" + month + "/" + year);
-                    DateTime lastDay = firstDay.AddMonths(-1).AddDays(1);
+                    DateTime firstDay = LicenseRentalRules.PeriodEndExclusive(txtDate.Value);
+                    DateTime lastDay = LicenseRentalRules.PeriodStart(txtDate.Value);
 
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
@@ -544,8 +547,8 @@ namespace BarakalAlkheir.Lic
                                join ee in db.RentLicensesDetails
                                on d.rentLicenseID equals ee.rentLicenseID
                                where ee.rd_fromDate >= lastDay
-                                && ee.rd_fromDate <= firstDay
-                                && ee.rd_isPaid == false                              
+                                && ee.rd_fromDate < firstDay
+
                                select new
                                {
                                    الرمز = c.companyLicencesID,
@@ -556,11 +559,16 @@ namespace BarakalAlkheir.Lic
                                    العميل = d.Customer.customer_Name,
                                    من = d.rentLicense_from,
                                    الى = d.rentLicense_to,
-                                   المبلغ = ee.rd_amount.Value
+                                   DetailId = ee.rentLicencesDetailsID,
+                                   المبلغ = ee.rd_amount ?? 0
 
                                }).ToList();
 
-                    Gview.DataSource = val;
+                    var paidTotals = LicenseRentalReports.PaidByInstalment(db);
+                    Gview.DataSource = val.Where(c => LicenseRentalRules.Amount(c.المبلغ) > LicenseRentalReports.Paid(paidTotals, c.DetailId)).Select(c => new {
+                        c.الرمز, c.كود_الربط, c.رقم_الرخصة, c.الاسم_التجاري, c.رقم_الايجار, c.العميل, c.من, c.الى,
+                        المبلغ = LicenseRentalRules.Amount(c.المبلغ) - LicenseRentalReports.Paid(paidTotals, c.DetailId)
+                    }).ToList();
 
                 }
             }
@@ -573,11 +581,11 @@ namespace BarakalAlkheir.Lic
             //{
             //    using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
             //    {
-            //        int month = DateTime.Parse(txtDate.Text).Month;
-            //        int year = DateTime.Parse(txtDate.Text).Year;
+            //        int month = txtDate.Value.Date.Month;
+            //        int year = txtDate.Value.Date.Year;
             //        int day = DateTime.DaysInMonth(year, month);
 
-            //        DateTime firstDay = DateTime.Parse("10/" + month + "/" + year);
+            //        DateTime firstDay = new DateTime(year, month, 10);
             //        DateTime lastDay = firstDay.AddMonths(1).AddDays(-1);
 
             //        var val = (from c in db.CompanyLicences
@@ -665,8 +673,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] ="";
                         dr["six"] = item.licenseUniqueNo;
-                        dr["seven"] = item.startDate.Value.ToShortDateString();
-                        dr["eight"] = item.endDate.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.startDate.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.endDate.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = "";
 
@@ -733,8 +741,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = item.noOfSeatsFree;
                         dr["six"] = item.noOfSeatsUsed;
-                        dr["seven"] = item.startDate.Value.ToShortDateString();
-                        dr["eight"] = item.endDate.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.startDate.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.endDate.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = item.licenseUniqueNo;
                         dt.Rows.Add(dr);
@@ -992,8 +1000,8 @@ namespace BarakalAlkheir.Lic
                         }
 
                         dr["six"] = item.licenseUniqueNo;
-                        dr["seven"] = item.startDate.Value.ToShortDateString();
-                        dr["eight"] = item.endDate.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.startDate.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.endDate.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = item.Mantaqa;
 
@@ -1101,8 +1109,8 @@ namespace BarakalAlkheir.Lic
                         dr["four"] = item.commercialName;
                         dr["five"] = item.noOfSeatsFree;
                         dr["six"] = item.noOfSeatsUsed;
-                        dr["seven"] = item.startDate.Value.ToShortDateString();
-                        dr["eight"] = item.endDate.Value.ToShortDateString();
+                        dr["seven"] = LicenseRentalRules.FormatDate(item.startDate.Value);
+                        dr["eight"] = LicenseRentalRules.FormatDate(item.endDate.Value);
                         dr["nine"] = item.Mohafaza;
                         dr["ten"] = item.licenseUniqueNo;
 

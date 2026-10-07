@@ -25,11 +25,17 @@ namespace BarakalAlkheir.Definitions
 
         private void frmFindCustomers_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmFindCustomers_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmFindCustomers_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

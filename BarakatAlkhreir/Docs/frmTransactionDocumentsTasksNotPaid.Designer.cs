@@ -115,7 +115,8 @@
             gridViewTextBoxColumn8.ReadOnly = true;
             gridViewTextBoxColumn8.Width = 300;
             gridViewTextBoxColumn9.FieldName = "document_endDate";
-            gridViewTextBoxColumn9.FormatString = "{0:dd/MM/yyyy}";
+            gridViewTextBoxColumn9.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn9.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn9.HeaderText = "تاريخ الانتهاء";
             gridViewTextBoxColumn9.Name = "gvdocument_endDate";
             gridViewTextBoxColumn9.ReadOnly = true;

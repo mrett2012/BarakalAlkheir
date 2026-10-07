@@ -32,10 +32,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocumentTransactionSteps_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocumentTransactionSteps_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocumentTransactionSteps_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -57,10 +62,11 @@ namespace BarakalAlkheir.Docs
 
                 disableControls();
 
-                getData();
+                await getDataAsync();
                 bindData();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -293,6 +299,21 @@ namespace BarakalAlkheir.Docs
             txtdocumentTransSetp_pCode.ReadOnly = false;
             GView.ReadOnly = true;
             GView.Enabled = false;
+        }
+
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (var db = new BarakeitAlkheirEntities()) { return (from c in db.DocumentTransactionSteps where c.documentTransID == _documentTransID select c).ToList(); }
+            }, rows =>
+            {
+                lstDocumentTransactionStep = rows;
+
+                GView.DataSource = lstDocumentTransactionStep;
+                //lstDocumentTransactionStepStep[0].TransactionDef.transDef_namea
+
+            });
         }
 
         private void getData()

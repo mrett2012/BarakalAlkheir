@@ -34,10 +34,15 @@ namespace BarakalAlkheir.CarsM
 
         private void frmRentLicensePayment_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmRentLicensePayment_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmRentLicensePayment_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -52,13 +57,14 @@ namespace BarakalAlkheir.CarsM
                 mainbar.btnExit.Click += new EventHandler(btnExit_Click);
 
                 disableControls();
-                PublicClass.bindMandoub(cmbMandoub);
-                getTotalRow();
-                getData();
+                await PublicClass.bindMandoubAsync(cmbMandoub);
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getTotalRow);
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
 
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -75,8 +81,8 @@ namespace BarakalAlkheir.CarsM
 
                 txtrentLicPay_VouNo.Text = "";
                 txtrentLicPay_Amount.Text = "";
-                txtrentLicPay_PaymentDate.Text = DateTime.Now.ToShortDateString();
-                txtrentLicPay_ForDate.Text = DateTime.Now.ToShortDateString();
+                txtrentLicPay_PaymentDate.Value = DateTime.Today;
+                txtrentLicPay_ForDate.Value = DateTime.Today;
                 cmbMandoub.SelectedIndex = 0;
 
                 txtlicenseNo.Text = "";
@@ -203,10 +209,8 @@ namespace BarakalAlkheir.CarsM
 
                                 bb.carCustomerPayment_VoucherNo = txtrentLicPay_VouNo.Text;
                                 bb.carCustomerPayment_amount = float.Parse(txtrentLicPay_Amount.Text);
-                                bb.carCustomerPayment_PaymentDate = DateTime.Parse(txtrentLicPay_PaymentDate.Text);
-                                bb.carCustomerPayment_ForDate = DateTime.Parse("15/" +
-                                    DateTime.Parse(txtrentLicPay_ForDate.Text).Month + "/" +
-                                    +DateTime.Parse(txtrentLicPay_ForDate.Text).Year);
+                                bb.carCustomerPayment_PaymentDate = txtrentLicPay_PaymentDate.Value.Date;
+                                bb.carCustomerPayment_ForDate = new DateTime(txtrentLicPay_ForDate.Value.Year, txtrentLicPay_ForDate.Value.Month, 15);
                                 bb.carCustomerPayment_mandoubID = int.Parse(cmbMandoub.SelectedValue.ToString());
 
 
@@ -260,10 +264,8 @@ namespace BarakalAlkheir.CarsM
 
                                 bb.carCustomerPayment_VoucherNo = txtrentLicPay_VouNo.Text;
                                 bb.carCustomerPayment_amount = float.Parse(txtrentLicPay_Amount.Text);
-                                bb.carCustomerPayment_PaymentDate = DateTime.Parse(txtrentLicPay_PaymentDate.Text);
-                                bb.carCustomerPayment_ForDate = DateTime.Parse("15/" +
-                                    DateTime.Parse(txtrentLicPay_ForDate.Text).Month + "/" +
-                                    +DateTime.Parse(txtrentLicPay_ForDate.Text).Year);
+                                bb.carCustomerPayment_PaymentDate = txtrentLicPay_PaymentDate.Value.Date;
+                                bb.carCustomerPayment_ForDate = new DateTime(txtrentLicPay_ForDate.Value.Year, txtrentLicPay_ForDate.Value.Month, 15);
                                 bb.carCustomerPayment_mandoubID = int.Parse(cmbMandoub.SelectedValue.ToString());
 
                                 bb.edited_Date = DateTime.Now;
@@ -480,8 +482,8 @@ namespace BarakalAlkheir.CarsM
                 txtrentLicPay_VouNo.Text = lstCarCustomerRentPayment[0].carCustomerPayment_VoucherNo;
                 txtrentLicPay_Amount.Text = lstCarCustomerRentPayment[0].carCustomerPayment_amount.Value.ToString();
                 
-                txtrentLicPay_ForDate.Text = lstCarCustomerRentPayment[0].carCustomerPayment_ForDate.Value.ToShortDateString();
-                txtrentLicPay_PaymentDate.Text = lstCarCustomerRentPayment[0].carCustomerPayment_PaymentDate.Value.ToShortDateString();
+                txtrentLicPay_ForDate.Value = lstCarCustomerRentPayment[0].carCustomerPayment_ForDate.Value.Date;
+                txtrentLicPay_PaymentDate.Value = lstCarCustomerRentPayment[0].carCustomerPayment_PaymentDate.Value.Date;
 
                 for (int i = 0; i < cmbMandoub.Items.Count; i++)
                 {
@@ -504,8 +506,8 @@ namespace BarakalAlkheir.CarsM
                 txtrentLicPay_VouNo.Text = "";
                 txtrentLicPay_Amount.Text = "0";
                 cmbMandoub.SelectedIndex = 0;
-                txtrentLicPay_ForDate.Text = DateTime.Now.ToShortDateString();
-                txtrentLicPay_PaymentDate.Text = DateTime.Now.ToShortDateString();
+                txtrentLicPay_ForDate.Value = DateTime.Today;
+                txtrentLicPay_PaymentDate.Value = DateTime.Today;
 
                 txtlicenseNo.Text = "";
                 txtrentLicenseNo.Text = "";
@@ -596,11 +598,11 @@ namespace BarakalAlkheir.CarsM
 
                         if (vv.rd_fromDate.Value.Day > MainClass.StartRentDay)
                         {
-                            txtrentLicPay_ForDate.Text = vv.rd_fromDate.Value.AddMonths(1).ToShortDateString();
+                            txtrentLicPay_ForDate.Value = vv.rd_fromDate.Value.AddMonths(1).Date;
                         }
                         else
                         {
-                            txtrentLicPay_ForDate.Text = vv.rd_fromDate.Value.ToShortDateString();
+                            txtrentLicPay_ForDate.Value = vv.rd_fromDate.Value.Date;
                         }
                         _rentCarDetailsID = vv.carCustomerRentDetailsID;
                         break;

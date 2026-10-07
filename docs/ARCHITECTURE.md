@@ -2,6 +2,10 @@
 
 Source and local build inspection: 2026-09-16. This describes the supplied workspace, not a verified production deployment. No application login, database query/restore, report rendering, or Excel export was performed.
 
+## Telerik upgrade (2026-10-07)
+
+The current project targets .NET Framework 4.8/x86 and Telerik UI for WinForms 2026 Q3 (2026.3.812.48). Telerik.Licensing 1.9.1 is restored through packages.config. Use Visual Studio MSBuild and the installed Bin48 assemblies. See [TELERIK-UPGRADE.md](TELERIK-UPGRADE.md) for current build instructions and verification. The initialization findings below describe the earlier 2011/.NET 4.0 baseline.
+
 ## System shape
 
 One C# Windows Forms executable provides Arabic-oriented business administration for employees, company licences and sponsorships, licence/shop rentals, cars, document transactions, and payments. There is no separate service, repository layer, web frontend, or API project in this solution. Form event handlers query and modify SQL Server directly through framework Entity Framework.

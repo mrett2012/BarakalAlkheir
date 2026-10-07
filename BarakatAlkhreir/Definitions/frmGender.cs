@@ -27,10 +27,15 @@ namespace BarakalAlkheir.Definitions
 
         private void frmGenders_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmGenders_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmGenders_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -46,10 +51,11 @@ namespace BarakalAlkheir.Definitions
 
                 disableControls();
 
-                getData();
+                await getDataAsync();
                 bindData();
                 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -250,6 +256,20 @@ namespace BarakalAlkheir.Definitions
             GView.Enabled = false;
         }
 
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+                {
+                    return (from c in db.Genders  select c).ToList();
+                }
+            }, rows =>
+            {
+                lstGender = rows;
+                GView.DataSource = lstGender;
+            });
+        }
         private void getData()
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())

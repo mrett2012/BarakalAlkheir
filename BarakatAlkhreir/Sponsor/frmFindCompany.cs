@@ -27,12 +27,18 @@ namespace BarakalAlkheir.Sponsor
 
         private void frmFindCompany_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmFindCompany_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmFindCompany_LoadData(object sender, EventArgs e)
+        {
             try
             {
           
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

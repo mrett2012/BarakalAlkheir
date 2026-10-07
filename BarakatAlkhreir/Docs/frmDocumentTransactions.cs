@@ -27,10 +27,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocumentTransaction_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocumentTransaction_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocumentTransaction_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -46,19 +51,20 @@ namespace BarakalAlkheir.Docs
 
                 mainbar.btnFind.Visible = false;
 
-                PublicClass.bindDocumentDef(cmbdocumentDefID);
+                await PublicClass.bindDocumentDefAsync(cmbdocumentDefID);
                 cmbdocumentDefID.SelectedIndex = 0;
 
-                PublicClass.bindTransactionDef(cmbtransDefID);
+                await PublicClass.bindTransactionDefAsync(cmbtransDefID);
                 cmbtransDefID.SelectedIndex = 0;
 
 
                 disableControls();
 
-                getData();
+                await getDataAsync();
                 bindData();
                 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -299,6 +305,21 @@ namespace BarakalAlkheir.Docs
 
             GView.ReadOnly = true;
             GView.Enabled = false;
+        }
+
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (var db = new BarakeitAlkheirEntities()) { return (from c in db.DocumentTransactions.Include("DocumentDef").Include("TransactionDef") select c).ToList(); }
+            }, rows =>
+            {
+                lstDocumentTransaction = rows;
+
+                GView.DataSource = lstDocumentTransaction;
+                //lstDocumentTransaction[0].TransactionDef.transDef_namea
+
+            });
         }
 
         private void getData()

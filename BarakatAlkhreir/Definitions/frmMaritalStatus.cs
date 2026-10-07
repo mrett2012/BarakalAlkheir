@@ -27,10 +27,15 @@ namespace BarakalAlkheir.Definitions
 
         private void frmMaritalStatus_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmMaritalStatus_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmMaritalStatus_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -46,10 +51,11 @@ namespace BarakalAlkheir.Definitions
 
                 disableControls();
 
-                getData();
+                await getDataAsync();
                 bindData();
                 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -253,6 +259,20 @@ namespace BarakalAlkheir.Definitions
         }
 
 
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+                {
+                    return (from c in db.MaritalStatus select c).ToList();
+                }
+            }, rows =>
+            {
+                lstMaritalStatu = rows;
+                GView.DataSource = lstMaritalStatu;
+            });
+        }
         private void getData()
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())

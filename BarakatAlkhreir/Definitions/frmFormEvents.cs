@@ -25,10 +25,15 @@ namespace BarakalAlkheir.Definitions
 
         private void frmFormEvents_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmFormEvents_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmFormEvents_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Visible = false;
                 mainbar.btnDelete.Visible = false;
@@ -55,6 +60,7 @@ namespace BarakalAlkheir.Definitions
                     lstData.SetSelected(0, true);
                 }
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

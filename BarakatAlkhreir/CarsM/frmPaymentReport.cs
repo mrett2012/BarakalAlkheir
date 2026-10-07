@@ -223,10 +223,15 @@ namespace BarakalAlkheir.CarsM
 
         private void frmPaymentReport_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmPaymentReport_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmPaymentReport_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                //PublicClass.bindGovernorate(cmbGovernorate);
-                PublicClass.bindMandoub(cmbMandoub);
+                //await PublicClass.bindGovernorateAsync(cmbGovernorate);
+                await PublicClass.bindMandoubAsync(cmbMandoub);
                 cmbMandoub.SelectedIndex = 0;
                 //cmbGovernorate.SelectedIndex = 0;
                 txtDate1.Text = DateTime.Now.ToShortDateString();
@@ -236,6 +241,7 @@ namespace BarakalAlkheir.CarsM
                 this.txtdateto.Text = DateTime.Now.ToShortDateString();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

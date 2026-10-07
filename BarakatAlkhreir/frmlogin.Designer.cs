@@ -94,10 +94,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmlogin";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            // 
-            // 
-            // 
-            this.RootElement.ApplyShapeToControl = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "تسجيل الدخول";
             this.ThemeName = "ControlDefault";

@@ -27,6 +27,11 @@ namespace BarakalAlkheir.CarsM
 
         private void frmfindLicences_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmfindLicences_LoadData);
+        }
+
+        private void frmfindLicences_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 getData(txtVoucherNo.Text, txtlicenseNo.Text, txtlicenseLinkCode.Text, txtcommercialName.Text);

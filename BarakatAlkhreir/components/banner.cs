@@ -14,6 +14,7 @@ namespace BarakalAlkheir.components
     public partial class banner : UserControl
     {
         string form_IDName = "";
+        private bool deferredSecurity;
 
         public banner(string _form_IDName)
         {
@@ -62,7 +63,7 @@ namespace BarakalAlkheir.components
 
         private void banner_Load(object sender, EventArgs e)
         {
-            if (!MainClass.isSuperUser)
+            if (!MainClass.isSuperUser && !deferredSecurity)
             {
                 DisableAllSecurity();
                 ApplySecurity(form_IDName);
@@ -96,11 +97,25 @@ namespace BarakalAlkheir.components
             btnPrevious.Visible = true;
         }
 
-        private void ApplySecurity(string _form_IDName)
+        public async System.Threading.Tasks.Task AddToAsync(Control parent)
+        {
+            deferredSecurity = true;
+            if (!MainClass.isSuperUser) DisableAllSecurity();
+            parent.Controls.Add(this);
+            if (!MainClass.isSuperUser)
+                await FormLoading.LoadAsync(parent.FindForm(), () => ReadSecurity(form_IDName), ApplySecurityEvents);
+        }
+
+        private void ApplySecurity(string screenName)
+        {
+            ApplySecurityEvents(ReadSecurity(screenName));
+        }
+
+        private static List<string> ReadSecurity(string _form_IDName)
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
             {
-                var val = (from c in db.FormScreans
+                return (from c in db.FormScreans
                            join d in db.FormEvents
                            on c.formID equals d.formID
                            join dd in db.EventsDefinitions
@@ -109,53 +124,50 @@ namespace BarakalAlkheir.components
                            on d.formEventID equals e.formEventID
                            where e.userGroupID == MainClass.userGroupID &&
                            c.form_IDName == _form_IDName
-                           select new
-                           {
-                               dd.event_Name
-                           }).ToList();
-                if (val.Count > 0)
-                {
-                    foreach (var item in val)
-                    {
-                        if (item.event_Name == "add")
-                        {
-                            btnAdd.Visible = true;
-                            btnSave.Visible = true;
-                            btnCancel.Visible = true;
-                            showNavigation();
-                        }
-                        else if (item.event_Name == "edit")
-                        {
-                            btnEdit.Visible = true;
-                            btnSave.Visible = true;
-                            btnCancel.Visible = true;
-                            showNavigation();
-                        }
-                        else if (item.event_Name == "delete")
-                        {
-                            this.btnDelete.Visible = true;
-                            btnFind.Visible = true;
-                            showNavigation();
-                        }
-                        else if (item.event_Name == "print")
-                        {
-                            this.btnPrint.Visible = true;
-                            btnFind.Visible = true;
-                            showNavigation();
-                        }
-                        else if (item.event_Name == "view")
-                        {
-                            // TODO: Check different Senario for Viewing
-                            btnFind.Visible = true;
-                            showNavigation();
-                        }
-                        else if (item.event_Name == "search")
-                        {
-                            this.btnFind.Visible = true;
-                            showNavigation();
-                        }
+                           select dd.event_Name).ToList();
+            }
+        }
 
-                    }
+        private void ApplySecurityEvents(List<string> events)
+        {
+            foreach (string eventName in events)
+            {
+                if (eventName == "add")
+                {
+                    btnAdd.Visible = true;
+                    btnSave.Visible = true;
+                    btnCancel.Visible = true;
+                    showNavigation();
+                }
+                else if (eventName == "edit")
+                {
+                    btnEdit.Visible = true;
+                    btnSave.Visible = true;
+                    btnCancel.Visible = true;
+                    showNavigation();
+                }
+                else if (eventName == "delete")
+                {
+                    this.btnDelete.Visible = true;
+                    btnFind.Visible = true;
+                    showNavigation();
+                }
+                else if (eventName == "print")
+                {
+                    this.btnPrint.Visible = true;
+                    btnFind.Visible = true;
+                    showNavigation();
+                }
+                else if (eventName == "view")
+                {
+                    // TODO: Check different Senario for Viewing
+                    btnFind.Visible = true;
+                    showNavigation();
+                }
+                else if (eventName == "search")
+                {
+                    this.btnFind.Visible = true;
+                    showNavigation();
                 }
 
             }

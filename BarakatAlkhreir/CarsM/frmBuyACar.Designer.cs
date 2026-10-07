@@ -268,7 +268,7 @@
             // 
             // txtTo1
             // 
-            this.txtTo1.CustomFormat = "dd/MM/yyyy";
+            this.txtTo1.CustomFormat = AppDateFormat.PickerFormat;
             this.txtTo1.Enabled = false;
             this.txtTo1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTo1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -279,7 +279,7 @@
             // 
             // txtcarSupplierRent_firstPaymentDate
             // 
-            this.txtcarSupplierRent_firstPaymentDate.CustomFormat = "dd/MM/yyyy";
+            this.txtcarSupplierRent_firstPaymentDate.CustomFormat = AppDateFormat.PickerFormat;
             this.txtcarSupplierRent_firstPaymentDate.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtcarSupplierRent_firstPaymentDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtcarSupplierRent_firstPaymentDate.Location = new System.Drawing.Point(292, 141);

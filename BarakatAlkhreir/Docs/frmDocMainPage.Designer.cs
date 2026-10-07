@@ -189,7 +189,8 @@
             // 
             // txtdateto
             // 
-            this.txtdateto.CustomFormat = "dd/MM/yyyy";
+            this.txtdateto.Culture = AppDateFormat.Culture;
+            this.txtdateto.CustomFormat = AppDateFormat.PickerFormat;
             this.txtdateto.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtdateto.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtdateto.Location = new System.Drawing.Point(32, 208);
@@ -206,7 +207,8 @@
             // 
             // txtdatefrom
             // 
-            this.txtdatefrom.CustomFormat = "dd/MM/yyyy";
+            this.txtdatefrom.Culture = AppDateFormat.Culture;
+            this.txtdatefrom.CustomFormat = AppDateFormat.PickerFormat;
             this.txtdatefrom.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtdatefrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtdatefrom.Location = new System.Drawing.Point(32, 182);
@@ -254,7 +256,8 @@
             // 
             // txtDate1
             // 
-            this.txtDate1.CustomFormat = "dd - MM - yyyy";
+            this.txtDate1.Culture = AppDateFormat.Culture;
+            this.txtDate1.CustomFormat = AppDateFormat.PickerFormat;
             this.txtDate1.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDate1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.txtDate1.Location = new System.Drawing.Point(78, 63);
@@ -390,7 +393,8 @@
             gridViewTextBoxColumn8.ReadOnly = true;
             gridViewTextBoxColumn8.Width = 300;
             gridViewTextBoxColumn9.FieldName = "document_endDate";
-            gridViewTextBoxColumn9.FormatString = "{0:dd/MM/yyyy}";
+            gridViewTextBoxColumn9.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn9.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn9.HeaderText = "تاريخ الانتهاء";
             gridViewTextBoxColumn9.Name = "gvdocument_endDate";
             gridViewTextBoxColumn9.ReadOnly = true;

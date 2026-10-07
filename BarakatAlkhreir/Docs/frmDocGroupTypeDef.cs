@@ -27,10 +27,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocGroupTypeDef_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocGroupTypeDef_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocGroupTypeDef_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -46,10 +51,11 @@ namespace BarakalAlkheir.Docs
 
                 disableControls();
 
-                getData();
+                await getDataAsync();
                 bindData();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -249,6 +255,20 @@ namespace BarakalAlkheir.Docs
             GView.Enabled = false;
         }
 
+        private System.Threading.Tasks.Task getDataAsync()
+        {
+            return BarakalAlkheir.components.FormLoading.LoadAsync(this, () =>
+            {
+                using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
+                {
+                    return (from c in db.DocumentTypeDefinitions select c).ToList();
+                }
+            }, rows =>
+            {
+                lstDocumentTypeDefinition = rows;
+                GView.DataSource = lstDocumentTypeDefinition;
+            });
+        }
         private void getData()
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())

@@ -28,10 +28,15 @@ namespace BarakalAlkheir.CarsM
 
         private void frmChangeRentingAmount_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmChangeRentingAmount_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmChangeRentingAmount_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar1.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar1);
+                await mainbar1.AddToAsync(this);
 
 
                 mainbar1.btnAdd.Visible = false;
@@ -56,6 +61,7 @@ namespace BarakalAlkheir.CarsM
                 bindData1();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

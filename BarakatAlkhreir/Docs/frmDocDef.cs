@@ -28,10 +28,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocDef_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocDef_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocDef_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -47,11 +52,12 @@ namespace BarakalAlkheir.Docs
 
                 disableControls();
 
-                PublicClass.bindDocumentTypeDef(cmbdocumentTypeDefID);
+                await PublicClass.bindDocumentTypeDefAsync(cmbdocumentTypeDefID);
                 getData();
                 bindData();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

@@ -30,10 +30,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocumentTransactionTaskPayment_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocumentTransactionTaskPayment_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocumentTransactionTaskPayment_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnSave.Click += new EventHandler(btnSave_Click);
 
@@ -53,6 +58,7 @@ namespace BarakalAlkheir.Docs
                 txtvoucherAmount.Text = _documentTrans_Amount.ToString();
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

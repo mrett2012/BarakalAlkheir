@@ -35,10 +35,15 @@ namespace BarakalAlkheir.Lic
 
         private void frmRentLicensePayment_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmRentLicensePayment_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmRentLicensePayment_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -53,13 +58,14 @@ namespace BarakalAlkheir.Lic
                 mainbar.btnExit.Click += new EventHandler(btnExit_Click);
 
                 disableControls();
-                PublicClass.bindMandoub(cmbMandoub);
-                getTotalRow();
-                getData();
+                await PublicClass.bindMandoubAsync(cmbMandoub);
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getTotalRow);
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
 
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -70,20 +76,19 @@ namespace BarakalAlkheir.Lic
         void btnAdd_Click(object sender, EventArgs e)
         {
             change = "add";
+            rentID = -1;
+            _rentLicencesDetailsID = -1;
+            lblID.Text = "-1";
             enableControls();
-            
             txtrentLicPay_VouNo.Text = "";
-            txtrentLicPay_Amount.Text = "";
-            txtrentLicPay_PaymentDate.Text = DateTime.Now.ToShortDateString();
-            txtrentLicPay_ForDate.Text = DateTime.Now.ToShortDateString();
+            txtrentLicPay_Amount.Text = "0";
+            txtrentLicPay_PaymentDate.Value = DateTime.Today;
+            txtrentLicPay_ForDate.Value = DateTime.Today;
             cmbMandoub.SelectedIndex = 0;
-
             txtlicenseNo.Text = "";
             txtrentLicenseNo.Text = "";
             txtcommercialName.Text = "";
             txtCustomerName.Text = "";
-
-            //rentID = -1;
         }
 
         void btnEdit_Click(object sender, EventArgs e)
@@ -99,60 +104,14 @@ namespace BarakalAlkheir.Lic
         {
             try
             {
-                if (lblID.Text != "-1")
-                {
-                    DialogResult dr = MessageBox.Show("هل تريد الحذف ؟", "Confirmation Of Deleting", MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-                    if (dr == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-                        {
-                            using (TransactionScope ts = new TransactionScope())
-                            {
-
-                                int bbID = int.Parse(lblID.Text);
-                                RentLicensesPayment bb = (from c in db.RentLicensesPayments
-                                                          where c.rentLicensePaymentID ==
-                                                              bbID
-                                                          select c).FirstOrDefault();
-
-                                db.RentLicensesPayments.DeleteObject(bb);
-                                int noOfAffectedRows = db.SaveChanges();
-
-                                int bbID1 = bb.rentLicencesDetailsID.Value;
-                                RentLicensesDetail bb1 = (from c in db.RentLicensesDetails
-                                                          where c.rentLicencesDetailsID == bbID1
-                                                          select c).FirstOrDefault();
-                                if (bb1 != null)
-                                {
-                                    bb1.rd_isPaid = false;
-                                    bb1.edited_Date = DateTime.Now;
-                                    bb1.editedBy = MainClass.userID;
-                                    db.SaveChanges();
-                                    db.AcceptAllChanges();
-                                    ts.Complete();
-                                }
-                                else
-                                {
-                                    ts.Dispose();
-                                }
-
-
-                            }
-                        }
-                        lblID.Text = "-1";
-                        _rentLicencesDetailsID = -1;
-                        rentID = -1;
-                        getTotalRow();
-                        getData();
-                        bindData();
-                    }
-                }
+                if (lblID.Text == "-1" || MessageBox.Show("هل تريد الحذف ؟", "Confirmation Of Deleting",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+                new LicenseRentalWorkflow().DeletePayment(int.Parse(lblID.Text), rentID, lstRentLicensesPayment[0].edited_Date);
+                getTotalRow();
+                getData();
+                bindData();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         void btnCancel_Click(object sender, EventArgs e)
@@ -166,135 +125,28 @@ namespace BarakalAlkheir.Lic
         {
             try
             {
-                int rowsAffected = 0;
-                if (txtrentLicPay_Amount.Text == "0")
-                {
-                    MessageBox.Show("المبلغ غير صحيح");
-                }
-                else
-                {
-                    if (change == "add")
-                    {
-                        using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-                        {
-                            using (TransactionScope ts = new TransactionScope())
-                            {
-                                RentLicensesPayment bb = new RentLicensesPayment();
-
-                                bb.rentLicPay_VouNo = txtrentLicPay_VouNo.Text;
-                                bb.rentLicPay_Amount = float.Parse(txtrentLicPay_Amount.Text);
-                                bb.rentLicPay_PaymentDate = DateTime.Parse(txtrentLicPay_PaymentDate.Text);
-                                bb.rentLicPay_ForDate = DateTime.Parse("15/" +
-                                    DateTime.Parse(txtrentLicPay_ForDate.Text).Month + "/" +
-                                    +DateTime.Parse(txtrentLicPay_ForDate.Text).Year);
-                                bb.rentLicPay_mandoubID = int.Parse(cmbMandoub.SelectedValue.ToString());
-
-
-
-                                bb.added_Date = DateTime.Now;
-                                bb.addedBy = MainClass.userID;
-
-                                bb.edited_Date = DateTime.Now;
-                                bb.editedBy = MainClass.userID;
-
-
-
-                                RentLicensesDetail bb1 = (from c in db.RentLicensesDetails
-                                                          where c.rentLicencesDetailsID == _rentLicencesDetailsID
-                                                          select c).FirstOrDefault();
-                                if (bb1 != null)
-                                {
-                                    bb.rentLicenseID = bb1.rentLicenseID.Value;
-                                    bb.rentLicencesDetailsID = bb1.rentLicencesDetailsID;
-                                    db.RentLicensesPayments.AddObject(bb);
-
-                                    bb1.rd_isPaid = true;
-
-                                    bb1.edited_Date = DateTime.Now;
-                                    bb1.editedBy = MainClass.userID;
-                                    db.SaveChanges();
-                                    lblID.Text = bb.rentLicensePaymentID.ToString();
-                                    db.AcceptAllChanges();
-                                    ts.Complete();
-                                    disableControls();
-                                }
-                                else
-                                {
-                                    ts.Dispose();
-                                }
-
-                            }
-                        }
-                    }
-                    if (change == "edit")
-                    {
-                        using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-                        {
-                            using (TransactionScope ts = new TransactionScope())
-                            {
-                                int bbID = int.Parse(lblID.Text);
-                                RentLicensesPayment bb = (from c in db.RentLicensesPayments
-                                                          where c.rentLicensePaymentID ==
-                                                              bbID
-                                                          select c).FirstOrDefault();
-
-                                bb.rentLicPay_VouNo = txtrentLicPay_VouNo.Text;
-                                bb.rentLicPay_Amount = float.Parse(txtrentLicPay_Amount.Text);
-                                bb.rentLicPay_PaymentDate = DateTime.Parse(txtrentLicPay_PaymentDate.Text);
-                                bb.rentLicPay_ForDate = DateTime.Parse("15/" +
-                                    DateTime.Parse(txtrentLicPay_ForDate.Text).Month + "/" +
-                                    +DateTime.Parse(txtrentLicPay_ForDate.Text).Year);
-                                bb.rentLicPay_mandoubID = int.Parse(cmbMandoub.SelectedValue.ToString());
-                                bb.rentLicenseID = rentID;
-
-                                bb.edited_Date = DateTime.Now;
-                                bb.editedBy = MainClass.userID;
-
-                                rowsAffected = db.SaveChanges();
-
-                                RentLicensesDetail bb1 = (from c in db.RentLicensesDetails
-                                                          where c.rentLicencesDetailsID == _rentLicencesDetailsID
-                                                          select c).FirstOrDefault();
-                                if (bb1 != null)
-                                {
-
-                                    bb1.rd_isPaid = true;
-
-                                    bb1.edited_Date = DateTime.Now;
-                                    bb1.editedBy = MainClass.userID;
-
-                                    db.AcceptAllChanges();
-                                    ts.Complete();
-                                    disableControls();
-                                }
-                                else
-                                {
-                                    ts.Dispose();
-                                }
-
-
-
-                            }
-                        }
-                    }
-                }
-
-                getTotalRow();
-                if (change == "edit")
-                {
-                    getData(int.Parse(lblID.Text));
-                }
-                else
-                {
-                    getData();
-                }
+                if (change != "add" && change != "edit") return;
+                int collector;
+                if (cmbMandoub.SelectedValue == null || !int.TryParse(cmbMandoub.SelectedValue.ToString(), out collector))
+                    throw new InvalidOperationException("يرجى اختيار المندوب");
+                bool adding = change == "add";
+                int id = new LicenseRentalWorkflow().SavePayment(adding ? -1 : int.Parse(lblID.Text),
+                    rentID, _rentLicencesDetailsID, LicenseRentalRules.ParsePositiveAmount(txtrentLicPay_Amount.Text),
+                    txtrentLicPay_VouNo.Text, txtrentLicPay_PaymentDate.Value.Date, collector,
+                    adding ? null : lstRentLicensesPayment[0].edited_Date);
                 change = "";
+                disableControls();
+                getTotalRow();
+                getData(id);
                 bindData();
             }
-            catch (Exception ex)
+            catch (RentalChangedException ex)
             {
                 MessageBox.Show(ex.Message);
+                if (change == "add") getLastPayment(rentID);
+                else { getData(int.Parse(lblID.Text)); bindData(); }
             }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         void btnFind_Click(object sender, EventArgs e)
@@ -386,7 +238,7 @@ namespace BarakalAlkheir.Lic
             cmbMandoub.Enabled = true;
             //txtrentLicPay_ForDate.Enabled = true;
             txtrentLicPay_PaymentDate.Enabled = true;
-            btnFindLicenses.Enabled = true;
+            btnFindLicenses.Enabled = change == "add";
 
         }
 
@@ -413,6 +265,7 @@ namespace BarakalAlkheir.Lic
                  if (val.Count > 0)
                  {
                      val1 = new RentLicensesPayment();
+                     position = Math.Min(Math.Max(position, 0), val.Count - 1);
                      val1 = val.ElementAt(position);
                  }
 
@@ -439,7 +292,8 @@ namespace BarakalAlkheir.Lic
                 {
                     val1 = new RentLicensesPayment();
                     position = val.FindIndex(cc => cc.rentLicensePaymentID == _ID);
-                    val1 = val.ElementAt(position);
+                    position = Math.Min(Math.Max(position, 0), val.Count - 1);
+                     val1 = val.ElementAt(position);
                 }
 
                 lstRentLicensesPayment = new List<RentLicensesPayment>();
@@ -457,24 +311,25 @@ namespace BarakalAlkheir.Lic
             {
 
                 txtrentLicPay_VouNo.Text = lstRentLicensesPayment[0].rentLicPay_VouNo;
-                txtrentLicPay_Amount.Text = lstRentLicensesPayment[0].rentLicPay_Amount.Value.ToString();
+                txtrentLicPay_Amount.Text = (lstRentLicensesPayment[0].rentLicPay_Amount ?? 0).ToString();
                 
-                txtrentLicPay_ForDate.Text = lstRentLicensesPayment[0].rentLicPay_ForDate.Value.ToShortDateString();
-                txtrentLicPay_PaymentDate.Text = lstRentLicensesPayment[0].rentLicPay_PaymentDate.Value.ToShortDateString();
+                txtrentLicPay_ForDate.Value = lstRentLicensesPayment[0].rentLicPay_ForDate ?? DateTime.Today;
+                txtrentLicPay_PaymentDate.Value = lstRentLicensesPayment[0].rentLicPay_PaymentDate ?? DateTime.Today;
 
+                cmbMandoub.SelectedIndex = 0;
                 for (int i = 0; i < cmbMandoub.Items.Count; i++)
                 {
-                    if (cmbMandoub.Items[i].Value.ToString() == lstRentLicensesPayment[0].rentLicPay_mandoubID.Value.ToString())
+                    if (cmbMandoub.Items[i].Value.ToString() == (lstRentLicensesPayment[0].rentLicPay_mandoubID ?? -1).ToString())
                     {
                         cmbMandoub.SelectedIndex = i;
                         break;
                     }
                 }
-                rentID = lstRentLicensesPayment[0].rentLicenseID.Value;
-                _rentLicencesDetailsID = lstRentLicensesPayment[0].rentLicencesDetailsID.Value; 
+                rentID = lstRentLicensesPayment[0].rentLicenseID ?? -1;
+                _rentLicencesDetailsID = lstRentLicensesPayment[0].rentLicencesDetailsID ?? -1;
 
                 lblID.Text = lstRentLicensesPayment[0].rentLicensePaymentID.ToString();
-                bindRentData(lstRentLicensesPayment[0].RentLicens.companyLicencesID.Value);
+                bindRentData(rentID);
 
                 mainbar.lblCount.Text = position + 1 + " / " + totalRow.ToString();
             }
@@ -483,8 +338,8 @@ namespace BarakalAlkheir.Lic
                 txtrentLicPay_VouNo.Text = "";
                 txtrentLicPay_Amount.Text = "0";
                 cmbMandoub.SelectedIndex = 0;
-                txtrentLicPay_ForDate.Text = DateTime.Now.ToShortDateString();
-                txtrentLicPay_PaymentDate.Text = DateTime.Now.ToShortDateString();
+                txtrentLicPay_ForDate.Value = DateTime.Today;
+                txtrentLicPay_PaymentDate.Value = DateTime.Today;
 
                 txtlicenseNo.Text = "";
                 txtrentLicenseNo.Text = "";
@@ -503,90 +358,69 @@ namespace BarakalAlkheir.Lic
 
         private void btnFindLicenses_Click(object sender, EventArgs e)
         {
-            frmfindLicences frm = new frmfindLicences(true,false);
-            frm.isCurrentRentedLicences = true;
-            frm.ShowDialog();
-            if (frm.found)
+            if (change != "add") return;
+            try
             {
-                bindRentData(frm.licID);
-                if (change == "add")
+                using (var frm = new frmfindLicences(true, false))
                 {
-                    getLastPayment(frm.licID);
-                }
-            }
-        }
-
-        private void bindRentData(int lID)
-        {
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-            {
-
-                var val = (from c in db.CompanyLicences
-                           join d in db.RentLicenses
-                            on c.companyLicencesID equals d.companyLicencesID
-                           where c.companyLicencesID == lID
-                           && d.rentLicense_active==true
-                           select new
-                           {
-                               c.companyLicencesID,
-                               c.commercialName,
-                               c.licenseNo,
-                               d.rentLicenseNo,
-                               d.Customer.customer_Name,
-                               d.rentLicenseID
-                           }).FirstOrDefault();
-
-                txtlicenseNo.Text = val.licenseNo;
-                txtrentLicenseNo.Text = val.rentLicenseNo;
-                txtcommercialName.Text = val.commercialName;
-                txtCustomerName.Text = val.customer_Name;
-                rentID = val.rentLicenseID;
-            }
-        }
-
-        private void getLastPayment(int _companyLicencesID)
-        {
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-            {
-                var val = (from c in db.CompanyLicences
-                           join d in db.RentLicenses
-                            on c.companyLicencesID equals d.companyLicencesID
-                           where c.companyLicencesID == _companyLicencesID
-                           && d.rentLicense_active == true
-                           select new
-                           {
-                               d.rentLicenseID,
-                               d.rentLicense_from,
-                               d.rentLicense_to,
-                               d.rentLicense_RentalAmount
-
-                           }).FirstOrDefault();
-
-
-                var val1 = (from c in db.RentLicensesDetails
-                           orderby c.rentLicenseID
-                           where c.rentLicenseID == rentID
-                           select c).ToList();
-                txtrentLicPay_Amount.Text = "0";
-                foreach (var vv in val1)
-                {
-                    if (vv.rd_isPaid == false)
+                    frm.isCurrentRentedLicences = true;
+                    frm.ShowDialog();
+                    if (!frm.found) return;
+                    rentID = -1;
+                    _rentLicencesDetailsID = -1;
+                    txtrentLicPay_Amount.Text = "0";
+                    using (var db = new BarakeitAlkheirEntities())
                     {
-                        txtrentLicPay_Amount.Text = vv.rd_amount.Value.ToString();
-
-                        if (vv.rd_fromDate.Value.Day > MainClass.StartRentDay)
-                        {
-                            txtrentLicPay_ForDate.Text = vv.rd_fromDate.Value.AddMonths(1).ToShortDateString();
-                        }
-                        else
-                        {
-                            txtrentLicPay_ForDate.Text = vv.rd_fromDate.Value.ToShortDateString();
-                        }
-                        _rentLicencesDetailsID = vv.rentLicencesDetailsID;
-                        break;
+                        var rentals = db.RentLicenses.Where(r => r.companyLicencesID == frm.licID && r.rentLicense_active == true).ToList();
+                        if (rentals.Count != 1) throw new InvalidOperationException("لا يوجد عقد نشط واحد للرخصة. يرجى مراجعة العقود");
+                        rentID = rentals[0].rentLicenseID;
                     }
+                    bindRentData(rentID);
+                    getLastPayment(rentID);
                 }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
 
+        private void bindRentData(int rentalId)
+        {
+            using (var db = new BarakeitAlkheirEntities())
+            {
+                var rental = db.RentLicenses.FirstOrDefault(r => r.rentLicenseID == rentalId);
+                if (rental == null)
+                {
+                    txtlicenseNo.Text = txtcommercialName.Text = txtrentLicenseNo.Text = txtCustomerName.Text = "";
+                    return;
+                }
+                var licence = db.CompanyLicences.FirstOrDefault(c => c.companyLicencesID == rental.companyLicencesID);
+                var customer = db.Customers.FirstOrDefault(c => c.customerID == rental.customerID);
+                txtlicenseNo.Text = licence == null ? "" : licence.licenseNo;
+                txtcommercialName.Text = licence == null ? "" : licence.commercialName;
+                txtrentLicenseNo.Text = rental.rentLicenseNo;
+                txtCustomerName.Text = customer == null ? "" : customer.customer_Name;
+                if (change == "")
+                {
+                    mainbar.btnEdit.Enabled = rental.rentLicense_active == true;
+                    mainbar.btnDelete.Enabled = rental.rentLicense_active == true;
+                }
+            }
+        }
+
+        private void getLastPayment(int rentalId)
+        {
+            _rentLicencesDetailsID = -1;
+            txtrentLicPay_Amount.Text = "0";
+            txtrentLicPay_ForDate.Value = DateTime.Today;
+            using (var db = new BarakeitAlkheirEntities())
+            {
+                var detail = db.RentLicensesDetails.Where(d => d.rentLicenseID == rentalId && d.rd_isPaid == false)
+                    .OrderBy(d => d.rd_fromDate).ThenBy(d => d.rd_mNo).ThenBy(d => d.rentLicencesDetailsID).FirstOrDefault();
+                if (detail == null) return;
+                if (!detail.rd_fromDate.HasValue || !detail.rd_amount.HasValue)
+                    throw new InvalidOperationException("بيانات القسط غير مكتملة. يرجى مراجعتها");
+                _rentLicencesDetailsID = detail.rentLicencesDetailsID;
+                txtrentLicPay_Amount.Text = detail.rd_amount.Value.ToString();
+                txtrentLicPay_ForDate.Value = LicenseRentalRules.BillingDate(detail.rd_fromDate.Value);
             }
         }
 

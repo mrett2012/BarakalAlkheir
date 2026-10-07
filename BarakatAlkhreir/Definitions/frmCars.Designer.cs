@@ -416,12 +416,14 @@
             gridViewTextBoxColumn8.Name = "gvdocument_No";
             gridViewTextBoxColumn8.Width = 150;
             gridViewTextBoxColumn9.FieldName = "document_startDate";
-            gridViewTextBoxColumn9.FormatString = "{0:d}";
+            gridViewTextBoxColumn9.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn9.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn9.HeaderText = "تاريخ الاصدار";
             gridViewTextBoxColumn9.Name = "gvdocument_startDate";
             gridViewTextBoxColumn9.Width = 130;
             gridViewTextBoxColumn10.FieldName = "document_endDate";
-            gridViewTextBoxColumn10.FormatString = "{0:d}";
+            gridViewTextBoxColumn10.FormatString = AppDateFormat.GridFormat;
+            gridViewTextBoxColumn10.FormatInfo = AppDateFormat.Culture;
             gridViewTextBoxColumn10.HeaderText = "تاريخ الانتهاء";
             gridViewTextBoxColumn10.Name = "gvdocument_endDate";
             gridViewTextBoxColumn10.Width = 130;

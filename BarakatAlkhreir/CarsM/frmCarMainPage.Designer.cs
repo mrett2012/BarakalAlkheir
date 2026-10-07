@@ -216,6 +216,7 @@
             // 
             // txtDate
             // 
+            this.txtDate.Culture = AppDateFormat.Culture;
             this.txtDate.CustomFormat = "MMMM -    yyyy";
             this.txtDate.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;

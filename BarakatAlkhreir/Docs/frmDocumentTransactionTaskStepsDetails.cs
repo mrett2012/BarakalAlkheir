@@ -28,10 +28,15 @@ namespace BarakalAlkheir.Docs
 
         private void frmDocumentTransactionTaskSetpsDetails_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmDocumentTransactionTaskSetpsDetails_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmDocumentTransactionTaskSetpsDetails_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnSave.Click += new EventHandler(btnSave_Click);
                 mainbar.btnExit.Click += new EventHandler(btnExit_Click);
@@ -49,13 +54,14 @@ namespace BarakalAlkheir.Docs
 
                 mainbar.btnSave.Enabled = true;
 
-                PublicClass.bindMandoub(cmbemployeeID);
+                await PublicClass.bindMandoubAsync(cmbemployeeID);
                 cmbemployeeID.SelectedIndex = 0;
 
                 getData();
 
 
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

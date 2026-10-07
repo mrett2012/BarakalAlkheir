@@ -36,14 +36,19 @@ namespace BarakalAlkheir.Sponsor
 
         private void frmCompanys_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmCompanys_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmCompanys_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                CompanyPage.Controls.Add(mainbar);
+                await mainbar.AddToAsync(CompanyPage);
 
 
                 mainbar2.Dock = DockStyle.Top;
-                AuthorizationPage.Controls.Add(mainbar2);
+                await mainbar2.AddToAsync(AuthorizationPage);
                 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -74,16 +79,17 @@ namespace BarakalAlkheir.Sponsor
                 mainbar2.btnLast.Click += new EventHandler(btnLast2_Click);
                 mainbar2.btnExit.Click += new EventHandler(btnExit2_Click);
 
-                PublicClass.bindAuthorization(cmbAuthorizationID);
+                await PublicClass.bindAuthorizationAsync(cmbAuthorizationID);
                 cmbAuthorizationID.SelectedIndex = 0;
 
                 disableControls();
                 disableControls2();
 
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
                              
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

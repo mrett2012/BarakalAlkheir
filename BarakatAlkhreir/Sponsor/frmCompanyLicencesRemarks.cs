@@ -31,10 +31,15 @@ namespace BarakalAlkheir.Sponsor
 
         private void frmCompanyLicences_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmCompanyLicences_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmCompanyLicences_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar.Dock = DockStyle.Top;
-                this.Controls.Add(mainbar);
+                await mainbar.AddToAsync(this);
 
                 mainbar.btnAdd.Click += new EventHandler(btnAdd_Click);
                 mainbar.btnEdit.Click += new EventHandler(btnEdit_Click);
@@ -50,7 +55,7 @@ namespace BarakalAlkheir.Sponsor
                 mainbar.btnExit.Click += new EventHandler(btnExit_Click);
 
                 disableControls();
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
 
                 if (_comLicenseRemID != -1)
                 {
@@ -58,6 +63,7 @@ namespace BarakalAlkheir.Sponsor
                 }
                 bindData();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

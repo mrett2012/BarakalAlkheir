@@ -27,6 +27,11 @@ namespace BarakalAlkheir.Lic
 
         private void frmfindLicences_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmfindLicences_LoadData);
+        }
+
+        private void frmfindLicences_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 //getData(txtVoucherNo.Text, txtlicenseNo.Text, txtlicenseLinkCode.Text, txtcommercialName.Text);
@@ -71,7 +76,7 @@ namespace BarakalAlkheir.Lic
                     GView.Rows[r].Cells[1].Value = item.rentLicPay_VouNo;
                     GView.Rows[r].Cells[2].Value = item.licenseLinkCode;
                     GView.Rows[r].Cells[3].Value = item.licenseNo;
-                    GView.Rows[r].Cells[4].Value = item.rentLicPay_ForDate.ToString("dd/MM/yyyy");
+                    GView.Rows[r].Cells[4].Value = LicenseRentalRules.FormatDate(item.rentLicPay_ForDate);
                     
                     GView.Rows[r].Cells[5].Value = item.rentLicPay_Amount.Value.ToString();
                     GView.Rows[r].Cells[6].Value = item.commercialName;

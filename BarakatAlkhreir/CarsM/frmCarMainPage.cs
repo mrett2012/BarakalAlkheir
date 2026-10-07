@@ -480,11 +480,17 @@ namespace BarakalAlkheir.CarsM
 
         private void frmCarMainPage_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmCarMainPage_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmCarMainPage_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 txtDate.Text = DateTime.Now.ToShortDateString();
-                PublicClass.bindCarBrand(cmbcar_Brand);
+                await PublicClass.bindCarBrandAsync(cmbcar_Brand);
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

@@ -39,10 +39,15 @@ namespace BarakalAlkheir.CarsM
 
         private void frmRentALicense_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmRentALicense_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmRentALicense_LoadData(object sender, EventArgs e)
+        {
             try
             {
                 mainbar1.Dock = DockStyle.Top;
-                pageRentCar.Controls.Add(mainbar1);
+                await mainbar1.AddToAsync(pageRentCar);
 
 
                 mainbar1.btnAdd.Click += new EventHandler(btnAdd_Click1);
@@ -57,15 +62,16 @@ namespace BarakalAlkheir.CarsM
                 mainbar1.btnLast.Click += new EventHandler(btnLast_Click1);
                 mainbar1.btnExit.Click += new EventHandler(btnExit_Click1);
 
-                PublicClass.bindEmployee(CmbDriverName);
+                await PublicClass.bindEmployeeAsync(CmbDriverName);
                 CmbDriverName.SelectedIndex = 0;
 
                 disableControls1();
 
 
-                getData1();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData1);
                 bindData1();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

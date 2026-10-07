@@ -28,22 +28,30 @@ namespace BarakalAlkheir.emp
 
         private void frmFindEmployees_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmFindEmployees_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmFindEmployees_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                PublicClass.bindNationality(cmbnationalityID);
-                PublicClass.bindGenders(cmbGender);
+                await PublicClass.bindNationalityAsync(cmbnationalityID);
+                await PublicClass.bindGendersAsync(cmbGender);
                 cmbGender.SelectedIndex = 0;
                 cmbnationalityID.SelectedIndex = 0;
 
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
                 isLoaded = true;
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+
+
 
 
         private void getData()

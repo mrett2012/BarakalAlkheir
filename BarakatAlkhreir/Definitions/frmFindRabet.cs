@@ -25,11 +25,17 @@ namespace BarakalAlkheir.Definitions
 
         private void frmFindEmployeeRabets_Load(object sender, EventArgs e)
         {
+            BarakalAlkheir.components.FormLoading.Attach(this, this.frmFindEmployeeRabets_LoadData);
+        }
+
+        private async System.Threading.Tasks.Task frmFindEmployeeRabets_LoadData(object sender, EventArgs e)
+        {
             try
             {
-                getData();
+                await BarakalAlkheir.components.FormLoading.ReadAsync(this, getData);
                 bindData();
             }
+            catch (OperationCanceledException) { }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
