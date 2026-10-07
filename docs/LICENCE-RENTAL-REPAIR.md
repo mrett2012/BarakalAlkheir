@@ -34,6 +34,78 @@ The suite exercises date/culture boundaries, creation, extension/shortening, rat
 
 The legacy x86 Debug build succeeds with bundled vendor references. Existing compiler warnings and the unresolved unused PowerPacks reference remain. Arabic rental/payment/annual forms were rendered and inspected. Authenticated production use, Crystal report rendering/printing, Excel COM export and deployment are separate acceptance checks; this build output is not a deployment package.
 
+## Interactive QA follow-up - 2026-10-07
+
+Scope: the **Rent A License** and **Rent License Payment** screens reached from the licence dashboard, using the current .NET Framework 4.8 / Telerik 2026.3.812.48 build. The configured database was assessed read-only; all rental/payment writes were made in disposable databases seeded from the active EDMX with synthetic data.
+
+### Reproduced and repaired
+
+Selecting a licence with a null link code by clicking OK raised an unhandled `NullReferenceException` in `frmfindLicences.btnOK_Click`. The Enter path also returned the commercial name as the link code. Both selection paths now use one guarded data-row selection helper and tolerate null display fields. The related active-rental and customer pickers now guard empty selections and nullable search fields too. Layout, business rules, transactions and database schema were not changed by this follow-up.
+
+### Verified
+
+- The isolated build succeeded with existing warnings. The final SQL integration run passed **283 assertions**, plus the new licence/customer picker regression checks; `git diff --check` passed.
+- Manual UI: opened both screens; observed the bilingual loading indicator; rejected zero/blank amounts and a missing collector; selected a licence with a null link code and a customer with missing optional fields; checked a historical closed-rental receipt after re-rental.
+- Manual payment: saved synthetic voucher `QA-UI-001` against `REPLACEMENT`. A database query verified exactly one matching receipt for **200**, linked to instalment 1 of the correct rental, its paid flag set, and billing date **15/05/2025**.
+- Manual rental: saved synthetic contract `QA-RENT-001`, starting **07/10/2026**, for two months at **125.5**. UI and database agreed on **251** total, two unpaid instalments, and **06/12/2026** end date. The screen returned to view mode with record count 3/3.
+- Automated lifecycle coverage includes creation, extension/shortening, rate changes, payment edit/delete, permissions, stale edits, duplicate/cross-rental rejection, paid/closed rules, re-rental history, forced rollback, concurrent payment attempts, report calculations and correction/constraint tooling on synthetic data.
+- Test windows were closed, temporary UI configuration removed, and a final server query found **zero** databases with the test harness prefix.
+
+To prepare the isolated interactive launcher:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tests\Run-LicenceRentalTests.ps1 -PrepareInteractive
+```
+
+Run the returned executable, then close its dashboard normally to trigger cleanup. This mode uses the workspace App.Config only for server credentials, creates its own unique database, and seeds a test superuser session. It does not exercise login. Do not combine this switch with `-Integration` or `-ConfigPath`. The separate test executable displayed a Telerik runtime licence watermark; licensing of the deployed application remains a separate acceptance check. A font error after mixing extensive offscreen tests and an interactive session in one process did not recur when the interactive launcher used a fresh process and fixture.
+
+### Current configured-database findings
+
+A read-only aggregate audit of **BarakeitAlkheir2** on 2026-10-07 returned:
+
+| Audit issue | Issue rows |
+| --- | ---: |
+| InvalidInstalment | 591 |
+| ScheduleDateMismatch | 371 |
+| BillingMonthMismatch | 133 |
+| MissingCollector | 75 |
+| InvalidRentalDuration | 31 |
+| RentalEndMismatch | 31 |
+| ReceiptRentalMismatch | 25 |
+| PaidWithoutReceipt | 19 |
+| DuplicateReceipt | 10 |
+| MissingInstalment | 7 |
+| EndedWithUnpaidInstalments | 5 |
+| ReceiptAmountMismatch | 2 |
+
+Counts overlap and are not distinct contracts. Duplicate rows do not establish duplicate cash collection, and missing receipts do not establish nonpayment. No customer records were repaired or constraints installed. Inconsistent ledgers can intentionally block financial changes; reconcile them against accounting evidence before rollout.
+
+The detailed CSV exporter was blocked by automatic approval review because it exports financial records. The approved alternative returns aggregate counts only, with no IDs or row exports:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File sql\Test-LicenceRentalSummary.ps1 `
+  -ConfigPath BarakatAlkhreir\App.Config -ExpectedDatabase BarakeitAlkheir2
+```
+
+This is not a complete production acceptance pass. Real-role login, deployed Telerik licensing, Crystal rendering/printing, Excel COM export and performance at production volume remain unverified. Financial lifecycle tests passed on synthetic data; historical inconsistencies remain open for accounting review.
+
+### Duplicate-payment investigation - 2026-10-07
+
+A follow-up read-only aggregate check confirmed **5 instalment groups with 5 extra receipts** (10 receipt rows total), and **20 rental/billing-month groups containing different instalment IDs**. These categories can overlap; they are not a count of duplicate cash collections. No unpaid-flag instalment already had a receipt at this snapshot.
+
+The payment table has **no enabled unique index other than its primary key** and **no enabled trigger**. Its primary key distinguishes receipt IDs; it does not prohibit two receipts for the same instalment. This confirms a missing database backstop. It does not identify the particular client/version or sequence that created existing duplicates. Repeated billing-month labels across different instalments also require allocation/date review.
+
+The current `LicenseRentalWorkflow.SavePayment` serializes cooperating clients with a transaction-owned application lock, reloads the ledger, and rejects an already-paid or already-receipted instalment. It writes the receipt and paid flag atomically. The preceding integration run exercised sequential duplicate attempts and two concurrent attempts, with exactly one concurrent winner. These safeguards cannot be assumed to exist in every deployed executable, and the application lock is voluntary: older clients or direct database writers can bypass it. No new payment-code defect was reproduced in this follow-up.
+
+Resolution: identify an affected licence/month and the executable used at the time; review the conflicting receipts and their original accounting evidence; reconcile approved records; then install the reviewed `licence-rental-integrity.sql` protections and deploy the current application to every workstation together. The existing integrity script includes a unique receipt-per-instalment index and deliberately refuses conflicting historical data. Do not run it blindly or delete an arbitrary duplicate. No database changes were applied here.
+
+Repeat the aggregate diagnostic without exporting customer records:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File sql\Test-LicenceRentalSummary.ps1 `
+  -ConfigPath BarakatAlkhreir\App.Config -ExpectedDatabase BarakeitAlkheir2 -PaymentDuplicates
+```
+
 ## Reconciliation and rollout
 
 1. Back up the target database and retain the current application package. Close all application clients for reconciliation and rollout: older executables do not participate in the new application lock.

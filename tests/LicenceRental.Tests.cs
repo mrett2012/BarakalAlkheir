@@ -115,16 +115,21 @@ internal static class LicenceRentalTests
         finally { Thread.CurrentThread.CurrentCulture = original; }
     }
 
-    private static void Integration(string fixture, string output, string constraints)
+    private static void CreateFixture(string fixture)
     {
         Sql(File.ReadAllText(fixture));
         Sql("INSERT dbo.CompanyLicences(isActive,isMainLicences,licenseNo,commercialName) VALUES(1,0,N'TEST-1',N'Test licence');" +
             "INSERT dbo.CompanyLicences(isActive,isMainLicences,licenseNo,commercialName) VALUES(1,0,N'TEST-2',N'Test licence 2');" +
-            "INSERT dbo.Customers(customer_Name) VALUES(N'Test customer'); INSERT dbo.Employees(emp_isMandoub,emp_namefullar) VALUES(1,N'Test collector');");
+            "INSERT dbo.Customers(customer_Name,customer_active) VALUES(N'Test customer',1); INSERT dbo.Employees(emp_isMandoub,emp_namefullar) VALUES(1,N'Test collector');");
         MainClass.userID = 1;
         MainClass.userGroupID = 1;
         MainClass.isSuperUser = true;
         workflow = new LicenseRentalWorkflow(entity);
+    }
+
+    private static void Integration(string fixture, string output, string constraints)
+    {
+        CreateFixture(fixture);
         DateTime start = new DateTime(2025, 1, 31);
         int rental = workflow.SaveRental(-1, 1, 1, "ORIGINAL", start, 2, 1, 100m, null);
         Check(Details(rental).Length == 2, "create two instalments");
@@ -235,7 +240,7 @@ internal static class LicenceRentalTests
         Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPayment")) == 2, "constraint rollback preserves receipts");
     }
 
-    private static void FormChecks(string output, int receiptId, int rentalId)
+    private static void FormChecks(string output, int receiptId, int rentalId, bool interactive = false)
     {
         string config = Path.Combine(output, "LicenceRental.Ui.config");
         new XDocument(new XElement("configuration", new XElement("connectionStrings", new XElement("add",
@@ -245,7 +250,8 @@ internal static class LicenceRentalTests
             new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, ConfigurationFile = config });
         try {
             var smoke = (LicenceRentalFormSmoke)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(LicenceRentalFormSmoke).FullName);
-            Check(smoke.Run(receiptId, rentalId, output), "historical receipt and Arabic form rendering");
+            if (interactive) smoke.RunInteractive();
+            else Check(smoke.Run(receiptId, rentalId, output), "historical receipt and Arabic form rendering");
         }
         finally { AppDomain.Unload(domain); File.Delete(config); }
     }
@@ -301,11 +307,21 @@ internal static class LicenceRentalTests
     [STAThread]
     private static int Main(string[] args)
     {
+#if INTERACTIVE
+        // Explicitly compiled test launcher; never uses the configured customer catalog for writes.
+        string buildRoot = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\')).FullName;
+        string root = Directory.GetParent(buildRoot).Parent.FullName;
+        args = new[] { Path.Combine(root, "BarakatAlkhreir", "App.Config"),
+            Path.Combine(buildRoot, "empty-fixture.sql"),
+            buildRoot, Path.Combine(root, "sql", "licence-rental-integrity.sql") };
+#endif
         string createdDatabase = null;
         SqlConnectionStringBuilder master = null;
         try {
+#if !INTERACTIVE
             PureRules();
             DateFormats();
+#endif
             if (args.Length == 4) {
                 var configuration = XDocument.Load(args[0]);
                 string configured = configuration.Root.Element("connectionStrings").Elements("add").Single(e => (string)e.Attribute("name") == "BarakeitAlkheirEntities").Attribute("connectionString").Value;
@@ -320,9 +336,22 @@ internal static class LicenceRentalTests
                 provider = new SqlConnectionStringBuilder(master.ConnectionString) { InitialCatalog = name }.ConnectionString;
                 entityBuilder.ProviderConnectionString = provider;
                 entity = entityBuilder.ConnectionString;
+#if INTERACTIVE
+                // Keep manual UI testing in a fresh process without prior Telerik form disposal.
+                CreateFixture(args[1]);
+                int original = workflow.SaveRental(-1, 1, 1, "ORIGINAL", new DateTime(2025, 1, 31), 2, 1, 100m, null);
+                Pay(original); Pay(original); workflow.CloseRental(original);
+                workflow.SaveRental(-1, 1, 1, "REPLACEMENT", new DateTime(2025, 5, 1), 2, 1, 200m, null);
+                FormChecks(args[2], 0, 0, true);
+#else
                 Integration(args[1], args[2], args[3]);
+#endif
             }
+#if INTERACTIVE
+            Console.WriteLine("Interactive synthetic test session ended.");
+#else
             Console.WriteLine("PASS: " + assertions + " assertions" + (createdDatabase == null ? " (rules and date controls; no database)" : " (rules, disposable SQL database, concurrent writes and form smoke checks)"));
+#endif
             return 0;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex.ToString()); return 1; }
@@ -341,23 +370,87 @@ internal static class LicenceRentalTests
 
 public sealed class LicenceRentalFormSmoke : MarshalByRefObject
 {
+    public void RunInteractive()
+    {
+        MainClass.userID = 1; MainClass.userGroupID = 1; MainClass.isSuperUser = true;
+        AppDateFormat.ApplyToCurrentThread();
+        System.Windows.Forms.Application.EnableVisualStyles();
+        using (var form = new frmLicenseMainPage()) {
+            form.Text = "Licence QA - SYNTHETIC TEST DATABASE";
+            System.Windows.Forms.Application.Run(form);
+        }
+    }
+
     private static void ShowOffscreen(System.Windows.Forms.Form form)
     {
         form.ShowInTaskbar = false;
         form.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
         form.Location = new System.Drawing.Point(-20000, -20000);
         form.Show();
-        System.Windows.Forms.Application.DoEvents();
+        var timeout = System.Diagnostics.Stopwatch.StartNew();
+        do {
+            System.Windows.Forms.Application.DoEvents();
+            if (timeout.Elapsed > TimeSpan.FromSeconds(30))
+                throw new TimeoutException("Form loading did not finish: " + form.Name);
+            Thread.Sleep(10);
+        } while (form.Controls.ContainsKey("LoadingStatus"));
     }
     private static object Field(object form, string name) { return form.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(form); }
     private static void Call(object form, string name, Type[] types, params object[] args) {
         form.GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic, null, types, null).Invoke(form, args);
     }
     private static void Click(object form, string name) { Call(form, name, new[] { typeof(object), typeof(EventArgs) }, form, EventArgs.Empty); }
+
+    private static void PickerChecks()
+    {
+        foreach (bool keyboard in new[] { false, true })
+        using (var form = new BarakalAlkheir.Sponsor.frmfindLicences(false, false)) {
+            ShowOffscreen(form);
+            var filter = (System.Windows.Forms.Control)Field(form, "txtlicenseLinkCode");
+            filter.Text = "NO-MATCH"; // Fixture link codes are null.
+            var key = new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Enter);
+            Call(form, "GView_KeyDown", new[] { typeof(object), typeof(System.Windows.Forms.KeyEventArgs) }, form, key);
+            if (form.found || form.IsDisposed || !key.SuppressKeyPress) throw new Exception("Empty licence selection must stay open.");
+            filter.Text = "";
+            var grid = (Telerik.WinControls.UI.RadGridView)Field(form, "GView");
+            if (grid.Rows.Count == 0) throw new Exception("Licence picker fixture missing.");
+            grid.CurrentRow = grid.Rows[0];
+            if (keyboard) {
+                grid.CurrentRow.Cells[2].Value = "LINK-TEST";
+                Call(form, "GView_KeyDown", new[] { typeof(object), typeof(System.Windows.Forms.KeyEventArgs) }, form,
+                    new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Enter));
+            } else Click(form, "btnOK_Click");
+            if (!form.found || form.licID <= 0 || form.licenseLinkCode != (keyboard ? "LINK-TEST" : ""))
+                throw new Exception("Licence picker lost selection or returned the wrong link code.");
+        }
+        using (var form = new BarakalAlkheir.Sponsor.frmfindLicences1(true, true)) {
+            ShowOffscreen(form);
+            var filter = (System.Windows.Forms.Control)Field(form, "txtlicensecivilID");
+            filter.Text = "NO-MATCH";
+            Click(form, "btnOK_Click");
+            if (form.found || form.IsDisposed) throw new Exception("Empty active-rental selection must stay open.");
+            filter.Text = "";
+            Click(form, "btnOK_Click");
+            if (!form.found || form.licID <= 0) throw new Exception("Active rental picker failed.");
+        }
+        using (var form = new BarakalAlkheir.Definitions.frmFindCustomers()) {
+            ShowOffscreen(form);
+            var filter = (System.Windows.Forms.Control)Field(form, "txtcustomer_CivilID");
+            filter.Text = "NO-MATCH";
+            Call(form, "GView_KeyDown", new[] { typeof(object), typeof(System.Windows.Forms.KeyEventArgs) }, form,
+                new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Enter));
+            if (form.found || form.IsDisposed) throw new Exception("Empty customer selection must stay open.");
+            filter.Text = "";
+            Click(form, "btnOK_Click");
+            if (!form.found || form.cID <= 0 || form.cName != "Test customer") throw new Exception("Customer picker failed.");
+        }
+        Console.WriteLine("PASS: licence/customer picker null fields, empty results, OK and Enter paths.");
+    }
     public bool Run(int receiptId, int rentalId, string output)
     {
         MainClass.userID = 1; MainClass.userGroupID = 1; MainClass.isSuperUser = true;
         System.Windows.Forms.Application.EnableVisualStyles();
+        PickerChecks();
         using (var form = new frmRentLicensePayment()) {
             ShowOffscreen(form);
             PublicClass.bindMandoub((Telerik.WinControls.UI.RadDropDownList)Field(form, "cmbMandoub"));

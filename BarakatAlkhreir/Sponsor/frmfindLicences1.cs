@@ -69,7 +69,8 @@ namespace BarakalAlkheir.Sponsor
 
         private void txtlicenseNo_TextChanged(object sender, EventArgs e)
        {
-            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => c.licenseNo.Contains(txtlicenseNo.Text)==true);
+            if (lstCompanyLicense == null) return;
+            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => (c.licenseNo ?? string.Empty).Contains(txtlicenseNo.Text)==true);
             if (txtlicenseNo.Text.Length > 0)
             {
                 GView.DataSource = dd;
@@ -82,7 +83,8 @@ namespace BarakalAlkheir.Sponsor
 
         private void txtcommercialName_TextChanged(object sender, EventArgs e)
         {
-            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => c.commercialName.Contains(txtcommercialName.Text) == true);
+            if (lstCompanyLicense == null) return;
+            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => (c.commercialName ?? string.Empty).Contains(txtcommercialName.Text) == true);
             if (txtcommercialName.Text.Length > 0)
             {
                 GView.DataSource = dd;
@@ -95,28 +97,29 @@ namespace BarakalAlkheir.Sponsor
 
         private void GView_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == 13)
-            {
-                licID = int.Parse(GView.CurrentRow.Cells[0].Value.ToString());
-                licNO = GView.CurrentRow.Cells[1].Value.ToString();
-                licName = GView.CurrentRow.Cells[2].Value.ToString();
-                found = true;
-                Close();
-            }
+            if (e.KeyCode != Keys.Enter) return;
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            SelectCurrentLicence();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (GView.SelectedRows.Count > 0)
-            {
-                licID = int.Parse(GView.CurrentRow.Cells[0].Value.ToString());
-                licNO = GView.CurrentRow.Cells[1].Value.ToString();
-                licName = GView.CurrentRow.Cells[2].Value.ToString();
-                found = true;
-                Close();
-            }
+            SelectCurrentLicence();
         }
 
+        private void SelectCurrentLicence()
+        {
+            var row = GView.CurrentRow as Telerik.WinControls.UI.GridViewDataRowInfo;
+            int selectedId;
+            if (row == null || !int.TryParse(Convert.ToString(row.Cells[0].Value), out selectedId) || selectedId <= 0)
+                return;
+            licID = selectedId;
+            licNO = Convert.ToString(row.Cells[1].Value);
+            licName = Convert.ToString(row.Cells[2].Value);
+            found = true;
+            Close();
+        }
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -124,7 +127,8 @@ namespace BarakalAlkheir.Sponsor
 
         private void txtlicenseLinkCode_TextChanged(object sender, EventArgs e)
         {
-            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => c.licenseLinkCode.Contains(txtlicenseLinkCode.Text) == true);
+            if (lstCompanyLicense == null) return;
+            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => (c.licenseLinkCode ?? string.Empty).Contains(txtlicenseLinkCode.Text) == true);
             if (txtlicenseLinkCode.Text.Length > 0)
             {
                 GView.DataSource = dd;
@@ -142,7 +146,8 @@ namespace BarakalAlkheir.Sponsor
 
         private void txtlicensecivilID_TextChanged(object sender, EventArgs e)
         {
-            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => c.licensecivilID.Contains(this.txtlicensecivilID.Text) == true);
+            if (lstCompanyLicense == null) return;
+            List<CompanyLicence> dd = lstCompanyLicense.FindAll(c => (c.licensecivilID ?? string.Empty).Contains(this.txtlicensecivilID.Text) == true);
             if (txtlicensecivilID.Text.Length > 0)
             {
                 GView.DataSource = dd;

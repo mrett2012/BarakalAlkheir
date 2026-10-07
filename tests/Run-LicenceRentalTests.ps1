@@ -1,10 +1,13 @@
 param(
     [switch]$Integration,
+    [switch]$PrepareInteractive,
     [string]$ConfigPath
 )
 $ErrorActionPreference = 'Stop'
+if ($PrepareInteractive -and ($Integration -or $ConfigPath)) { throw '-PrepareInteractive uses the workspace App.Config and cannot be combined with -Integration or -ConfigPath.' }
 $projectRoot = Split-Path $PSScriptRoot -Parent
-$buildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot '.codex-build/licence-repair'))
+$buildFolder = if ($PrepareInteractive) { '.codex-build/licence-ui' } else { '.codex-build/licence-repair' }
+$buildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot $buildFolder))
 $buildBin = Join-Path $buildRoot 'bin'
 $buildObj = Join-Path $buildRoot 'obj'
 New-Item -ItemType Directory -Force -Path $buildBin,$buildObj | Out-Null
@@ -15,9 +18,10 @@ $csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework/v4.0.30319/csc.exe'
 & $msbuild (Join-Path $projectRoot 'BarakatAlkhreir/BarakalAlkheir.csproj') /t:Rebuild /p:Configuration=Debug /p:Platform=x86 "/p:ReferencePath=$projectRoot\BarakatAlkhreir\bin\Debug" "/p:OutDir=$buildBin\" "/p:IntermediateOutputPath=$buildObj\" /nologo /verbosity:minimal > (Join-Path $buildRoot 'build.log') 2>&1
 if($LASTEXITCODE -ne 0){ Get-Content (Join-Path $buildRoot 'build.log'); throw 'Application build failed' }
 $testExe = Join-Path $buildBin 'LicenceRental.Tests.exe'
-& $csc /nologo /target:exe /platform:x86 "/out:$testExe" /r:System.Core.dll /r:System.Data.dll /r:System.Data.Entity.dll /r:System.Transactions.dll /r:System.Xml.Linq.dll /r:System.Runtime.Serialization.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll "/r:$buildBin/BarakalAlkheir.exe" "/r:$buildBin/Telerik.WinControls.dll" "/r:$buildBin/Telerik.WinControls.UI.dll" "/r:$buildBin/TelerikCommon.dll" (Join-Path $PSScriptRoot 'LicenceRental.Tests.cs')
+[string[]]$compilerOptions = if ($PrepareInteractive) { @('/define:INTERACTIVE') } else { @() }
+& $csc @compilerOptions /nologo /target:exe /platform:x86 "/out:$testExe" /r:System.Core.dll /r:System.Data.dll /r:System.Data.Entity.dll /r:System.Transactions.dll /r:System.Xml.Linq.dll /r:System.Runtime.Serialization.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll "/r:$buildBin/BarakalAlkheir.exe" "/r:$buildBin/Telerik.WinControls.dll" "/r:$buildBin/Telerik.WinControls.UI.dll" "/r:$buildBin/TelerikCommon.dll" "/r:$buildBin/Telerik.WinControls.GridView.dll" (Join-Path $PSScriptRoot 'LicenceRental.Tests.cs')
 if($LASTEXITCODE -ne 0){throw 'Regression harness compilation failed'}
-if(-not $Integration){ & $testExe; if($LASTEXITCODE -ne 0){throw 'Regression checks failed'}; return }
+if(-not $Integration -and -not $PrepareInteractive){ & $testExe; if($LASTEXITCODE -ne 0){throw 'Regression checks failed'}; return }
 
 # Derive an empty fixture from the active EDMX, never from a customer database/backup.
 [xml]$model = Get-Content (Join-Path $projectRoot 'BarakatAlkhreir/Model/BarakeitAlkheir.edmx')
@@ -51,6 +55,7 @@ ALTER TABLE dbo.RentLicensesPayment ADD FOREIGN KEY(rentLicenseID) REFERENCES db
 '@)
 $fixture = Join-Path $buildRoot 'empty-fixture.sql'
 [IO.File]::WriteAllText($fixture,$ddl.ToString(),(New-Object Text.UTF8Encoding($false)))
+if ($PrepareInteractive) { Write-Output "Interactive test launcher: $testExe"; return }
 if(-not $ConfigPath){$ConfigPath = Join-Path $projectRoot 'BarakatAlkhreir/App.Config'}
 & $testExe $ConfigPath $fixture $buildRoot (Join-Path $projectRoot 'sql/licence-rental-integrity.sql')
 if($LASTEXITCODE -ne 0){throw 'Integration checks failed'}
