@@ -5,7 +5,7 @@ Converted on 2026-10-11 to EntityFramework 6.5.2 on the existing .NET Framework 
 ## Source of truth
 
 - `BarakatAlkhreir/Model/Entities/`: 62 editable POCO entity classes. Scalar properties use normal setters and EF snapshot tracking; virtual navigation properties support lazy loading.
-- `BarakatAlkhreir/Model/Mapping/`: one explicit `EntityTypeConfiguration<T>` per entity, mapping 62 tables, 794 columns, and 61 relationships after payment consolidation.
+- `BarakatAlkhreir/Model/Mapping/`: one explicit `EntityTypeConfiguration<T>` per entity, mapping 62 tables, 795 columns, and 61 relationships after payment consolidation and the licence automated-number addition.
 - `BarakatAlkhreir/Model/BarakeitAlkheirEntities.cs`: `DbContext` with the existing entity-set names. Context lifetime, transaction scopes, permissions, audit assignments, and form behavior remain in their existing locations.
 - `BarakatAlkhreir/Model/Migrations/`: explicit EF6 migrations and their snapshots. `ExistingDatabaseBaseline` has empty `Up` and `Down` methods and a complete embedded snapshot.
 
@@ -47,6 +47,22 @@ New database provisioning is a separate explicit operation. The empty baseline a
 Microsoft documents [Code First against an existing database](https://learn.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/existing-database) and [baselining existing databases for migrations](https://learn.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/existing-database).
 
 ## Verification
+
+### Licence automated number
+
+`CompanyLicence.licenseAutomatedNumber` is the optional **الرقم الآلي** (Automated Number), distinct from the licence number, unified number, civil ID, and link code. It stores up to 50 Unicode characters and preserves leading zeros. The company-licence form supports viewing, adding, editing, saving, and clearing it. Both shared licence selectors and the payment finder provide partial-number search and display the number in their results; existing eligibility filters and returned licence IDs remain in use.
+
+`202610111200000_AddLicenceAutomatedNumber` adds only nullable `dbo.CompanyLicences.licenseAutomatedNumber` (`nvarchar(50)`). Existing rows remain null. Its `Down` removes the new column and would lose any numbers entered there. Startup applies the pending migration through the existing runner and checks that the column is present. The new migration has not been applied to the configured business database during this change; deploy the rebuilt application using the backup/client-close procedure above.
+
+Verification commands against the isolated build:
+
+```powershell
+tests\Run-CodeFirstTests.ps1 -BuildBin .codex-build\automated-number\bin
+tests\Run-LicenceAutomatedNumberTests.ps1 -BuildBin .codex-build\automated-number\bin
+tests\Run-PaymentMergeMigrationTests.ps1 -BuildBin .codex-build\automated-number\bin -StartupOnly
+```
+
+The UI harness uses real Telerik controls with synthetic data and disables database-loading handlers. The migration harness uses only uniquely named disposable databases and checks existing-row preservation, leading-zero round trips, edits, SQL partial search, paid-installment lookup, reapplication, concurrent startup, and missing-column detection. These checks do not establish production login, permission roles, or end-to-end form saving against the business database.
 
 Restore NuGet packages and use the isolated VS2022 MSBuild pattern in `AGENTS.md`. Run the offline parity test against that build:
 

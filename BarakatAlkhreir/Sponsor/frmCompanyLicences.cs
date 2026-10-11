@@ -115,6 +115,7 @@ namespace BarakalAlkheir.Sponsor
             txtlicenseLinkCode.Text = "";
             txtlicensecivilID.Text = "";
             txtlicenseNo.Text = "";
+            txtlicenseAutomatedNumber.Text = "";
             //txtMantaqa.Text = "";
             //txtMohafaza.Text = "";
             txtnoOfSeats.Text = "0";
@@ -251,6 +252,7 @@ namespace BarakalAlkheir.Sponsor
                             bb.licenseLinkCode = txtlicenseLinkCode.Text;
                             bb.licensecivilID = txtlicensecivilID.Text;
                             bb.licenseNo = txtlicenseNo.Text;
+                            bb.licenseAutomatedNumber = string.IsNullOrWhiteSpace(txtlicenseAutomatedNumber.Text) ? null : txtlicenseAutomatedNumber.Text.Trim();
                             bb.Mantaqa = txtMantaqa.Text;
                             bb.Mohafaza = txtMohafaza.Text;
                             bb.noOfSeats = int.Parse(txtnoOfSeats.Text);
@@ -378,6 +380,7 @@ namespace BarakalAlkheir.Sponsor
                             bb.licenseLinkCode = txtlicenseLinkCode.Text;
                             bb.licensecivilID = txtlicensecivilID.Text;
                             bb.licenseNo = txtlicenseNo.Text;
+                            bb.licenseAutomatedNumber = string.IsNullOrWhiteSpace(txtlicenseAutomatedNumber.Text) ? null : txtlicenseAutomatedNumber.Text.Trim();
                             bb.Mantaqa = txtMantaqa.Text;
                             bb.Mohafaza = txtMohafaza.Text;
                             bb.noOfSeats = int.Parse(txtnoOfSeats.Text);
@@ -559,6 +562,7 @@ namespace BarakalAlkheir.Sponsor
             txtlicenseLinkCode.ReadOnly = true;
             txtlicensecivilID.ReadOnly = true;
             txtlicenseNo.ReadOnly = true;
+            txtlicenseAutomatedNumber.ReadOnly = true;
             txtMantaqa.Enabled = false;
             txtMohafaza.Enabled = false;
             txtnoOfSeats.ReadOnly = true;
@@ -600,6 +604,7 @@ namespace BarakalAlkheir.Sponsor
             txtlicenseLinkCode.ReadOnly = false;
             txtlicensecivilID.ReadOnly = false;
             txtlicenseNo.ReadOnly = false;
+            txtlicenseAutomatedNumber.ReadOnly = false;
             txtMantaqa.Enabled = true;
             txtMohafaza.Enabled = true;
             txtnoOfSeats.ReadOnly = false;
@@ -663,6 +668,7 @@ namespace BarakalAlkheir.Sponsor
                 txtlicenseLinkCode.Text = lstCompanyLicence[position].licenseLinkCode;
                 txtlicensecivilID.Text = lstCompanyLicence[position].licensecivilID;
                 txtlicenseNo.Text = lstCompanyLicence[position].licenseNo;
+                txtlicenseAutomatedNumber.Text = lstCompanyLicence[position].licenseAutomatedNumber;
                 txtMantaqa.Text = lstCompanyLicence[position].Mantaqa;
                 txtMohafaza.Text = lstCompanyLicence[position].Mohafaza;
                 txtnoOfSeats.Text = lstCompanyLicence[position].noOfSeats.Value.ToString();
@@ -747,6 +753,7 @@ namespace BarakalAlkheir.Sponsor
                 txtlicenseLinkCode.Text = "";
                 txtlicensecivilID.Text = "";
                 txtlicenseNo.Text = "";
+                txtlicenseAutomatedNumber.Text = "";
                 txtMantaqa.Text = "";
                 txtMohafaza.Text = "";
                 txtnoOfSeats.Text = "";

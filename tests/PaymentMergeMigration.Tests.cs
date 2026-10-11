@@ -128,7 +128,7 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
             "date recovery uses only unambiguous linked archive dates and preserves existing dates: " + scenario);
         Check(Convert.ToString(Sql(unchanged)) == before, "date recovery preserves every other installment field");
         Check(Convert.ToString(Sql("SELECT * FROM dbo.RentLicensesPaymentArchive_20261011 ORDER BY rentLicensePaymentID FOR XML RAW")) == archive, "date recovery preserves archive");
-        Check(!migrator.GetPendingMigrations().Any(), "date recovery migration recorded");
+        Check(!migrator.GetPendingMigrations().Any(m => m.EndsWith("_RestoreArchivedLicencePaymentDates")), "date recovery migration recorded");
         migrator.Update("RestoreArchivedLicencePaymentDates");
         Check(Sql("SELECT rentLicPay_PaymentDate FROM dbo.RentLicensesDetails").Equals(date), "date recovery repeat is harmless");
         bool rejected = false;
@@ -168,7 +168,7 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
                 new[] { "existing-archive", "CREATE TABLE dbo.RentLicensesPaymentArchive_20261011(ID int)" },
                 new[] { "incoming-foreign-key", "CREATE TABLE dbo.TestReceiptReference(ID int REFERENCES dbo.RentLicensesPayment(rentLicensePaymentID))" }
             };
-            foreach (var item in cases)
+            foreach (var item in args.Contains("--startup-only") ? new string[0][] : cases)
             {
                 database = "BarakatMergeTests_" + Guid.NewGuid().ToString("N");
                 connectionString = master.ConnectionString;
@@ -183,7 +183,7 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
                     database = null;
                 }
             }
-            foreach (string scenario in new[] { "first-start", "current", "concurrent", "blocked-retry", "empty", "newer-database", "missing-column" })
+            foreach (string scenario in new[] { "first-start", "current", "concurrent", "blocked-retry", "empty", "newer-database", "missing-column", "missing-automated-number" })
             {
                 database = "BarakatStartupTests_" + Guid.NewGuid().ToString("N");
                 connectionString = master.ConnectionString;
@@ -217,7 +217,8 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
             return;
         }
         Fixture(false);
-        if (scenario == "current" || scenario == "newer-database" || scenario == "missing-column")
+        Sql("INSERT dbo.CompanyLicences(licenseNo,commercialName) VALUES(N'LEGACY',N'Existing licence');");
+        if (scenario == "current" || scenario == "newer-database" || scenario == "missing-column" || scenario == "missing-automated-number")
             Migrator().Update();
         if (scenario == "newer-database")
             Sql("INSERT dbo.__MigrationHistory(MigrationId,ContextKey,Model,ProductVersion) SELECT '209901010000000_Future',ContextKey,Model,ProductVersion FROM dbo.__MigrationHistory WHERE MigrationId LIKE '%RestoreArchivedLicencePaymentDates'");
@@ -225,7 +226,9 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
             Sql("ALTER TABLE dbo.RentLicensesDetails DROP CONSTRAINT CK_LicenceInstalment_PaymentState; ALTER TABLE dbo.RentLicensesDetails DROP COLUMN rentLicPay_VouNo;");
         if (scenario == "blocked-retry")
             Sql("UPDATE dbo.RentLicensesDetails SET rd_isPaid=NULL");
-        if (scenario == "blocked-retry" || scenario == "newer-database" || scenario == "missing-column")
+        if (scenario == "missing-automated-number")
+            Sql("ALTER TABLE dbo.CompanyLicences DROP COLUMN licenseAutomatedNumber");
+        if (scenario == "blocked-retry" || scenario == "newer-database" || scenario == "missing-column" || scenario == "missing-automated-number")
         {
             bool rejected = false;
             try { BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString); }
@@ -258,12 +261,42 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
         }
         else BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString);
         Check(!Migrator().GetPendingMigrations().Any(), "startup applies all explicit migrations: " + scenario);
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 3, "startup records each migration once");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 4, "startup records each migration once");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.columns WHERE object_id=OBJECT_ID('dbo.CompanyLicences') AND name='licenseAutomatedNumber' AND max_length=100 AND is_nullable=1")) == 1, "startup adds optional automated number");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.CompanyLicences WHERE licenseNo=N'LEGACY' AND commercialName=N'Existing licence' AND licenseAutomatedNumber IS NULL")) == 1, "migration retains existing licence with blank automated number");
         Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPaymentArchive_20261011")) == 1, "startup preserves receipt archive");
         using (var db = new BarakeitAlkheirEntities(connectionString))
             Check(db.RentLicensesDetails.Single().rentLicPay_VouNo == "TEST", "EF payment page query succeeds after startup migration");
         BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString);
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 3, "repeat startup skips applied migrations");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 4, "repeat startup skips applied migrations");
+        if (scenario == "first-start")
+        {
+            using (var db = new BarakeitAlkheirEntities(connectionString))
+            {
+                var licence = db.CompanyLicences.Single();
+                licence.licenseAutomatedNumber = "001234";
+                db.RentLicenses.Single(r => r.rentLicenseID == 1).companyLicencesID = licence.companyLicencesID;
+                db.SaveChanges();
+            }
+            using (var db = new BarakeitAlkheirEntities(connectionString))
+            {
+                Check(db.CompanyLicences.Single().licenseAutomatedNumber == "001234", "automated number round trip preserves leading zeros");
+                Check(db.CompanyLicences.Where(c => c.licenseAutomatedNumber.Contains("012")).Count() == 1, "partial automated number search translates to SQL");
+                Check((from d in db.RentLicensesDetails.Where(d => d.rd_isPaid == true)
+                       join r in db.RentLicenses on d.rentLicenseID equals r.rentLicenseID
+                       join c in db.CompanyLicences on r.companyLicencesID equals c.companyLicencesID
+                       where c.licenseAutomatedNumber.Contains("001234") select d).Count() == 1, "paid installment found through licence automated number");
+                db.CompanyLicences.Single().licenseAutomatedNumber = "009876";
+                db.SaveChanges();
+            }
+            BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString);
+            using (var db = new BarakeitAlkheirEntities(connectionString))
+                Check(db.CompanyLicences.Single().licenseAutomatedNumber == "009876", "edited number survives repeated startup");
+            Migrator().Update("RestoreArchivedLicencePaymentDates");
+            Check(Sql("SELECT COL_LENGTH('dbo.CompanyLicences','licenseAutomatedNumber')") == DBNull.Value, "field migration downgrade removes only its column");
+            Migrator().Update();
+            Check(Sql("SELECT licenseNo FROM dbo.CompanyLicences").Equals("LEGACY"), "field migration reapply preserves licence record");
+        }
         Console.WriteLine("PASS: application startup migration scenario " + scenario);
     }
 }

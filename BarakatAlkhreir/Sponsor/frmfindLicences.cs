@@ -143,6 +143,14 @@ namespace BarakalAlkheir.Sponsor
             GView.DataSource = lstCompanyLicense;
         }
 
+        private void txtlicenseAutomatedNumber_TextChanged(object sender, EventArgs e)
+        {
+            if (lstCompanyLicense == null) return;
+            string number = txtlicenseAutomatedNumber.Text.Trim();
+            GView.DataSource = number.Length == 0 ? lstCompanyLicense :
+                lstCompanyLicense.FindAll(c => (c.licenseAutomatedNumber ?? string.Empty).Contains(number));
+        }
+
         private void txtlicenseNo_TextChanged(object sender, EventArgs e)
        {
             if (lstCompanyLicense == null) return;

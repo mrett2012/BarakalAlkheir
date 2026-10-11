@@ -59,7 +59,10 @@ SELECT @result;";
 WHERE object_id=OBJECT_ID('dbo.RentLicensesDetails') AND name IN
  ('rentLicPay_VouNo','rentLicPay_PaymentDate','rentLicPay_mandoubID','payment_added_Date',
   'payment_edited_Date','payment_addedBy','payment_editedBy','legacyPaymentID');";
-                        if (Convert.ToInt32(command.ExecuteScalar()) != 8)
+                        int paymentColumnCount = Convert.ToInt32(command.ExecuteScalar());
+                        command.CommandText = "SELECT COL_LENGTH('dbo.CompanyLicences','licenseAutomatedNumber');";
+                        object automatedNumberLength = command.ExecuteScalar();
+                        if (paymentColumnCount != 8 || automatedNumberLength == DBNull.Value || Convert.ToInt32(automatedNumberLength) != 100)
                             throw new InvalidOperationException("سجل تحديث قاعدة البيانات لا يطابق الأعمدة الموجودة. يلزم إصلاح قاعدة البيانات قبل التشغيل.");
                     }
                 }

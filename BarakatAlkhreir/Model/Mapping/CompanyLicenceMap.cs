@@ -40,6 +40,7 @@ namespace BarakalAlkheir.Model.Mapping
             Property(e => e.commercialName).HasColumnName("commercialName").HasColumnType("nvarchar").IsOptional().HasMaxLength(100).IsUnicode();
             Property(e => e.licenseLinkCode).HasColumnName("licenseLinkCode").HasColumnType("nvarchar").IsOptional().HasMaxLength(50).IsUnicode();
             Property(e => e.licenseUniqueNo).HasColumnName("licenseUniqueNo").HasColumnType("nvarchar").IsOptional().HasMaxLength(50).IsUnicode();
+            Property(e => e.licenseAutomatedNumber).HasColumnName("licenseAutomatedNumber").HasColumnType("nvarchar").IsOptional().HasMaxLength(50).IsUnicode();
             Property(e => e.licenseNo).HasColumnName("licenseNo").HasColumnType("nvarchar").IsOptional().HasMaxLength(50).IsUnicode();
             Property(e => e.companyID).HasColumnName("companyID").HasColumnType("int").IsOptional();
             Property(e => e.companyLicencesID).HasColumnName("companyLicencesID").HasColumnType("int").IsRequired().HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);

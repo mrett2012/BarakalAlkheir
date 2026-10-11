@@ -184,7 +184,9 @@ JOIN sys.columns c ON c.object_id=t.object_id JOIN sys.types ty ON ty.user_type_
             {
                 var previous = table.Value.Elements().Where(e => e.Name.LocalName == "Property").ToDictionary(e => Attribute(e, "Name"));
                 var current = after[table.Key].Elements().Where(e => e.Name.LocalName == "Property").ToDictionary(e => Attribute(e, "Name"));
-                Check(previous.Keys.OrderBy(s => s).SequenceEqual(current.Keys.Where(n => table.Key != "dbo.RentLicensesDetails" || !PaymentColumns.Contains(n)).OrderBy(s => s)), table.Key + " columns preserved");
+                Check(previous.Keys.OrderBy(s => s).SequenceEqual(current.Keys.Where(n =>
+                    (table.Key != "dbo.RentLicensesDetails" || !PaymentColumns.Contains(n)) &&
+                    (table.Key != "dbo.CompanyLicences" || n != "licenseAutomatedNumber")).OrderBy(s => s)), table.Key + " columns preserved");
                 foreach (var column in previous) { Column(column.Value, current[column.Key], table.Key); columns++; }
                 Func<XElement, string[]> keys = e => e.Elements().Single(p => p.Name.LocalName == "Key").Elements().Select(p => Attribute(p, "Name")).ToArray();
                 Check(keys(table.Value).SequenceEqual(keys(after[table.Key])), table.Key + " primary key preserved");
@@ -217,11 +219,25 @@ JOIN sys.columns c ON c.object_id=t.object_id JOIN sys.types ty ON ty.user_type_
                 Check(paymentColumns.Length == PaymentColumns.Length, "all eight receipt metadata columns mapped");
                 foreach (var column in paymentColumns) Column(Tables(migrated)["dbo.RentLicensesDetails"].Elements().Single(e => e.Name.LocalName == "Property" && Attribute(e,"Name") == Attribute(column,"Name")), column, "dbo.RentLicensesDetails");
             }
+            var automatedNumber = (System.Data.Entity.Migrations.Infrastructure.IMigrationMetadata)new BarakalAlkheir.Model.Migrations.AddLicenceAutomatedNumber();
+            using (var bytes = new MemoryStream(Convert.FromBase64String(automatedNumber.Target)))
+            using (var unzip = new GZipStream(bytes, CompressionMode.Decompress))
+            {
+                var migrated = Tables(XDocument.Load(unzip));
+                foreach (var table in after)
+                {
+                    var snapshotColumns = migrated[table.Key].Elements().Where(e => e.Name.LocalName == "Property").ToDictionary(e => Attribute(e, "Name"));
+                    foreach (var column in table.Value.Elements().Where(e => e.Name.LocalName == "Property"))
+                        Column(snapshotColumns[Attribute(column, "Name")], column, table.Key);
+                }
+                var number = migrated["dbo.CompanyLicences"].Elements().Single(e => Attribute(e, "Name") == "licenseAutomatedNumber");
+                Check(Attribute(number, "Type") == "nvarchar" && Attribute(number, "MaxLength") == "50" && Attribute(number, "Nullable") == "true", "automated number is optional Unicode text of length 50");
+            }
             baseline.Up();
             var operations = (System.Collections.IEnumerable)typeof(System.Data.Entity.Migrations.DbMigration)
                 .GetProperty("Operations", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(baseline, null);
             Check(!operations.Cast<object>().Any(), "empty baseline does not modify business tables");
-            Console.WriteLine("PASS: " + assertions + " mapping checks; 62 tables, " + (columns + PaymentColumns.Length) + " columns, 61 relationships; no database access.");
+            Console.WriteLine("PASS: " + assertions + " mapping checks; 62 tables, " + (columns + PaymentColumns.Length + 1) + " columns, 61 relationships; no database access.");
             if (args.Length > 1) ExistingDatabase(actual, args[1]);
             return 0;
         }

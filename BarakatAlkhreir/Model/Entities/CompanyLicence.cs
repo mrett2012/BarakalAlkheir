@@ -19,6 +19,7 @@ namespace BarakalAlkheir.Model
         public int companyLicencesID { get; set; }
         public int? companyID { get; set; }
         public string licenseNo { get; set; }
+        public string licenseAutomatedNumber { get; set; }
         public string licenseUniqueNo { get; set; }
         public string licenseLinkCode { get; set; }
         public string commercialName { get; set; }

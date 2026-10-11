@@ -1269,6 +1269,13 @@
       <DependentUpon>202610110924552_MergeLicencePaymentsIntoDetails.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Model\Migrations\Configuration.cs" />
+    <Compile Include="Model\Migrations\202610111200000_AddLicenceAutomatedNumber.cs" />
+    <Compile Include="Model\Migrations\202610111200000_AddLicenceAutomatedNumber.Designer.cs">
+      <DependentUpon>202610111200000_AddLicenceAutomatedNumber.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Model\Migrations\202610111200000_AddLicenceAutomatedNumber.resx">
+      <DependentUpon>202610111200000_AddLicenceAutomatedNumber.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Model\Migrations\DatabaseMigrationRunner.cs" />
     <Compile Include="Model\Migrations\202610111046253_RestoreArchivedLicencePaymentDates.cs" />
     <Compile Include="Model\Migrations\202610111046253_RestoreArchivedLicencePaymentDates.Designer.cs">

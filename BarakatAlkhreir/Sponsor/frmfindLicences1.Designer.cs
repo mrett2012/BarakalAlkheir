@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Telerik.WinControls.UI.GridViewTextBoxColumn automatedNumberColumn = new Telerik.WinControls.UI.GridViewTextBoxColumn();
             Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn1 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
             Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn2 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
             Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn3 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
@@ -37,6 +38,8 @@
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
             this.radLabel11 = new Telerik.WinControls.UI.RadLabel();
             this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
+            this.txtlicenseAutomatedNumber = new Telerik.WinControls.UI.RadTextBox();
+            this.lbllicenseAutomatedNumber = new Telerik.WinControls.UI.RadLabel();
             this.txtlicenseNo = new Telerik.WinControls.UI.RadTextBox();
             this.txtcommercialName = new Telerik.WinControls.UI.RadTextBox();
             this.GView = new Telerik.WinControls.UI.RadGridView();
@@ -49,6 +52,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtlicenseAutomatedNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbllicenseAutomatedNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtlicenseNo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtcommercialName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GView)).BeginInit();
@@ -93,6 +98,30 @@
             this.radLabel5.Size = new System.Drawing.Size(77, 21);
             this.radLabel5.TabIndex = 7;
             this.radLabel5.Text = "الاسم التجاري";
+            //
+            // txtlicenseAutomatedNumber
+            //
+            this.txtlicenseAutomatedNumber.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.txtlicenseAutomatedNumber.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
+            this.txtlicenseAutomatedNumber.Location = new System.Drawing.Point(31, 59);
+            this.txtlicenseAutomatedNumber.Name = "txtlicenseAutomatedNumber";
+            this.txtlicenseAutomatedNumber.MaxLength = 50;
+            this.txtlicenseAutomatedNumber.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.txtlicenseAutomatedNumber.Size = new System.Drawing.Size(232, 23);
+            this.txtlicenseAutomatedNumber.TabIndex = 4;
+            //
+            // lbllicenseAutomatedNumber
+            //
+            this.lbllicenseAutomatedNumber.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.lbllicenseAutomatedNumber.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lbllicenseAutomatedNumber.Location = new System.Drawing.Point(267, 59);
+            this.lbllicenseAutomatedNumber.Name = "lbllicenseAutomatedNumber";
+            this.lbllicenseAutomatedNumber.AutoSize = false;
+            this.lbllicenseAutomatedNumber.Size = new System.Drawing.Size(76, 23);
+            this.lbllicenseAutomatedNumber.TextAlignment = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbllicenseAutomatedNumber.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbllicenseAutomatedNumber.Text = "الرقم الآلي";
+            this.txtlicenseAutomatedNumber.TextChanged += new System.EventHandler(this.txtlicenseAutomatedNumber_TextChanged);
             // 
             // txtlicenseNo
             // 
@@ -129,6 +158,7 @@
             // 
             this.GView.MasterTemplate.AllowAddNewRow = false;
             this.GView.MasterTemplate.AllowColumnReorder = false;
+            this.GView.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;
             gridViewTextBoxColumn1.FieldName = "companyLicencesID";
             gridViewTextBoxColumn1.HeaderText = "ID";
             gridViewTextBoxColumn1.IsVisible = false;
@@ -162,13 +192,19 @@
             gridViewTextBoxColumn6.Name = "gvendDate";
             gridViewTextBoxColumn6.ReadOnly = true;
             gridViewTextBoxColumn6.Width = 100;
+            automatedNumberColumn.FieldName = "licenseAutomatedNumber";
+            automatedNumberColumn.HeaderText = "الرقم الآلي";
+            automatedNumberColumn.Name = "gvlicenseAutomatedNumber";
+            automatedNumberColumn.ReadOnly = true;
+            automatedNumberColumn.Width = 120;
             this.GView.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
             gridViewTextBoxColumn1,
             gridViewTextBoxColumn2,
             gridViewTextBoxColumn3,
             gridViewTextBoxColumn4,
             gridViewTextBoxColumn5,
-            gridViewTextBoxColumn6});
+            gridViewTextBoxColumn6,
+            automatedNumberColumn});
             this.GView.Name = "GView";
             this.GView.ReadOnly = true;
             this.GView.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -257,6 +293,8 @@
             this.Controls.Add(this.GView);
             this.Controls.Add(this.radLabel11);
             this.Controls.Add(this.radLabel5);
+            this.Controls.Add(this.txtlicenseAutomatedNumber);
+            this.Controls.Add(this.lbllicenseAutomatedNumber);
             this.Controls.Add(this.txtlicenseNo);
             this.Controls.Add(this.txtcommercialName);
             this.Controls.Add(this.radPanel1);
@@ -272,6 +310,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtlicenseAutomatedNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbllicenseAutomatedNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtlicenseNo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtcommercialName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GView)).EndInit();
@@ -292,6 +332,8 @@
         private Telerik.WinControls.UI.RadPanel radPanel1;
         private Telerik.WinControls.UI.RadLabel radLabel11;
         private Telerik.WinControls.UI.RadLabel radLabel5;
+        private Telerik.WinControls.UI.RadTextBox txtlicenseAutomatedNumber;
+        private Telerik.WinControls.UI.RadLabel lbllicenseAutomatedNumber;
         private Telerik.WinControls.UI.RadTextBox txtlicenseNo;
         private Telerik.WinControls.UI.RadTextBox txtcommercialName;
         private Telerik.WinControls.UI.RadGridView GView;

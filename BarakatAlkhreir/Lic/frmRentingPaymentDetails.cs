@@ -52,10 +52,11 @@ namespace BarakalAlkheir.Lic
                 var details = db.RentLicensesDetails.Where(d => d.rd_fromDate >= first && d.rd_fromDate < end).ToList();
                 var receipts = details.Where(d => d.rd_isPaid == true).ToList();
                 var ids = details.Where(d => d.rentLicenseID.HasValue).Select(d => d.rentLicenseID.Value).Distinct().ToList();
+                // Keep active rentals visible even when the selected year has no installments.
                 // Historical rentals remain visible in their billing year after closure.
                 var rentals = (from r in db.RentLicenses
                                join c in db.CompanyLicences on r.companyLicencesID equals c.companyLicencesID
-                               where ids.Contains(r.rentLicenseID)
+                               where r.rentLicense_active == true || ids.Contains(r.rentLicenseID)
                                orderby r.rentLicenseID
                                select new { r.rentLicenseID, c.licenseNo, c.commercialName, r.rentLicense_from, r.rentLicense_to }).ToList();
                 foreach (var rental in rentals)

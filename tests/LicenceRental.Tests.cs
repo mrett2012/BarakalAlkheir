@@ -537,6 +537,15 @@ public sealed class LicenceRentalFormSmoke : MarshalByRefObject
                 form.DrawToBitmap(image, new System.Drawing.Rectangle(0, 0, image.Width, image.Height));
                 image.Save(Path.Combine(output, "annual-form.png"));
             }
+            ((Telerik.WinControls.UI.RadDateTimePicker)Field(form, "txtDate")).Value = new DateTime(2026, 1, 1);
+            Click(form, "btnPrint_Click");
+            if (grid.Rows.Count != 4 || Convert.ToDecimal(grid.Rows[grid.Rows.Count - 1].Cells[17].Value) != 0m ||
+                Convert.ToDecimal(grid.Rows[grid.Rows.Count - 1].Cells[18].Value) != 0m) return false;
+            // Active rentals stay visible without inventing charges in a year with no instalments.
+            if (grid.Rows[0].Cells[5].Value != null || grid.Rows[0].Cells[16].Value != null) return false;
+            ((Telerik.WinControls.UI.RadDateTimePicker)Field(form, "txtDate")).Value = new DateTime(2025, 1, 1);
+            Click(form, "btnPrint_Click");
+            if (grid.Rows.Count != 5 || Convert.ToDecimal(grid.Rows[grid.Rows.Count - 1].Cells[18].Value) != 250m) return false;
         }
         return true;
     }
@@ -558,13 +567,13 @@ public sealed class LicenceRentalFormSmoke : MarshalByRefObject
                     var grid = (Telerik.WinControls.UI.RadGridView)Field(form, "GView");
                     foreach (string filter in new[] { "", null, "NO-MATCH" })
                     {
-                        Call(form, "getData", new[] { typeof(string), typeof(string), typeof(string), typeof(string) }, filter, "", "SEARCH-TEST", "");
+                        Call(form, "getData", new[] { typeof(string), typeof(string), typeof(string), typeof(string), typeof(string) }, filter, "", "SEARCH-TEST", "", "");
                         bool found = grid.Rows.Any(r => Convert.ToInt32(r.Cells[0].Value) == receiptId);
                         if (found != string.IsNullOrEmpty(filter)) throw new Exception("Blank vouchers must be searchable only when the voucher filter is absent.");
                     }
                     detail.rentLicPay_VouNo = "RECEIPT-TEST";
                     db.SaveChanges();
-                    Call(form, "getData", new[] { typeof(string), typeof(string), typeof(string), typeof(string) }, "CEIPT", "", "SEARCH-TEST", "");
+                    Call(form, "getData", new[] { typeof(string), typeof(string), typeof(string), typeof(string), typeof(string) }, "CEIPT", "", "SEARCH-TEST", "", "");
                     if (!grid.Rows.Any(r => Convert.ToInt32(r.Cells[0].Value) == receiptId)) throw new Exception("Voucher substring search regressed.");
                 }
             }
