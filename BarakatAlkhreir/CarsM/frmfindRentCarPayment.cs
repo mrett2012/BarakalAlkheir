@@ -14,7 +14,6 @@ namespace BarakalAlkheir.CarsM
 {
     public partial class frmfindRentCarPayment : Telerik.WinControls.UI.RadForm
     {
-        List<RentLicensesPayment> lstRentLicensesPayment = null;
         public bool found = false;
         public int licID = -1;
         public string licNO = "";

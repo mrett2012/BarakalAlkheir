@@ -115,7 +115,7 @@ namespace BarakalAlkheir.Sponsor
                                                                 bbID
                                                             select c).FirstOrDefault();
 
-                            db.CompanyLicenseDesignations.DeleteObject(bb);
+                            db.CompanyLicenseDesignations.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -208,7 +208,7 @@ namespace BarakalAlkheir.Sponsor
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.CompanyLicenseDesignations.AddObject(bb);
+                            db.CompanyLicenseDesignations.Add(bb);
                             rowsAffected = db.SaveChanges();
                             lblID.Text = bb.companyLicencesDesignationID.ToString();
 
@@ -382,14 +382,14 @@ namespace BarakalAlkheir.Sponsor
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
             {
                 int CLID = lstCompanyLicence[position].companyLicencesID;
-                var val = from c in db.CompanyLicenseDesignations
+                var val = (from c in db.CompanyLicenseDesignations
                           where c.companyLicencesID == CLID
                           select new
                           {
                               c.companyLicencesDesignationID,
                               c.Designation.desig_namea,
                               c.noOfSeats
-                          };
+                          }).ToList();
                 GView.DataSource = val;
             }
         }

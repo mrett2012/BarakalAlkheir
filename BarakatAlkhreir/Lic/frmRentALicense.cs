@@ -336,7 +336,7 @@ namespace BarakalAlkheir.Lic
                 int id = int.Parse(lblID1.Text);
                 using (var db = new BarakeitAlkheirEntities())
                 {
-                    bool hasPayments = db.RentLicensesPayments.Any(p => p.rentLicenseID == id);
+                    bool hasPayments = db.RentLicensesDetails.Any(p => p.rentLicenseID == id && p.rd_isPaid == true);
                     btnFindCustomer1.Enabled = !hasPayments;
                     btnFindLicenses1.Enabled = !hasPayments;
                 }
@@ -485,7 +485,7 @@ namespace BarakalAlkheir.Lic
                                              bbID
                                          select c).FirstOrDefault();
 
-                        db.RentShops.DeleteObject(bb);
+                        db.RentShops.Remove(bb);
                         int noOfAffectedRows = db.SaveChanges();
                         if (noOfAffectedRows > 0)
                         {
@@ -532,7 +532,7 @@ namespace BarakalAlkheir.Lic
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.RentShops.AddObject(bb);
+                        db.RentShops.Add(bb);
                         rowsAffected = db.SaveChanges();
 
 
@@ -564,7 +564,7 @@ namespace BarakalAlkheir.Lic
                     bb.edited_Date = DateTime.Now;
                     bb.editedBy = MainClass.userID;
 
-                    //db.RentLicenses.AddObject(bb);
+                    //db.RentLicenses.Add(bb);
                     rowsAffected = db.SaveChanges();
                 }
             }

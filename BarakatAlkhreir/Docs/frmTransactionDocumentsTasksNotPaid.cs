@@ -274,7 +274,7 @@ namespace BarakalAlkheir.Docs
                               };
 
                     DateTime now = DateTime.Now;
-                    var val1 = val.Where(p => p.document_endDate <= System.Data.Objects.EntityFunctions.AddDays(now, p.noOfDays)).ToList();
+                    var val1 = val.Where(p => p.document_endDate <= System.Data.Entity.DbFunctions.AddDays(now, p.noOfDays)).ToList();
                     return DocumentListLookup.Create(db, val1, item => item.documentID, null, false);
                 }
             }, loaded =>
@@ -412,7 +412,7 @@ namespace BarakalAlkheir.Docs
                                 dd.edited_Date = DateTime.Now;
                                 dd.editedBy = MainClass.userID;
 
-                                db.DocumentTransactionTasks.AddObject(dd);
+                                db.DocumentTransactionTasks.Add(dd);
                                 int rowsAffected = db.SaveChanges();
 
                                 db.AcceptAllChanges();

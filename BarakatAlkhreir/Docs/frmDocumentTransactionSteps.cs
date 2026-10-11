@@ -110,7 +110,7 @@ namespace BarakalAlkheir.Docs
                                                           where c.documentTransSetpID == bbID
                                                           select c).FirstOrDefault();
 
-                            db.DocumentTransactionSteps.DeleteObject(bb);
+                            db.DocumentTransactionSteps.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -158,7 +158,7 @@ namespace BarakalAlkheir.Docs
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.DocumentTransactionSteps.AddObject(bb);
+                        db.DocumentTransactionSteps.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -180,7 +180,7 @@ namespace BarakalAlkheir.Docs
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.DocumentTransactionSteps.AddObject(bb);
+                        //db.DocumentTransactionSteps.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }

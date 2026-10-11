@@ -41,11 +41,11 @@ namespace BarakalAlkheir.Lic
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
                                 on c.companyLicencesID equals d.companyLicencesID
-                               join ee in db.RentLicensesPayments
+                               join ee in db.RentLicensesDetails.Where(detail => detail.rd_isPaid == true)
                                on d.rentLicenseID equals ee.rentLicenseID
                                join collector in db.Employees on ee.rentLicPay_mandoubID equals collector.employeeID into collectors
                                from ee1 in collectors.DefaultIfEmpty()
-                               orderby ee.rentLicPay_ForDate
+                               orderby ee.rd_fromDate
 
                                select new
                                {
@@ -63,9 +63,9 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = ee1 == null ? -1 : ee1.employeeID,
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
-                                   ForDate = ee.rentLicPay_ForDate,
+                                   ForDate = ee.rd_fromDate,
                                    PaymentDate = ee.rentLicPay_PaymentDate,
-                                   Amount = ee.rentLicPay_Amount ?? 0,
+                                   Amount = ee.rd_amount ?? 0,
                                    rentLicPay_VouNo = ee.rentLicPay_VouNo,
                                    rentLicense_active = d.rentLicense_active
 
@@ -82,7 +82,7 @@ namespace BarakalAlkheir.Lic
 
                     if (chkDateFrom.Checked && chkDateTo.Checked && txtDate1.Value.Date > txtDate2.Value.Date)
                         throw new InvalidOperationException("فترة التقرير غير صحيحة");
-                    val = val.Where(c => LicenseRentalReports.InPeriod(c.ForDate, false,
+                    val = val.Where(c => LicenseRentalReports.InPeriod(c.ForDate, true,
                         chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null,
                         chkDateTo.Checked ? (DateTime?)txtDate2.Value : (chkDateFrom.Checked ? (DateTime?)txtDate1.Value : null))).ToList();
                     if (chkDateFrom.Checked) title += " من: " + txtDate1.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
@@ -117,7 +117,7 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = c.mandoubID,
                                    rentLicense_from = c.rentLicense_from,
                                    rentLicense_to = c.rentLicense_to,
-                                   ForDate = c.ForDate.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                                   ForDate = LicenseRentalRules.BillingDate(c.ForDate.Value).ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
                                    PaymentDate = c.PaymentDate,
                                    Amount = c.Amount,
                                    rentLicPay_VouNo =  c.rentLicPay_VouNo
@@ -148,7 +148,7 @@ namespace BarakalAlkheir.Lic
                         dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["ForDate"] = item.ForDate;
 
-                        dr["PaymentDate"]=LicenseRentalRules.FormatDate(item.PaymentDate.Value);
+                        dr["PaymentDate"]=item.PaymentDate.HasValue ? LicenseRentalRules.FormatDate(item.PaymentDate.Value) : "";
                         dr["Amount"]=item.Amount;
                         dr["extra1"]=item.rentLicPay_VouNo;
                         dr["extra2"]="";
@@ -480,7 +480,7 @@ namespace BarakalAlkheir.Lic
                         dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["ForDate"] = LicenseRentalRules.FormatDate(item.ForDate.Value);
 
-                        dr["PaymentDate"] = LicenseRentalRules.FormatDate(item.PaymentDate.Value);
+                        dr["PaymentDate"] = item.PaymentDate.HasValue ? LicenseRentalRules.FormatDate(item.PaymentDate.Value) : "";
                         dr["Amount"] = item.Amount;
                         dr["extra1"] = item.rentLicPay_VouNo;
                         dr["extra2"] = "";
@@ -648,7 +648,7 @@ namespace BarakalAlkheir.Lic
                         dr["rentLicense_to"] = LicenseRentalRules.FormatDate(item.rentLicense_to.Value);
                         dr["ForDate"] = LicenseRentalRules.FormatDate(item.ForDate.Value);
 
-                        dr["PaymentDate"] = LicenseRentalRules.FormatDate(item.PaymentDate.Value);
+                        dr["PaymentDate"] = item.PaymentDate.HasValue ? LicenseRentalRules.FormatDate(item.PaymentDate.Value) : "";
                         dr["Amount"] = item.Amount;
                         dr["extra1"] = item.rentLicPay_VouNo;
                         if (item.rd_isPaid.Value)
@@ -711,7 +711,7 @@ namespace BarakalAlkheir.Lic
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
                                 on c.companyLicencesID equals d.companyLicencesID
-                               join ee in db.RentLicensesPayments
+                               join ee in db.RentLicensesDetails.Where(detail => detail.rd_isPaid == true)
                                on d.rentLicenseID equals ee.rentLicenseID
                                join collector in db.Employees on ee.rentLicPay_mandoubID equals collector.employeeID into collectors
                                from ee1 in collectors.DefaultIfEmpty()
@@ -733,9 +733,9 @@ namespace BarakalAlkheir.Lic
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
                                    rentLicense_active = d.rentLicense_active,
-                                   ForDate = ee.rentLicPay_ForDate,
+                                   ForDate = ee.rd_fromDate,
                                    PaymentDate = ee.rentLicPay_PaymentDate,
-                                   Amount = ee.rentLicPay_Amount ?? 0,
+                                   Amount = ee.rd_amount ?? 0,
                                    rentLicPay_VouNo = ee.rentLicPay_VouNo
 
                                }).ToList();
@@ -793,8 +793,8 @@ namespace BarakalAlkheir.Lic
                                    mandoubID = c.mandoubID,
                                    rentLicense_from = c.rentLicense_from,
                                    rentLicense_to = c.rentLicense_to,
-                                   ForDate = c.ForDate.Value.ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
-                                   PaymentDate = LicenseRentalRules.FormatDate(c.PaymentDate.Value),
+                                   ForDate = LicenseRentalRules.BillingDate(c.ForDate.Value).ToString("MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                                   PaymentDate = c.PaymentDate.HasValue ? LicenseRentalRules.FormatDate(c.PaymentDate.Value) : "",
                                    Amount = c.Amount,
                                    rentLicPay_VouNo =  c.rentLicPay_VouNo
 

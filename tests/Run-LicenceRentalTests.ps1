@@ -23,38 +23,8 @@ $interactive = if ($PrepareInteractive) { 'true' } else { 'false' }
 if($LASTEXITCODE -ne 0){ Get-Content (Join-Path $buildRoot 'harness-build.log'); throw 'Regression harness compilation failed' }
 if(-not $Integration -and -not $PrepareInteractive){ & $testExe; if($LASTEXITCODE -ne 0){throw 'Regression checks failed'}; return }
 
-# Derive an empty fixture from the active EDMX, never from a customer database/backup.
-[xml]$model = Get-Content (Join-Path $projectRoot 'BarakatAlkhreir/Model/BarakeitAlkheir.edmx')
-$storage = $model.SelectSingleNode('//*[local-name()="StorageModels"]/*')
-$ddl = New-Object Text.StringBuilder
-foreach($set in $storage.EntityContainer.EntitySet){
-    $entityName = ($set.EntityType -split '\.')[-1]
-    $entity = $storage.EntityType | Where-Object {$_.Name -eq $entityName}
-    if(-not $entity){throw "Missing fixture entity $entityName"}
-    $table = if($set.Table){[string]$set.Table}else{[string]$set.Name}
-    $columns = @()
-    foreach($property in $entity.Property){
-        $type = [string]$property.Type
-        if($type -in @('nvarchar','varchar','nchar','char','varbinary','binary')){
-            $length = if($property.MaxLength){[string]$property.MaxLength}else{'max'}
-            $type += '('+$length+')'
-        }elseif($type -in @('decimal','numeric')){ $type += '('+$property.Precision+','+$property.Scale+')' }
-        $identity = if($property.StoreGeneratedPattern -eq 'Identity'){' IDENTITY(1,1)'}else{''}
-        $nullable = if($property.Nullable -eq 'false'){' NOT NULL'}else{' NULL'}
-        $columns += '['+([string]$property.Name).Replace(']',']]')+'] '+$type+$identity+$nullable
-    }
-    $keys = @($entity.Key.PropertyRef | ForEach-Object {'['+([string]$_.Name).Replace(']',']]')+']'})
-    if($keys.Count -gt 0){$columns += 'PRIMARY KEY ('+($keys -join ',')+')'}
-    [void]$ddl.AppendLine('CREATE TABLE dbo.['+$table.Replace(']',']]')+'] ('+($columns -join ',')+');')
-}
-[void]$ddl.AppendLine(@'
-ALTER TABLE dbo.RentLicenses ADD FOREIGN KEY(customerID) REFERENCES dbo.Customers(customerID);
-ALTER TABLE dbo.RentLicenses ADD FOREIGN KEY(companyLicencesID) REFERENCES dbo.CompanyLicences(companyLicencesID);
-ALTER TABLE dbo.RentLicensesDetails ADD FOREIGN KEY(rentLicenseID) REFERENCES dbo.RentLicenses(rentLicenseID);
-ALTER TABLE dbo.RentLicensesPayment ADD FOREIGN KEY(rentLicenseID) REFERENCES dbo.RentLicenses(rentLicenseID);
-'@)
+# The harness derives its empty fixture from the active C# Code First model.
 $fixture = Join-Path $buildRoot 'empty-fixture.sql'
-[IO.File]::WriteAllText($fixture,$ddl.ToString(),(New-Object Text.UTF8Encoding($false)))
 if ($PrepareInteractive) { Write-Output "Interactive test launcher: $testExe"; return }
 if(-not $ConfigPath){$ConfigPath = Join-Path $projectRoot 'BarakatAlkhreir/App.Config'}
 & $testExe $ConfigPath $fixture $buildRoot (Join-Path $projectRoot 'sql/licence-rental-integrity.sql')

@@ -137,7 +137,7 @@ namespace BarakalAlkheir.Definitions
                                     bb.edited_Date = DateTime.Now;
                                     bb.editedBy = MainClass.userID;
 
-                                    db.FormEvents.AddObject(bb);
+                                    db.FormEvents.Add(bb);
                                     db.SaveChanges();
                                 }
                                 else if (!isSelected && formEventID != -1)
@@ -156,7 +156,7 @@ namespace BarakalAlkheir.Definitions
                                         bb.edited_Date = DateTime.Now;
                                         bb.editedBy = MainClass.userID;
 
-                                        db.FormEvents.DeleteObject(bb);
+                                        db.FormEvents.Remove(bb);
                                         db.SaveChanges();
                                     }
                                 }

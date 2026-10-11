@@ -11,7 +11,6 @@ BEGIN TRY
     IF EXISTS(SELECT 1 FROM dbo.RentLicenses WHERE rentLicense_active=1 AND companyLicencesID IS NULL)
         OR EXISTS(SELECT companyLicencesID FROM dbo.RentLicenses WHERE rentLicense_active=1 GROUP BY companyLicencesID HAVING COUNT(*)>1)
         OR EXISTS(SELECT rentLicenseID,rd_mNo FROM dbo.RentLicensesDetails GROUP BY rentLicenseID,rd_mNo HAVING COUNT(*)>1)
-        OR EXISTS(SELECT rentLicencesDetailsID FROM dbo.RentLicensesPayment GROUP BY rentLicencesDetailsID HAVING COUNT(*)>1)
         RAISERROR('Duplicate active rentals, instalments or receipts require reconciliation.',16,1);
 
     IF EXISTS(SELECT 1 FROM dbo.RentLicensesDetails d LEFT JOIN dbo.RentLicenses r ON r.rentLicenseID=d.rentLicenseID
@@ -20,17 +19,10 @@ BEGIN TRY
         d.rd_fromDate<>DATEADD(month,d.rd_mNo-1,r.rentLicense_from) OR d.rd_toDate<>DATEADD(day,-1,DATEADD(month,d.rd_mNo,r.rentLicense_from)))
         RAISERROR('Invalid instalments or schedule differences require reconciliation.',16,1);
 
-    IF EXISTS(SELECT 1 FROM dbo.RentLicensesPayment p LEFT JOIN dbo.RentLicensesDetails d ON d.rentLicencesDetailsID=p.rentLicencesDetailsID
-        WHERE d.rentLicencesDetailsID IS NULL OR p.rentLicenseID IS NULL OR p.rentLicenseID<>d.rentLicenseID OR
-        p.rentLicPay_Amount IS NULL OR p.rentLicPay_Amount<>d.rd_amount OR p.rentLicPay_ForDate IS NULL OR
-        DAY(p.rentLicPay_ForDate)<>15 OR DATEDIFF(month,p.rentLicPay_ForDate,DATEADD(month,CASE WHEN DAY(d.rd_fromDate)>10 THEN 1 ELSE 0 END,d.rd_fromDate))<>0)
-        RAISERROR('Receipt links, amounts or billing months require reconciliation.',16,1);
-
-    IF EXISTS(SELECT 1 FROM dbo.RentLicensesDetails d WHERE
-        (d.rd_isPaid=1 AND NOT EXISTS(SELECT 1 FROM dbo.RentLicensesPayment p WHERE p.rentLicencesDetailsID=d.rentLicencesDetailsID)) OR
-        (d.rd_isPaid=0 AND EXISTS(SELECT 1 FROM dbo.RentLicensesPayment p WHERE p.rentLicencesDetailsID=d.rentLicencesDetailsID)))
-        RAISERROR('Paid status and receipts disagree; reconciliation required.',16,1);
-
+    IF EXISTS(SELECT 1 FROM dbo.RentLicensesDetails WHERE rd_isPaid=0 AND
+        (rentLicPay_VouNo IS NOT NULL OR rentLicPay_PaymentDate IS NOT NULL OR rentLicPay_mandoubID IS NOT NULL OR
+         payment_added_Date IS NOT NULL OR payment_edited_Date IS NOT NULL OR payment_addedBy IS NOT NULL OR payment_editedBy IS NOT NULL OR legacyPaymentID IS NOT NULL))
+        RAISERROR('Unpaid installments retain receipt metadata; reconciliation required.',16,1);
     IF EXISTS(SELECT 1 FROM dbo.RentLicenses r WHERE ISNULL(r.rentLicense_noOfMonths,0) NOT BETWEEN 1 AND 1000 OR
         r.rentLicense_from IS NULL OR r.rentLicense_to IS NULL OR r.rentLicense_active IS NULL OR
         r.rentLicense_noOfMonths<>(SELECT COUNT(*) FROM dbo.RentLicensesDetails d WHERE d.rentLicenseID=r.rentLicenseID) OR
@@ -44,14 +36,13 @@ BEGIN TRY
         CREATE UNIQUE INDEX UX_LicenceInstalment_Month ON dbo.RentLicensesDetails(rentLicenseID,rd_mNo);
     IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.RentLicensesDetails') AND name='UX_LicenceInstalment_RentalIdentity')
         CREATE UNIQUE INDEX UX_LicenceInstalment_RentalIdentity ON dbo.RentLicensesDetails(rentLicenseID,rentLicencesDetailsID);
-    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.RentLicensesPayment') AND name='UX_LicenceReceipt_Instalment')
-        CREATE UNIQUE INDEX UX_LicenceReceipt_Instalment ON dbo.RentLicensesPayment(rentLicencesDetailsID);
-    IF OBJECT_ID('dbo.FK_LicenceReceipt_InstalmentRental','F') IS NULL
-        ALTER TABLE dbo.RentLicensesPayment WITH CHECK ADD CONSTRAINT FK_LicenceReceipt_InstalmentRental
-            FOREIGN KEY(rentLicenseID,rentLicencesDetailsID) REFERENCES dbo.RentLicensesDetails(rentLicenseID,rentLicencesDetailsID);
-    ALTER TABLE dbo.RentLicensesPayment WITH CHECK CHECK CONSTRAINT FK_LicenceReceipt_InstalmentRental;
-    IF OBJECT_ID('dbo.CK_LicenceReceipt_RequiredKeys','C') IS NULL
-        ALTER TABLE dbo.RentLicensesPayment WITH CHECK ADD CONSTRAINT CK_LicenceReceipt_RequiredKeys CHECK(rentLicenseID IS NOT NULL AND rentLicencesDetailsID IS NOT NULL);
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID('dbo.RentLicensesDetails') AND name='UX_LicenceInstalment_LegacyPayment')
+        CREATE UNIQUE INDEX UX_LicenceInstalment_LegacyPayment ON dbo.RentLicensesDetails(legacyPaymentID) WHERE legacyPaymentID IS NOT NULL;
+    IF OBJECT_ID('dbo.CK_LicenceInstalment_PaymentState','C') IS NULL
+        ALTER TABLE dbo.RentLicensesDetails WITH CHECK ADD CONSTRAINT CK_LicenceInstalment_PaymentState CHECK
+            (rd_isPaid IS NOT NULL AND (rd_isPaid=1 OR (rd_isPaid=0 AND rentLicPay_VouNo IS NULL AND rentLicPay_PaymentDate IS NULL
+             AND rentLicPay_mandoubID IS NULL AND payment_added_Date IS NULL AND payment_edited_Date IS NULL
+             AND payment_addedBy IS NULL AND payment_editedBy IS NULL AND legacyPaymentID IS NULL)));
     IF OBJECT_ID('dbo.CK_LicenceInstalment_RequiredKeys','C') IS NULL
         ALTER TABLE dbo.RentLicensesDetails WITH CHECK ADD CONSTRAINT CK_LicenceInstalment_RequiredKeys CHECK(rentLicenseID IS NOT NULL AND rd_mNo IS NOT NULL AND rd_mNo BETWEEN 1 AND 1000);
     COMMIT TRANSACTION;

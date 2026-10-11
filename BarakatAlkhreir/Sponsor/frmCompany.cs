@@ -151,7 +151,7 @@ namespace BarakalAlkheir.Sponsor
                                        bbID
                                    select c).FirstOrDefault();
 
-                        db.Companies.DeleteObject(bb);
+                        db.Companies.Remove(bb);
                         int noOfAffectedRows = db.SaveChanges();
                         if (noOfAffectedRows > 0)
                         {
@@ -209,7 +209,7 @@ namespace BarakalAlkheir.Sponsor
                     bb.edited_Date = DateTime.Now;
                     bb.editedBy = MainClass.userID;
 
-                    db.Companies.AddObject(bb);
+                    db.Companies.Add(bb);
                     rowsAffected = db.SaveChanges();
                 }
             }
@@ -247,7 +247,7 @@ namespace BarakalAlkheir.Sponsor
                     bb.edited_Date = DateTime.Now;
                     bb.editedBy = MainClass.userID;
                     
-                    //db.Companys.AddObject(bb);
+                    //db.Companys.Add(bb);
                     rowsAffected = db.SaveChanges();
                 }
             }
@@ -503,7 +503,7 @@ namespace BarakalAlkheir.Sponsor
                                           bbID
                                       select c).FirstOrDefault();
 
-                        db.CompanyAuthorizations.DeleteObject(bb);
+                        db.CompanyAuthorizations.Remove(bb);
                         int noOfAffectedRows = db.SaveChanges();
                         if (noOfAffectedRows > 0)
                         {
@@ -543,7 +543,7 @@ namespace BarakalAlkheir.Sponsor
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.CompanyAuthorizations.AddObject(bb);
+                        db.CompanyAuthorizations.Add(bb);
                         rowsAffected = db.SaveChanges();
 
                         int bbID = int.Parse(lblID.Text);

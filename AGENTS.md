@@ -16,7 +16,7 @@
 - Namespace and executable name: `BarakalAlkheir`; EF context/database name: `BarakeitAlkheirEntities` / `BarakeitAlkheir`.
 - Preserve these existing spelling differences in paths, namespaces, entities, and database identifiers.
 - Target: full .NET Framework 4.8, x86, legacy non-SDK C# project. Use Visual Studio 2022 MSBuild; the solution header still identifies Visual Studio 2013.
-- Dependencies include Telerik WinForms 2026.3.812.48 (Bin48), Telerik.Licensing 1.9.1, Crystal Reports assemblies 13.0.3500.0, framework Entity Framework, and Excel COM interop. See docs/TELERIK-UPGRADE.md for restore, licensing, and validation.
+- Dependencies include Telerik WinForms 2026.3.812.48 (Bin48), Telerik.Licensing 1.9.1, Crystal Reports assemblies 13.0.3500.0, EntityFramework 6.5.2 Code First, and Excel COM interop. See docs/TELERIK-UPGRADE.md and docs/CODE-FIRST.md for restore, mapping, and validation.
 - At initialization on 2026-09-16 this directory had no Git metadata. Check current status before relying on Git history, diffs, or rollback.
 
 ## Source map
@@ -34,7 +34,7 @@
 | `Lic/` | Licence/shop rental agreements, schedules, payments, reports |
 | `CarsM/` | Customer car rentals, supplier purchase/payment workflows, reports |
 | `Docs/` | Document definitions, expiry, transaction tasks, payments, steps |
-| `Model/BarakeitAlkheir.edmx` | Active database-first EF model |
+| `Model/BarakeitAlkheirEntities.cs`, `Model/Entities/`, `Model/Mapping/`, `Model/Migrations/` | EF6 Code First context, entities, explicit SQL mappings, and reviewed migrations |
 | `frmHumanResouceReportViewer.cs` | Report selection, file loading, dataset/parameter binding |
 | `hrReports/`, `otherReports/`, `CarReports/` | Crystal `.rpt` designs and generated wrappers |
 
@@ -44,8 +44,9 @@
 - Business logic currently lives in form event handlers. Follow the nearby pattern for narrow fixes; do not introduce a new architectural layer or framework migration incidentally.
 - Forms normally come as `.cs`, `.Designer.cs`, and `.resx`. Preserve event wiring, control names, Arabic text, layout, encoding, and line endings.
 - This project explicitly lists compiled files and resources. Add/remove the relevant project entries when adding/removing source or resources.
-- `Model/BarakeitAlkheir.Designer.cs` is generated `ObjectContext`/`EntityObject` code. Prefer model-backed regeneration for schema changes; do not treat it as a modern `DbContext` model.
-- The standalone `.csdl`, `.ssdl`, and `.msl` files are older than the active EDMX model. Do not use them as the authoritative schema or replace generated embedded metadata with them.
+- The active model is EF6 Code First (`DbContext` and POCO entities). Maintain explicit table, column, nullability, SQL type, key, and relationship mappings in C#; add project entries for new entities/mappings/migrations.
+- The former EDMX and older standalone metadata are archived under `docs/legacy-db-first/` for historical comparison only. They are not build/runtime inputs or the current schema authority.
+- Database creation and EF-generated automatic migrations are disabled. At the user's request, `Program` runs `DatabaseMigrationRunner.ApplyPending` before login to apply the application's explicit migrations to the configured database. Review/test new migrations before deployment; do not run standalone schema SQL. The initial empty baseline only records the existing model in `__MigrationHistory`; it does not create application tables. See `docs/CODE-FIRST.md`.
 - Preserve `TransactionScope` boundaries and `Complete()` behavior when changing related records, payment schedules, paid flags, or task steps.
 - Maintain existing `added_Date`, `edited_Date`, `addedBy`, and `editedBy` assignments for affected writes.
 - Form/control permission identifiers and event strings are database contracts. Preserve `view`, `add`, `edit`, `delete`, `print`, and `search`, plus superuser behavior, unless explicitly changing permissions.
@@ -77,7 +78,7 @@ if (-not $msbuild) { throw 'Visual Studio MSBuild was not found.' }
 - This pattern builds with the installed Telerik 2026 Q3 Bin48 assemblies and the restored licensing package. `ReferencePath` supplies the preserved bundled Crystal Reports and Flash dependencies; Telerik references use exact versions and explicit hint paths.
 - `Microsoft.VisualBasic.PowerPacks.Vs` 10.0.0.0 remained an unresolved reference warning; the reference-assisted build still returned exit code 0. Other compiler warnings also remain; this is not a warning-free baseline.
 - Restricted execution initially denied MSBuild access to the installed SDK directory. The successful run had permission to access installed SDKs. Distinguish this environment restriction from a source compilation failure.
-- Standalone regression harnesses are in `tests/`, including Telerik constructor/rendering checks. No CI configuration or migration runner was found. Choose focused manual checks for changed behavior after compilation.
+- Standalone regression harnesses are in `tests/`, including Code First mapping/schema checks, startup migration/concurrency tests, and Telerik constructor/rendering checks. No CI configuration is configured. Choose focused manual checks for changed behavior after compilation.
 - Isolated build output is for compilation verification. It does not have the report directory layout expected by the current viewer and is not a validated deployable package.
 - For UI changes, check form load, navigation, add/edit/cancel/save/delete, Arabic layout, and relevant permission roles. For money/workflow changes, also check related records, rollback, paid/closed flags, and affected reports against a designated test database.
 - Do not claim database connectivity, login, SQL compatibility, report rendering, printing, or Excel export passed based solely on a build.

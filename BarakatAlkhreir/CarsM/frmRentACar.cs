@@ -141,7 +141,7 @@ namespace BarakalAlkheir.CarsM
 
                                 foreach (var item in bb1)
                                 {
-                                    db.carCustomerRentDetails.DeleteObject(item);
+                                    db.carCustomerRentDetails.Remove(item);
                                     db.SaveChanges();
                                 }
 
@@ -151,7 +151,7 @@ namespace BarakalAlkheir.CarsM
                                                           bbID
                                                       select c).FirstOrDefault();
 
-                                db.CarCustomerRents.DeleteObject(bb);
+                                db.CarCustomerRents.Remove(bb);
                                 int noOfAffectedRows = db.SaveChanges();
                                 if (noOfAffectedRows > 0)
                                 {
@@ -221,7 +221,7 @@ namespace BarakalAlkheir.CarsM
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.CarCustomerRents.AddObject(bb);
+                            db.CarCustomerRents.Add(bb);
                             rowsAffected = db.SaveChanges();
 
 
@@ -240,7 +240,7 @@ namespace BarakalAlkheir.CarsM
                                 rld.rd_toDate = DateTime.Parse(txtFrom1.Text).AddMonths(i + 1).AddDays(-1);
                                 rld.carCustomerRentID = bb.carCustomerRentID;
 
-                                db.carCustomerRentDetails.AddObject(rld);
+                                db.carCustomerRentDetails.Add(rld);
                                 db.SaveChanges();
                             }
 
@@ -280,7 +280,7 @@ namespace BarakalAlkheir.CarsM
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            //db.CarCustomerRents.AddObject(bb);
+                            //db.CarCustomerRents.Add(bb);
                             rowsAffected = db.SaveChanges();
 
 
@@ -301,7 +301,7 @@ namespace BarakalAlkheir.CarsM
                                 }
                                 else
                                 {
-                                    db.carCustomerRentDetails.DeleteObject(item);
+                                    db.carCustomerRentDetails.Remove(item);
                                     db.SaveChanges();
                                 }
                             }
@@ -359,7 +359,7 @@ namespace BarakalAlkheir.CarsM
                                         rld.rd_toDate = bb33.Value.AddMonths(i + 2).AddDays(-1);
                                         rld.carCustomerRentID = bb.carCustomerRentID;
 
-                                        db.carCustomerRentDetails.AddObject(rld);
+                                        db.carCustomerRentDetails.Add(rld);
                                         db.SaveChanges();
                                     }
                                 }
@@ -381,7 +381,7 @@ namespace BarakalAlkheir.CarsM
                                     rld.rd_toDate = DateTime.Parse(txtFrom1.Text).AddMonths(i + 1).AddDays(-1);
                                     rld.carCustomerRentID = bb.carCustomerRentID;
 
-                                    db.carCustomerRentDetails.AddObject(rld);
+                                    db.carCustomerRentDetails.Add(rld);
                                     db.SaveChanges();
                                 }
                             }

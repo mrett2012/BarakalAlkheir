@@ -10,13 +10,10 @@ param(
 # Apply/Rollback use exact full-row guards and one transaction for the entire reviewed package.
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Data
-$keys = @{ RentLicenses='rentLicenseID'; RentLicensesDetails='rentLicencesDetailsID'; RentLicensesPayment='rentLicensePaymentID' }
-[xml]$config = [IO.File]::ReadAllText((Resolve-Path -LiteralPath $ConfigPath))
-$entry = @($config.configuration.connectionStrings.add | Where-Object {$_.name -eq 'BarakeitAlkheirEntities'})
-if($entry.Count -ne 1){throw 'Expected one application entity connection.'}
-$entity = New-Object System.Data.Common.DbConnectionStringBuilder
-$entity.set_ConnectionString([string]$entry[0].connectionString)
-$connection = New-Object System.Data.SqlClient.SqlConnection([string]$entity['provider connection string'])
+$keys = @{ RentLicenses='rentLicenseID'; RentLicensesDetails='rentLicencesDetailsID' }
+. (Join-Path $PSScriptRoot "Get-LicenceSqlConnectionString.ps1")
+$providerConnectionString = Get-LicenceSqlConnectionString -ConfigPath $ConfigPath
+$connection = New-Object System.Data.SqlClient.SqlConnection($providerConnectionString)
 $transaction = $null
 function Command([string]$sql) {
     $command = $connection.CreateCommand()
@@ -77,6 +74,9 @@ function Write-Row($item, $target, [bool]$insert) {
 try {
     $connection.Open()
     if($connection.Database -cne $ExpectedDatabase){throw 'Connected database does not match ExpectedDatabase.'}
+    # Legacy receipt corrections remain available only before the consolidation migration.
+    $probe=Command "SELECT CASE WHEN OBJECT_ID('dbo.RentLicensesPayment','U') IS NULL THEN 0 ELSE 1 END"
+    try { if([int]$probe.ExecuteScalar() -eq 1){$keys['RentLicensesPayment']='rentLicensePaymentID'} } finally {$probe.Dispose()}
     if($Mode -eq 'Preview'){
         if(-not $ManifestPath -or $AuditUserId -le 0){throw 'Preview requires ManifestPath and a positive AuditUserId.'}
         if(Test-Path -LiteralPath $PackagePath){throw 'Package already exists. Use a new path to preserve the rollback record.'}
@@ -98,7 +98,7 @@ try {
                 if($changes.Count -eq 0){throw 'An update requires changes.'}
                 foreach($change in $changes){
                     $column = $change.Name
-                    if(-not $after.ContainsKey($column) -or $column -eq $keys[$table] -or $column -in @('added_Date','addedBy','edited_Date','editedBy')){throw "Column cannot be changed: $column"}
+                    if(-not $after.ContainsKey($column) -or $column -eq $keys[$table] -or $column -in @('added_Date','addedBy','edited_Date','editedBy','payment_added_Date','payment_addedBy','payment_edited_Date','payment_editedBy','legacyPaymentID')){throw "Column cannot be changed: $column"}
                     $value = $change.Value
                     if($null -ne $value){$value = [Convert]::ChangeType($value,[type]$row.Types[$column],[Globalization.CultureInfo]::InvariantCulture)}
                     # SQL datetime has 1/300-second precision. Round before storing the rollback guard.
@@ -107,6 +107,11 @@ try {
                 }
                 $after['editedBy'] = $AuditUserId
                 $after['edited_Date'] = (New-Object System.Data.SqlTypes.SqlDateTime([datetime]::Now)).Value
+                if($table -eq 'RentLicensesDetails' -and $row.Values.ContainsKey('payment_edited_Date') -and
+                    @($changes | Where-Object {$_.Name -in @('rentLicPay_VouNo','rentLicPay_PaymentDate','rentLicPay_mandoubID','rd_isPaid')}).Count -gt 0){
+                    $after['payment_editedBy']=$AuditUserId
+                    $after['payment_edited_Date']=$after['edited_Date']
+                }
             }
             $items += @{Table=$table; Id=$id; Reason=[string]$decision.reason; Before=$row.Values; After=$after}
         }

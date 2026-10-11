@@ -104,7 +104,7 @@ namespace BarakalAlkheir.CarsM
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            //db.CarCustomerRentes.AddObject(bb);
+                            //db.CarCustomerRentes.Add(bb);
                             rowsAffected = db.SaveChanges();
 
 

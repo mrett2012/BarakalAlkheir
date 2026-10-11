@@ -68,7 +68,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
@@ -1127,10 +1135,151 @@
     <Compile Include="components\FormLoading.cs" />
     <Compile Include="Docs\DocumentListLookup.cs" />
     <Compile Include="MainClass.cs" />
-    <Compile Include="Model\BarakeitAlkheir.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BarakeitAlkheir.edmx</DependentUpon>
+    <Compile Include="Model\Entities\AssignDocumentTransactionTask.cs" />
+    <Compile Include="Model\Mapping\AssignDocumentTransactionTaskMap.cs" />
+    <Compile Include="Model\Entities\AuthorizationPerson.cs" />
+    <Compile Include="Model\Mapping\AuthorizationPersonMap.cs" />
+    <Compile Include="Model\Entities\Bank.cs" />
+    <Compile Include="Model\Mapping\BankMap.cs" />
+    <Compile Include="Model\Entities\CarCustomerRent.cs" />
+    <Compile Include="Model\Mapping\CarCustomerRentMap.cs" />
+    <Compile Include="Model\Entities\carCustomerRentDetail.cs" />
+    <Compile Include="Model\Mapping\carCustomerRentDetailMap.cs" />
+    <Compile Include="Model\Entities\CarCustomerRentPayment.cs" />
+    <Compile Include="Model\Mapping\CarCustomerRentPaymentMap.cs" />
+    <Compile Include="Model\Entities\Car.cs" />
+    <Compile Include="Model\Mapping\CarMap.cs" />
+    <Compile Include="Model\Entities\CarSupllier.cs" />
+    <Compile Include="Model\Mapping\CarSupllierMap.cs" />
+    <Compile Include="Model\Entities\CarSupplierRent.cs" />
+    <Compile Include="Model\Mapping\CarSupplierRentMap.cs" />
+    <Compile Include="Model\Entities\CarSupplierRentDetail.cs" />
+    <Compile Include="Model\Mapping\CarSupplierRentDetailMap.cs" />
+    <Compile Include="Model\Entities\CarSupplierRentPayment.cs" />
+    <Compile Include="Model\Mapping\CarSupplierRentPaymentMap.cs" />
+    <Compile Include="Model\Entities\Company.cs" />
+    <Compile Include="Model\Mapping\CompanyMap.cs" />
+    <Compile Include="Model\Entities\CompanyAuthorization.cs" />
+    <Compile Include="Model\Mapping\CompanyAuthorizationMap.cs" />
+    <Compile Include="Model\Entities\companyGovermentContract.cs" />
+    <Compile Include="Model\Mapping\companyGovermentContractMap.cs" />
+    <Compile Include="Model\Entities\CompanyLicence.cs" />
+    <Compile Include="Model\Mapping\CompanyLicenceMap.cs" />
+    <Compile Include="Model\Entities\CompanyLicencesEnd.cs" />
+    <Compile Include="Model\Mapping\CompanyLicencesEndMap.cs" />
+    <Compile Include="Model\Entities\CompanyLicencesRemark.cs" />
+    <Compile Include="Model\Mapping\CompanyLicencesRemarkMap.cs" />
+    <Compile Include="Model\Entities\CompanyLicenseDesignation.cs" />
+    <Compile Include="Model\Mapping\CompanyLicenseDesignationMap.cs" />
+    <Compile Include="Model\Entities\Customer.cs" />
+    <Compile Include="Model\Mapping\CustomerMap.cs" />
+    <Compile Include="Model\Entities\Dependent.cs" />
+    <Compile Include="Model\Mapping\DependentMap.cs" />
+    <Compile Include="Model\Entities\Designation.cs" />
+    <Compile Include="Model\Mapping\DesignationMap.cs" />
+    <Compile Include="Model\Entities\DocumentDef.cs" />
+    <Compile Include="Model\Mapping\DocumentDefMap.cs" />
+    <Compile Include="Model\Entities\Document.cs" />
+    <Compile Include="Model\Mapping\DocumentMap.cs" />
+    <Compile Include="Model\Entities\DocumentTransaction.cs" />
+    <Compile Include="Model\Mapping\DocumentTransactionMap.cs" />
+    <Compile Include="Model\Entities\DocumentTransactionStep.cs" />
+    <Compile Include="Model\Mapping\DocumentTransactionStepMap.cs" />
+    <Compile Include="Model\Entities\DocumentTransactionTask.cs" />
+    <Compile Include="Model\Mapping\DocumentTransactionTaskMap.cs" />
+    <Compile Include="Model\Entities\DocumentTransactionTasksPayment.cs" />
+    <Compile Include="Model\Mapping\DocumentTransactionTasksPaymentMap.cs" />
+    <Compile Include="Model\Entities\documentTransTaskDetail.cs" />
+    <Compile Include="Model\Mapping\documentTransTaskDetailMap.cs" />
+    <Compile Include="Model\Entities\DocumentTypeDefinition.cs" />
+    <Compile Include="Model\Mapping\DocumentTypeDefinitionMap.cs" />
+    <Compile Include="Model\Entities\DocumnetStore.cs" />
+    <Compile Include="Model\Mapping\DocumnetStoreMap.cs" />
+    <Compile Include="Model\Entities\Education.cs" />
+    <Compile Include="Model\Mapping\EducationMap.cs" />
+    <Compile Include="Model\Entities\EmployeeLicenseShop.cs" />
+    <Compile Include="Model\Mapping\EmployeeLicenseShopMap.cs" />
+    <Compile Include="Model\Entities\EmployeePassport.cs" />
+    <Compile Include="Model\Mapping\EmployeePassportMap.cs" />
+    <Compile Include="Model\Entities\EmployeeRabet.cs" />
+    <Compile Include="Model\Mapping\EmployeeRabetMap.cs" />
+    <Compile Include="Model\Entities\Employee.cs" />
+    <Compile Include="Model\Mapping\EmployeeMap.cs" />
+    <Compile Include="Model\Entities\EmployeeSalary.cs" />
+    <Compile Include="Model\Mapping\EmployeeSalaryMap.cs" />
+    <Compile Include="Model\Entities\EmployeeSponsor.cs" />
+    <Compile Include="Model\Mapping\EmployeeSponsorMap.cs" />
+    <Compile Include="Model\Entities\EmployeeStatusDef.cs" />
+    <Compile Include="Model\Mapping\EmployeeStatusDefMap.cs" />
+    <Compile Include="Model\Entities\EmployeeWorkContract.cs" />
+    <Compile Include="Model\Mapping\EmployeeWorkContractMap.cs" />
+    <Compile Include="Model\Entities\EventsDefinition.cs" />
+    <Compile Include="Model\Mapping\EventsDefinitionMap.cs" />
+    <Compile Include="Model\Entities\FormEvent.cs" />
+    <Compile Include="Model\Mapping\FormEventMap.cs" />
+    <Compile Include="Model\Entities\FormScrean.cs" />
+    <Compile Include="Model\Mapping\FormScreanMap.cs" />
+    <Compile Include="Model\Entities\Gender.cs" />
+    <Compile Include="Model\Mapping\GenderMap.cs" />
+    <Compile Include="Model\Entities\Governorate.cs" />
+    <Compile Include="Model\Mapping\GovernorateMap.cs" />
+    <Compile Include="Model\Entities\GovernorateArea.cs" />
+    <Compile Include="Model\Mapping\GovernorateAreaMap.cs" />
+    <Compile Include="Model\Entities\LicenseActivity.cs" />
+    <Compile Include="Model\Mapping\LicenseActivityMap.cs" />
+    <Compile Include="Model\Entities\LicensesShop.cs" />
+    <Compile Include="Model\Mapping\LicensesShopMap.cs" />
+    <Compile Include="Model\Entities\MaritalStatu.cs" />
+    <Compile Include="Model\Mapping\MaritalStatuMap.cs" />
+    <Compile Include="Model\Entities\Nationality.cs" />
+    <Compile Include="Model\Mapping\NationalityMap.cs" />
+    <Compile Include="Model\Entities\Religion.cs" />
+    <Compile Include="Model\Mapping\ReligionMap.cs" />
+    <Compile Include="Model\Entities\RentLicenseEnd.cs" />
+    <Compile Include="Model\Mapping\RentLicenseEndMap.cs" />
+    <Compile Include="Model\Entities\RentLicens.cs" />
+    <Compile Include="Model\Mapping\RentLicensMap.cs" />
+    <Compile Include="Model\Entities\RentLicensesDetail.cs" />
+    <Compile Include="Model\Mapping\RentLicensesDetailMap.cs" />
+    <Compile Include="Model\Entities\RentShop.cs" />
+    <Compile Include="Model\Mapping\RentShopMap.cs" />
+    <Compile Include="Model\Entities\RentShopEnd.cs" />
+    <Compile Include="Model\Mapping\RentShopEndMap.cs" />
+    <Compile Include="Model\Entities\RentShopPayment.cs" />
+    <Compile Include="Model\Mapping\RentShopPaymentMap.cs" />
+    <Compile Include="Model\Entities\sysdiagram.cs" />
+    <Compile Include="Model\Mapping\sysdiagramMap.cs" />
+    <Compile Include="Model\Entities\TransactionDef.cs" />
+    <Compile Include="Model\Mapping\TransactionDefMap.cs" />
+    <Compile Include="Model\Entities\UserGroup.cs" />
+    <Compile Include="Model\Mapping\UserGroupMap.cs" />
+    <Compile Include="Model\Entities\UserGroupEvent.cs" />
+    <Compile Include="Model\Mapping\UserGroupEventMap.cs" />
+    <Compile Include="Model\Entities\User.cs" />
+    <Compile Include="Model\Mapping\UserMap.cs" />
+    <Compile Include="Model\Entities\z_Residency.cs" />
+    <Compile Include="Model\Mapping\z_ResidencyMap.cs" />
+    <Compile Include="Model\BarakeitAlkheirEntities.cs" />
+    <Compile Include="Model\BarakeitAlkheirDbConfiguration.cs" />
+    <Compile Include="Model\Migrations\202610110924552_MergeLicencePaymentsIntoDetails.cs" />
+    <Compile Include="Model\Migrations\202610110924552_MergeLicencePaymentsIntoDetails.Designer.cs">
+      <DependentUpon>202610110924552_MergeLicencePaymentsIntoDetails.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Model\Migrations\202610110924552_MergeLicencePaymentsIntoDetails.resx">
+      <DependentUpon>202610110924552_MergeLicencePaymentsIntoDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Model\Migrations\Configuration.cs" />
+    <Compile Include="Model\Migrations\DatabaseMigrationRunner.cs" />
+    <Compile Include="Model\Migrations\202610111046253_RestoreArchivedLicencePaymentDates.cs" />
+    <Compile Include="Model\Migrations\202610111046253_RestoreArchivedLicencePaymentDates.Designer.cs">
+      <DependentUpon>202610111046253_RestoreArchivedLicencePaymentDates.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Model\Migrations\202610111046253_RestoreArchivedLicencePaymentDates.resx">
+      <DependentUpon>202610111046253_RestoreArchivedLicencePaymentDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Model\Migrations\202610110833385_ExistingDatabaseBaseline.cs" />
+    <Compile Include="Model\Migrations\202610110833385_ExistingDatabaseBaseline.Designer.cs">
+      <DependentUpon>202610110833385_ExistingDatabaseBaseline.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1724,6 +1873,9 @@
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Model\Migrations\202610110833385_ExistingDatabaseBaseline.resx">
+      <DependentUpon>202610110833385_ExistingDatabaseBaseline.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -1755,11 +1907,7 @@
     <EmbeddedResource Include="Sponsor\fromCompanyMain.resx">
       <DependentUpon>fromCompanyMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EntityDeploy Include="Model\BarakeitAlkheir.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BarakeitAlkheir.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="App.Config">
+<None Include="App.Config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\DataSources\RadControlsWinFormsApp1.Model.BarakeitAlkheirEntities.datasource" />
@@ -1973,6 +2121,7 @@
   </ItemGroup>
   <Import Project="..\packages\Telerik.Licensing.1.9.1\build\Telerik.Licensing.targets" Condition="Exists('..\packages\Telerik.Licensing.1.9.1\build\Telerik.Licensing.targets')" />
   <Target Name="EnsureTelerikDependencies" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.dll') Or !Exists('..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.SqlServer.dll')" Text="Restore NuGet packages before building. EntityFramework 6.5.2 Code First is required." />
     <Error Condition="!Exists('$(TelerikWinFormsDir)\Telerik.WinControls.dll')" Text="Install Telerik UI for WinForms 2026 Q3 (2026.3.812), or set TelerikWinFormsDir to its Bin48 directory." />
     <Error Condition="!Exists('..\packages\Telerik.Licensing.1.9.1\build\Telerik.Licensing.targets')" Text="Restore NuGet packages before building. Telerik.Licensing 1.9.1 is required." />
   </Target>

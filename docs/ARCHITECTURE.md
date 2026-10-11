@@ -1,6 +1,14 @@
 # Barakat Al Kheir: architecture and infrastructure
 
-Source and local build inspection: 2026-09-16. This describes the supplied workspace, not a verified production deployment. No application login, database query/restore, report rendering, or Excel export was performed.
+Initial source/build inspection: 2026-09-16; updated for EF6 Code First on 2026-10-11. This describes the local workspace, not a verified production deployment. Current database schema/EF reads were checked read-only; lifecycle writes were tested only in disposable databases. The subsequently requested EF6 update applied the baseline and archive-preserving payment consolidation after a verified backup. No customer database restore, production login, report rendering, or Excel export was performed.
+
+## EF6 Code First conversion (2026-10-11)
+
+The active model is now a C# `DbContext`, 62 POCO entities, and explicit mappings under `BarakatAlkhreir/Model/`. The EDMX is archived for comparison and is no longer used by the build or application. EntityFramework 6.5.2 is restored through NuGet. Implicit database creation and EF-generated automatic migrations are disabled. At the user's request, `Program` applies pending explicit migrations through `DatabaseMigrationRunner` before login, with a progress dialog, database-level startup lock, and failure blocking. The baseline, archive-preserving consolidation, and date recovery were applied through EF6 to both BarakeitAlkheir2 and the subsequently selected BarakeitAlkheir on 2026-10-11 after verified backups. Schema updates use EF6 migrations without executing standalone SQL scripts. See [CODE-FIRST.md](CODE-FIRST.md) for the source map, migration workflow, verification, and remaining acceptance checks.
+
+## Licence payment consolidation (2026-10-11)
+
+The active model uses installment rows for receipts and no longer maps the former payment table. The migration was tested in disposable databases and applied through EF6 to BarakeitAlkheir2 after a verified backup. Every original receipt is archived; only a unique receipt matching an existing paid installment supplies metadata. Ambiguous, orphaned, or conflicting receipts stay archive-only, and historical paid installments keep their amounts and flags. See [LICENCE-PAYMENT-CONSOLIDATION.md](LICENCE-PAYMENT-CONSOLIDATION.md) for deployment, report checks, and the confirmed Crystal SP24/SP27 distinction.
 
 ## Telerik upgrade (2026-10-07)
 
@@ -8,21 +16,22 @@ The current project targets .NET Framework 4.8/x86 and Telerik UI for WinForms 2
 
 ## System shape
 
-One C# Windows Forms executable provides Arabic-oriented business administration for employees, company licences and sponsorships, licence/shop rentals, cars, document transactions, and payments. There is no separate service, repository layer, web frontend, or API project in this solution. Form event handlers query and modify SQL Server directly through framework Entity Framework.
+One C# Windows Forms executable provides Arabic-oriented business administration for employees, company licences and sponsorships, licence/shop rentals, cars, document transactions, and payments. There is no separate service, repository layer, web frontend, or API project in this solution. Form event handlers query and modify SQL Server directly through EF6 Code First.
 
 ```text
 Program.Main
+  -> DatabaseMigrationRunner (pending explicit migrations; stop on failure)
   -> frmMain (Telerik MDI shell)
      -> frmlogin (modal login)
         -> Users query -> MainClass session fields
      -> module forms and shared banner toolbar
-        -> BarakeitAlkheirEntities (ObjectContext)
+        -> BarakeitAlkheirEntities (EF6 DbContext)
            -> System.Data.SqlClient -> SQL Server / BarakeitAlkheir
         -> in-memory DataSet -> Crystal Reports viewer -> .rpt files
         -> Excel COM automation in payment-detail exports
 ```
 
-The active project explicitly includes 244 C# compilation entries, 74 entries marked as forms, and 86 embedded `.rpt` resources. These counts include generated files and are not counts of independently implemented features. All explicitly included source/resource/content files checked during initialization existed.
+At initialization the project explicitly included 244 C# compilation entries, 74 form entries, and 86 embedded `.rpt` resources. These were snapshot counts, including generated files. The Code First conversion replaced one generated model file with explicit entities, mappings, context/configuration, and migration source/resources; see the current project file for current counts.
 
 ## Startup, state, and authorization
 
@@ -41,7 +50,7 @@ Standard CRUD forms create a shared banner with a form identifier, attach click 
 | Definitions | Banks, customers, car suppliers/cars, nationalities, designations, education, religion, gender, geography, status definitions, users/groups, screens/events |
 | Sponsor | Companies, authorized persons, company authorizations, company licences, licence remarks, designation allocations, licence documents |
 | Employees | Employee identity/details, sponsors, salary records, work contracts, dependents, licence/shop assignment, passport records, document tasks, HR print datasets |
-| Licences | `RentLicens` agreements, `RentLicensesDetail` instalments, `RentLicensesPayment` receipts, shop rentals, amount changes, agreement ending, payment summaries |
+| Licences | `RentLicens` agreements, `RentLicensesDetail` installments with integrated receipts, shop rentals, amount changes, agreement ending, payment summaries |
 | Cars | `CarCustomerRent` with details/payments; supplier-side `CarSupplierRent` with details/payments; agreement changes/ending and financial reports |
 | Documents | Document types/definitions, document transactions and step definitions, per-document tasks, task payments, task detail steps, expiry and outstanding-work lists |
 
@@ -51,7 +60,7 @@ Standard CRUD forms create a shared banner with a form identifier, attach click 
 
 `Lic/frmRentALicense.cs` creates an agreement and monthly `RentLicensesDetail` rows within a `TransactionScope`. The detail rows carry the month number, from/to dates, amount, and `rd_isPaid`. Agreement edits also manipulate those detail schedules.
 
-`Lic/frmRentLicensePayment.cs` creates a receipt associated with a detail row and marks that row paid. Its delete path also updates the associated detail. The car modules implement related agreement/schedule/payment patterns with different entity and field names. Do not assume the licence and car variants have identical calculations or validation.
+`Lic/frmRentLicensePayment.cs` stores receipt metadata on the installment and marks it paid. Deleting a payment clears its metadata and paid flag without deleting the installment. The car modules implement related agreement/schedule/payment patterns with different entity and field names. Do not assume the licence and car variants have identical calculations or validation.
 
 `MainFile.NoOfSeatForShop` reads the active licence rental's seat count; `NoOfSeatTaken` joins employees, sponsors, and employee licence/shop assignments. The ID relationships deserve care because company-licence IDs and licence/shop IDs appear in these paths.
 
@@ -65,16 +74,16 @@ Expiry lists and reports join owners, document definitions, warning days, and ta
 
 ## Database and EF model
 
-- `App.Config` contains a named EntityClient connection string, `BarakeitAlkheirEntities`, with embedded model resource paths and `System.Data.SqlClient` as provider.
-- In the source configuration, the active SQL Server target is the local default instance (`.`), catalog `BarakeitAlkheir`, using SQL authentication and multiple active result sets. Credentials are intentionally omitted here.
-- `Model/BarakeitAlkheir.edmx` contains storage, conceptual, and mapping metadata. It specifies the SQL Server provider manifest token `2008`; that is model metadata, not confirmation of the currently installed SQL Server version.
-- The EDMX conceptual model has 63 entity types. Generated `BarakeitAlkheir.Designer.cs` uses `ObjectContext`, `ObjectSet`, `EntityObject`, `AddObject`, and `DeleteObject`. Lazy loading is enabled by the context constructors.
-- The project's `EntityDeploy` entry processes the EDMX and embeds metadata into the output assembly. There are no stored-function entries in the inspected storage model.
-- Separate `BarakeitAlkheir.csdl` and `.ssdl` files contain only 54 entity types. They omit nine types present in the EDMX, including payment/detail entities and `LicenseActivity`. These standalone copies are not the active project's authoritative model inputs.
+- `App.Config` contains the named `BarakeitAlkheirEntities` SQL Client connection string, without embedded model resource paths.
+- The configured SQL Server target is the local default instance (`.`), catalog `BarakeitAlkheir2`, using the existing authentication and multiple active result sets. Credentials are intentionally omitted here.
+- The authoritative model is `Model/BarakeitAlkheirEntities.cs`, `Model/Entities/`, and `Model/Mapping/`: 62 entities/tables, 794 columns, and 61 relationships. Existing SQL types, lengths, nullability, identity flags, table/column names, and delete rules were preserved.
+- Forms now use `DbSet.Add`/`Remove` and EF6 `DbFunctions`. Scalar properties use snapshot tracking; virtual relationships preserve lazy loading. A compatibility method retains legacy post-save `AcceptAllChanges()` calls.
+- The project no longer has an `EntityDeploy` entry or embedded database-first metadata. The generated `EntityObject` designer was removed. The old EDMX and older standalone metadata are archived under `docs/legacy-db-first/` for historical comparison only.
+- `Model/Migrations/ExistingDatabaseBaseline` records the initial C# model with empty `Up`/`Down` operations. Initializers and EF-generated automatic migrations are disabled. Review/test explicit migrations before deployment; client startup applies pending versions through EF6. The baseline adds only migration history and cannot provision an empty database.
 - Historical database assets include three `.bak` files dated in their names from 2016, 2017, and 2019, `Alter Constraint.sql`, two small SQL files, and a 2016 database-update text file. They are not an ordered, idempotent migration system or a verified current schema export.
 - `Alter Constraint.sql` adds/checks existing-table foreign keys; it is not a full database-creation script. A small update script contains a broad `CompanyLicences` update. Inspect and scope any proposed database operation before execution.
 
-The machine's default SQL Server service was running at inspection time. That does not establish that this catalog exists, credentials work, or the live schema matches the model. Backup contents and restore compatibility were not inspected.
+During the initial conversion on 2026-10-11, before payment consolidation, the configured database's mapped column metadata matched that original Code First model, and EF6 SELECT queries, lazy loading, and date-function translation passed with writes rejected by an interceptor. Rental lifecycle tests passed on a separate disposable database. These checks do not establish production deployment, every form's CRUD behavior, report rendering, or backup/restore compatibility.
 
 ## Reports, exports, and deployment layout
 
@@ -86,7 +95,7 @@ Licence and car payment-detail forms use `Microsoft.Office.Interop.Excel.Applica
 
 The project contains ClickOnce-style publish/bootstrapper properties: local `publish/`, installation from disk, updates disabled, application version `1.0.0.*`. It targets full .NET Framework 4.0, while a bootstrapper entry names the Client Profile; treat packaging prerequisites as needing validation. No installer project, deployment automation, containers, infrastructure-as-code, or CI configuration was found. Do not infer an operational deployment procedure from these project properties alone.
 
-## Build baseline
+## Historical build baseline (2026-09-16)
 
 The solution defines Debug/Release x86 configurations. It uses framework assembly references rather than a NuGet package manifest. The current project references Telerik 2011.3.11.1219, Crystal Reports 13.0.3500.0, FlashControlV71, Office Excel interop 15.0.0.0, and Visual Basic PowerPacks 10.0.0.0.
 
@@ -108,6 +117,6 @@ These are source observations and follow-up areas, not claims of a completed sec
 - Nullable `.Value`, `FirstOrDefault()` results, and dropdown values are often used with limited validation. Empty or incomplete records are relevant regression cases.
 - Synchronous database queries, materialized lists, and per-row helper queries can affect desktop responsiveness as data grows.
 - Manual transactions coordinate receipts, schedules, documents, and steps. Preserve those relationships and verify persistence ordering when changing a write flow.
-- Report loading depends on the source-tree-like deployment layout, and standalone EF metadata has drifted from the active EDMX.
+- Report loading depends on the source-tree-like deployment layout. Archived EF metadata is historical; future schema changes belong in the active Code First model and reviewed migrations.
 
-No remediation or database changes were made during initialization. The durable outputs are this architecture map and the root contributor guidance; isolated build artifacts are local verification output.
+No database changes were made during initialization or the Code First conversion. Isolated build artifacts are local verification output, not a validated deployment package.

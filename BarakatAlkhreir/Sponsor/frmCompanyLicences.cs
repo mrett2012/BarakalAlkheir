@@ -167,7 +167,7 @@ namespace BarakalAlkheir.Sponsor
 
                                 if (bb1 != null)
                                 {
-                                    db.Documents.DeleteObject(bb1);
+                                    db.Documents.Remove(bb1);
                                     db.SaveChanges();
                                 }
 
@@ -177,7 +177,7 @@ namespace BarakalAlkheir.Sponsor
                                                     select lcc).FirstOrDefault();
                                 if (lss != null)
                                 {
-                                    db.LicensesShops.DeleteObject(lss);
+                                    db.LicensesShops.Remove(lss);
                                     db.SaveChanges();
                                 }
 
@@ -186,7 +186,7 @@ namespace BarakalAlkheir.Sponsor
                                                          bbID
                                                      select c).FirstOrDefault();
 
-                                db.CompanyLicences.DeleteObject(bb);
+                                db.CompanyLicences.Remove(bb);
                                 db.SaveChanges();
                                
 
@@ -272,7 +272,7 @@ namespace BarakalAlkheir.Sponsor
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.CompanyLicences.AddObject(bb);
+                            db.CompanyLicences.Add(bb);
                             rowsAffected = db.SaveChanges();
 
                             lblID.Text = bb.companyLicencesID.ToString();
@@ -294,7 +294,7 @@ namespace BarakalAlkheir.Sponsor
                                 shop.edited_Date = DateTime.Now;
                                 shop.editedBy = MainClass.userID;
 
-                                db.LicensesShops.AddObject(shop);
+                                db.LicensesShops.Add(shop);
                                 db.SaveChanges();
 
                                 Document bb1 = new Document();
@@ -337,7 +337,7 @@ namespace BarakalAlkheir.Sponsor
                                 bb1.edited_Date = DateTime.Now;
                                 bb1.editedBy = MainClass.userID;
 
-                                db.Documents.AddObject(bb1);
+                                db.Documents.Add(bb1);
                                 db.SaveChanges();
 
                             }
@@ -887,7 +887,7 @@ namespace BarakalAlkheir.Sponsor
                                                bbID
                                            select c).FirstOrDefault();
 
-                            db.Documents.DeleteObject(bb);
+                            db.Documents.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {

@@ -103,7 +103,7 @@ namespace BarakalAlkheir.Definitions
                                                       bbID
                                                   select c).FirstOrDefault();
 
-                            db.GovernorateAreas.DeleteObject(bb);
+                            db.GovernorateAreas.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -153,7 +153,7 @@ namespace BarakalAlkheir.Definitions
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.GovernorateAreas.AddObject(bb);
+                            db.GovernorateAreas.Add(bb);
                             rowsAffected = db.SaveChanges();
                             lblID.Text = bb.goverareaID.ToString();
 
@@ -324,14 +324,14 @@ namespace BarakalAlkheir.Definitions
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
             {
                 int CLID = lstGovernorate[position].governorateID;
-                var val = from c in db.GovernorateAreas
+                var val = (from c in db.GovernorateAreas
                           where c.governorateID == CLID
                           select new
                           {
                               c.goverareaID,
                               c.goverarea_Code,
                               c.goverarea_namea
-                          };
+                          }).ToList();
                 GView.DataSource = val;
             }
         }

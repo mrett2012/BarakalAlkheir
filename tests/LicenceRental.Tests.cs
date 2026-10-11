@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -44,7 +44,8 @@ internal static class LicenceRentalTests
     }
     private static DateTime? Version(int id) { using (var db = Db()) return db.RentLicenses.Single(r => r.rentLicenseID == id).edited_Date; }
     private static RentLicensesDetail[] Details(int id) { using (var db = Db()) return db.RentLicensesDetails.Where(d => d.rentLicenseID == id).OrderBy(d => d.rd_mNo).ToArray(); }
-    private static RentLicensesPayment Receipt(int id) { using (var db = Db()) return db.RentLicensesPayments.Single(p => p.rentLicensePaymentID == id); }
+    private static RentLicensesDetail Receipt(int id) { using (var db = Db()) return db.RentLicensesDetails.Where(d => d.rd_isPaid == true).Single(p => p.rentLicencesDetailsID == id); }
+    private static DateTime? ReceiptToken(int id) { using (var db = Db()) return db.RentLicensesDetails.Single(d => d.rentLicencesDetailsID == id).payment_edited_Date; }
     private static int Pay(int id)
     {
         var detail = Details(id).First(d => d.rd_isPaid == false);
@@ -152,20 +153,20 @@ internal static class LicenceRentalTests
         Reject(() => workflow.SavePayment(-1, rental, next.rentLicencesDetailsID, 100m, "STALE", DateTime.Today, 1, null), "stale charge rejected");
         Reject(() => workflow.SavePayment(-1, rental, next.rentLicencesDetailsID, 150m, "COLLECTOR", DateTime.Today, -1, null), "collector required");
         var receipt = Receipt(firstReceipt);
-        workflow.SavePayment(firstReceipt, rental, first.rentLicencesDetailsID, 100m, "EDITED", new DateTime(2025, 2, 20), 1, receipt.edited_Date);
-        Reject(() => workflow.SavePayment(firstReceipt, rental, first.rentLicencesDetailsID, 100m, "STALE EDIT", DateTime.Today, 1, receipt.edited_Date), "stale receipt edit rejected");
+        workflow.SavePayment(firstReceipt, rental, first.rentLicencesDetailsID, 100m, "EDITED", new DateTime(2025, 2, 20), 1, receipt.payment_edited_Date);
+        Reject(() => workflow.SavePayment(firstReceipt, rental, first.rentLicencesDetailsID, 100m, "STALE EDIT", DateTime.Today, 1, receipt.payment_edited_Date), "stale receipt edit rejected");
         receipt = Receipt(firstReceipt);
         Check(receipt.rentLicPay_VouNo == "EDITED" && receipt.rentLicenseID == rental && receipt.rentLicencesDetailsID == first.rentLicencesDetailsID, "receipt edit retains links");
         Check(Details(rental)[0].rd_isPaid == true, "paid flag saved");
         Reject(() => workflow.CloseRental(rental), "unpaid rental cannot close");
-        workflow.DeletePayment(firstReceipt, rental, receipt.edited_Date);
+        workflow.DeletePayment(firstReceipt, rental, receipt.payment_edited_Date);
         Check(Details(rental)[0].rd_isPaid == false, "delete unsets paid flag");
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPayment")) == 0, "delete removes receipt");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesDetails WHERE rd_isPaid=1")) == 0, "delete clears receipt without deleting installment");
 
-        Sql("CREATE TRIGGER dbo.LicenceTestRejectReceipt ON dbo.RentLicensesPayment AFTER INSERT AS BEGIN RAISERROR('TEST ROLLBACK',16,1); ROLLBACK TRANSACTION; END");
+        Sql("CREATE TRIGGER dbo.LicenceTestRejectReceipt ON dbo.RentLicensesDetails AFTER UPDATE AS BEGIN RAISERROR('TEST ROLLBACK',16,1); ROLLBACK TRANSACTION; END");
         bool failed = false;
         try { Pay(rental); } catch { failed = true; }
-        Check(failed && Details(rental)[0].rd_isPaid == false && Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPayment")) == 0, "receipt and paid flag roll back together");
+        Check(failed && Details(rental)[0].rd_isPaid == false && Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesDetails WHERE rd_isPaid=1")) == 0, "receipt and paid flag roll back together");
         Sql("DROP TRIGGER dbo.LicenceTestRejectReceipt");
 
         int successes = 0, conflicts = 0;
@@ -180,27 +181,23 @@ internal static class LicenceRentalTests
         var a = new Thread(payOnce); var b = new Thread(payOnce); a.Start(); b.Start(); gate.Set(); a.Join(); b.Join();
         if (errors.Count > 0) throw errors[0];
         Check(successes == 1 && conflicts == 1, "concurrent payment has exactly one winner");
+        Check(Receipt(firstReceipt).payment_edited_Date != receipt.payment_edited_Date, "re-payment cannot reuse deleted receipt edit token");
+        Reject(() => workflow.SavePayment(firstReceipt, rental, first.rentLicencesDetailsID, 100m, "OLD RECEIPT", DateTime.Today, 1, receipt.payment_edited_Date), "deleted receipt cannot edit a new payment on the same installment");
         workflow.SaveRental(rental, 1, 1, "ORIGINAL", start, 2, 2, 0m, Version(rental));
         Check(Details(rental).Length == 2, "shortening removes only unpaid tail");
         Pay(rental);
         Reject(() => workflow.SaveRental(rental, 1, 1, "SHORT", start, 1, 2, 0m, Version(rental)), "shortening across paid month rejected");
 
         int historicalReceipt;
-        using (var db = Db()) historicalReceipt = db.RentLicensesPayments.First(p => p.rentLicenseID == rental).rentLicensePaymentID;
+        using (var db = Db()) historicalReceipt = db.RentLicensesDetails.Where(d => d.rd_isPaid == true).First(p => p.rentLicenseID == rental).rentLicencesDetailsID;
         // Deliberately corrupt only the disposable fixture to exercise fail-closed paths.
-        Sql("INSERT dbo.RentLicensesPayment(rentLicenseID,rentLicencesDetailsID,rentLicPay_Amount,rentLicPay_ForDate) SELECT rentLicenseID,rentLicencesDetailsID,rentLicPay_Amount,rentLicPay_ForDate FROM dbo.RentLicensesPayment WHERE rentLicensePaymentID=" + historicalReceipt);
-        Reject(() => workflow.CloseRental(rental), "duplicate cannot conceal unpaid balance");
-        Reject(() => workflow.DeletePayment(historicalReceipt, rental, Receipt(historicalReceipt).edited_Date), "ambiguous duplicate deletion blocked");
-        Sql("DELETE dbo.RentLicensesPayment WHERE rentLicensePaymentID=(SELECT MAX(rentLicensePaymentID) FROM dbo.RentLicensesPayment)");
-        int crossRental = workflow.SaveRental(-1, 2, 1, "CROSS", start, 1, 1, 100m, null);
-        Sql("UPDATE dbo.RentLicensesPayment SET rentLicenseID=" + crossRental + " WHERE rentLicensePaymentID=" + historicalReceipt);
-        Reject(() => workflow.CloseRental(rental), "cross-rental receipt blocks source settlement");
-        Reject(() => Pay(crossRental), "cross-rental receipt blocks destination payment");
-        using (var db = Db()) Check(LicenseRentalReports.PaidByInstalment(db).Values.Sum() == 150m, "misallocated receipt does not settle another rental");
-        Sql("UPDATE dbo.RentLicensesPayment SET rentLicenseID=" + rental + " WHERE rentLicensePaymentID=" + historicalReceipt);
-        workflow.DeleteRental(crossRental);
+        Sql("UPDATE dbo.RentLicensesDetails SET rd_isPaid=0 WHERE rentLicencesDetailsID=" + historicalReceipt);
+        Reject(() => workflow.CloseRental(rental), "unpaid installment with receipt metadata blocks closure");
+        Reject(() => workflow.DeletePayment(historicalReceipt, rental, ReceiptToken(historicalReceipt)), "invalid receipt state blocks deletion");
+        Sql("UPDATE dbo.RentLicensesDetails SET rd_isPaid=1 WHERE rentLicencesDetailsID=" + historicalReceipt);
+        Check(Receipt(historicalReceipt).payment_addedBy == 1, "receipt audit user retained separately from schedule audit");
         workflow.CloseRental(rental);
-        Reject(() => workflow.DeletePayment(historicalReceipt, rental, Receipt(historicalReceipt).edited_Date), "closed rental is financially read-only");
+        Reject(() => workflow.DeletePayment(historicalReceipt, rental, Receipt(historicalReceipt).payment_edited_Date), "closed rental is financially read-only");
         int replacement = workflow.SaveRental(-1, 1, 1, "REPLACEMENT", new DateTime(2025, 5, 1), 1, 1, 200m, null);
         Check(replacement != rental, "licence can be re-rented after closure");
         Reject(() => workflow.SavePayment(historicalReceipt, replacement, first.rentLicencesDetailsID, 100m, "MOVE", DateTime.Today, 1, null), "receipt cannot move to replacement");
@@ -224,28 +221,24 @@ internal static class LicenceRentalTests
         CorrectionChecks(output, constraints, historicalReceipt);
         Sql(File.ReadAllText(constraints));
         Sql(File.ReadAllText(constraints));
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.foreign_keys WHERE name='FK_LicenceReceipt_InstalmentRental' AND is_disabled=0 AND is_not_trusted=0")) == 1, "validated composite FK installed idempotently");
-        bool duplicateBlocked = false;
-        try { Sql("INSERT dbo.RentLicensesPayment(rentLicenseID,rentLicencesDetailsID,rentLicPay_Amount,rentLicPay_ForDate) SELECT rentLicenseID,rentLicencesDetailsID,rentLicPay_Amount,rentLicPay_ForDate FROM dbo.RentLicensesPayment WHERE rentLicensePaymentID=" + historicalReceipt); }
-        catch (SqlException) { duplicateBlocked = true; }
-        Check(duplicateBlocked, "database prevents duplicate receipts");
-        bool wrongRentalBlocked = false;
-        try { Sql("UPDATE dbo.RentLicensesPayment SET rentLicenseID=" + replacement + " WHERE rentLicensePaymentID=" + historicalReceipt); }
-        catch (SqlException) { wrongRentalBlocked = true; }
-        Check(wrongRentalBlocked, "composite FK prevents cross-rental receipt links");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.check_constraints WHERE name='CK_LicenceInstalment_PaymentState' AND is_disabled=0 AND is_not_trusted=0")) == 1, "payment-state constraint installed idempotently");
+        bool badStateBlocked = false;
+        try { Sql("UPDATE dbo.RentLicensesDetails SET rd_isPaid=0 WHERE rentLicencesDetailsID=" + historicalReceipt); }
+        catch (SqlException) { badStateBlocked = true; }
+        Check(badStateBlocked, "database prevents unpaid installment with receipt metadata");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.tables WHERE name='RentLicensesPayment'")) == 0, "payment table absent from generated schema");
         string rollback = Path.Combine(Path.GetDirectoryName(constraints), "licence-rental-integrity-rollback.sql");
         Sql(File.ReadAllText(rollback));
         Sql(File.ReadAllText(rollback));
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.foreign_keys WHERE name='FK_LicenceReceipt_InstalmentRental'")) == 0, "constraint rollback is idempotent");
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPayment")) == 2, "constraint rollback preserves receipts");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.check_constraints WHERE name='CK_LicenceInstalment_PaymentState'")) == 0, "constraint rollback is idempotent");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesDetails WHERE rd_isPaid=1")) == 2, "constraint rollback preserves payments");
     }
-
     private static void FormChecks(string output, int receiptId, int rentalId, bool interactive = false)
     {
         string config = Path.Combine(output, "LicenceRental.Ui.config");
         new XDocument(new XElement("configuration", new XElement("connectionStrings", new XElement("add",
             new XAttribute("name", "BarakeitAlkheirEntities"), new XAttribute("connectionString", entity),
-            new XAttribute("providerName", "System.Data.EntityClient"))))).Save(config);
+            new XAttribute("providerName", "System.Data.SqlClient"))))).Save(config);
         var domain = AppDomain.CreateDomain("LicenceRental UI tests", null,
             new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, ConfigurationFile = config });
         try {
@@ -263,7 +256,8 @@ internal static class LicenceRentalTests
         string manifest = Path.Combine(output, "correction-test.json");
         string package = Path.Combine(output, "correction-test.clixml");
         new XDocument(new XElement("configuration", new XElement("connectionStrings", new XElement("add",
-            new XAttribute("name", "BarakeitAlkheirEntities"), new XAttribute("connectionString", entity))))).Save(config);
+            new XAttribute("name", "BarakeitAlkheirEntities"), new XAttribute("connectionString", entity),
+            new XAttribute("providerName", "System.Data.SqlClient"))))).Save(config);
         string database = new SqlConnectionStringBuilder(provider).InitialCatalog;
         Func<string, bool> run = mode => {
             var start = new System.Diagnostics.ProcessStartInfo("powershell.exe",
@@ -283,22 +277,22 @@ internal static class LicenceRentalTests
         try {
             File.Delete(package);
             string original = Receipt(receiptId).rentLicPay_VouNo;
-            File.WriteAllText(manifest, "[{\"table\":\"RentLicensesPayment\",\"id\":" + receiptId + ",\"operation\":\"update\",\"reason\":\"Synthetic test\",\"changes\":{\"rentLicPay_VouNo\":\"CORRECTED\"}}]");
+            File.WriteAllText(manifest, "[{\"table\":\"RentLicensesDetails\",\"id\":" + receiptId + ",\"operation\":\"update\",\"reason\":\"Synthetic test\",\"changes\":{\"rentLicPay_VouNo\":\"CORRECTED\"}}]");
             Check(run("Preview") && Receipt(receiptId).rentLicPay_VouNo == original, "correction preview is read-only");
             Check(run("Apply") && Receipt(receiptId).rentLicPay_VouNo == "CORRECTED", "reviewed correction applied");
             Check(!run("Apply"), "stale correction package rejected");
             Check(run("Rollback") && Receipt(receiptId).rentLicPay_VouNo == original, "correction rollback restores original values");
             File.Delete(package);
-            int secondId = Convert.ToInt32(Sql("SELECT MAX(rentLicensePaymentID) FROM dbo.RentLicensesPayment WHERE rentLicensePaymentID<>" + receiptId));
-            File.WriteAllText(manifest, "[{\"table\":\"RentLicensesPayment\",\"id\":" + receiptId + ",\"operation\":\"update\",\"reason\":\"Atomic batch test\",\"changes\":{\"rentLicPay_VouNo\":\"BATCH\"}},{\"table\":\"RentLicensesPayment\",\"id\":" + secondId + ",\"operation\":\"update\",\"reason\":\"Stale second row\",\"changes\":{\"rentLicPay_VouNo\":\"BATCH2\"}}]");
+            int secondId = Convert.ToInt32(Sql("SELECT MAX(rentLicencesDetailsID) FROM dbo.RentLicensesDetails WHERE rd_isPaid=1 AND rentLicencesDetailsID<>" + receiptId));
+            File.WriteAllText(manifest, "[{\"table\":\"RentLicensesDetails\",\"id\":" + receiptId + ",\"operation\":\"update\",\"reason\":\"Atomic batch test\",\"changes\":{\"rentLicPay_VouNo\":\"BATCH\"}},{\"table\":\"RentLicensesDetails\",\"id\":" + secondId + ",\"operation\":\"update\",\"reason\":\"Stale second row\",\"changes\":{\"rentLicPay_VouNo\":\"BATCH2\"}}]");
             Check(run("Preview"), "batch preview created");
-            Sql("UPDATE dbo.RentLicensesPayment SET editedBy=999 WHERE rentLicensePaymentID=" + secondId);
+            Sql("UPDATE dbo.RentLicensesDetails SET editedBy=999 WHERE rentLicencesDetailsID=" + secondId);
             Check(!run("Apply") && Receipt(receiptId).rentLicPay_VouNo == original, "stale second row rolls back first correction");
-            Sql("UPDATE dbo.RentLicensesPayment SET editedBy=1 WHERE rentLicensePaymentID=" + secondId);
+            Sql("UPDATE dbo.RentLicensesDetails SET editedBy=1 WHERE rentLicencesDetailsID=" + secondId);
             File.Delete(package);
-            File.WriteAllText(manifest, "[{\"table\":\"RentLicensesPayment\",\"id\":" + receiptId + ",\"operation\":\"delete\",\"reason\":\"Synthetic deletion rollback test\"}]");
+            File.WriteAllText(manifest, "[{\"table\":\"RentLicensesDetails\",\"id\":" + receiptId + ",\"operation\":\"delete\",\"reason\":\"Synthetic deletion rollback test\"}]");
             Check(run("Preview") && run("Apply"), "reviewed deletion applied");
-            Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPayment WHERE rentLicensePaymentID=" + receiptId)) == 0, "deleted receipt absent");
+            Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesDetails WHERE rd_isPaid=1 AND rentLicencesDetailsID=" + receiptId)) == 0, "deleted receipt absent");
             Check(run("Rollback") && Receipt(receiptId).rentLicPay_VouNo == original, "deleted receipt restored with original identity");
         }
         finally { File.Delete(config); File.Delete(manifest); File.Delete(package); }
@@ -326,8 +320,12 @@ internal static class LicenceRentalTests
             if (args.Length == 4) {
                 var configuration = XDocument.Load(args[0]);
                 string configured = configuration.Root.Element("connectionStrings").Elements("add").Single(e => (string)e.Attribute("name") == "BarakeitAlkheirEntities").Attribute("connectionString").Value;
-                var entityBuilder = new System.Data.EntityClient.EntityConnectionStringBuilder(configured);
-                master = new SqlConnectionStringBuilder(entityBuilder.ProviderConnectionString) { InitialCatalog = "master", ConnectTimeout = 5 };
+                string providerConnection = configured;
+                if ((string)configuration.Root.Element("connectionStrings").Elements("add").Single(e => (string)e.Attribute("name") == "BarakeitAlkheirEntities").Attribute("providerName") == "System.Data.EntityClient") {
+                    var legacy = new System.Data.Common.DbConnectionStringBuilder { ConnectionString = configured };
+                    providerConnection = (string)legacy["provider connection string"];
+                }
+                master = new SqlConnectionStringBuilder(providerConnection) { InitialCatalog = "master", ConnectTimeout = 5 };
                 string name = "BarakatLicenceTests_" + Guid.NewGuid().ToString("N");
                 using (var connection = new SqlConnection(master.ConnectionString)) {
                     connection.Open();
@@ -335,8 +333,11 @@ internal static class LicenceRentalTests
                 }
                 createdDatabase = name;
                 provider = new SqlConnectionStringBuilder(master.ConnectionString) { InitialCatalog = name }.ConnectionString;
-                entityBuilder.ProviderConnectionString = provider;
-                entity = entityBuilder.ConnectionString;
+                entity = provider;
+                using (var db = Db()) {
+                    var context = ((System.Data.Entity.Infrastructure.IObjectContextAdapter)db).ObjectContext;
+                    File.WriteAllText(args[1], context.CreateDatabaseScript());
+                }
 #if INTERACTIVE
                 // Keep manual UI testing in a fresh process without prior Telerik form disposal.
                 CreateFixture(args[1]);
@@ -466,6 +467,7 @@ public sealed class LicenceRentalFormSmoke : MarshalByRefObject
         MainClass.userID = 1; MainClass.userGroupID = 1; MainClass.isSuperUser = true;
         System.Windows.Forms.Application.EnableVisualStyles();
         PickerChecks();
+        PaymentSearchChecks(receiptId);
         using (var form = new frmRentLicensePayment()) {
             ShowOffscreen(form);
             PublicClass.bindMandoub((Telerik.WinControls.UI.RadDropDownList)Field(form, "cmbMandoub"));
@@ -473,6 +475,17 @@ public sealed class LicenceRentalFormSmoke : MarshalByRefObject
             Call(form, "getData", new[] { typeof(int) }, receiptId);
             Call(form, "bindData", Type.EmptyTypes);
             if ((int)Field(form, "rentID") != rentalId || ((System.Windows.Forms.Control)Field(form, "txtrentLicenseNo")).Text != "ORIGINAL") return false;
+            var boundDetails = (System.Collections.Generic.List<RentLicensesDetail>)Field(form, "paidDetails");
+            var originalDate = boundDetails[0].rentLicPay_PaymentDate;
+            boundDetails[0].rentLicPay_PaymentDate = null;
+            Call(form, "bindData", Type.EmptyTypes);
+            var paymentDate = (System.Windows.Forms.DateTimePicker)Field(form, "txtrentLicPay_PaymentDate");
+            if (paymentDate.Checked || !string.IsNullOrWhiteSpace(paymentDate.Text))
+                throw new Exception("Unknown payment date must display blank, without a today fallback.");
+            boundDetails[0].rentLicPay_PaymentDate = originalDate;
+            Call(form, "bindData", Type.EmptyTypes);
+            if (!paymentDate.Checked || paymentDate.Value != originalDate || paymentDate.CustomFormat != AppDateFormat.PickerFormat)
+                throw new Exception("Known payment date must be retained.");
             var toolbar = (BarakalAlkheir.components.banner)Field(form, "mainbar");
             if (toolbar.btnEdit.Enabled || toolbar.btnDelete.Enabled) return false;
             using (var image = new System.Drawing.Bitmap(form.Width, form.Height)) {
@@ -480,6 +493,7 @@ public sealed class LicenceRentalFormSmoke : MarshalByRefObject
                 image.Save(Path.Combine(output, "receipt-form.png"));
             }
             Click(form, "btnAdd_Click");
+            if (!paymentDate.Checked || paymentDate.Value.Date != DateTime.Today) throw new Exception("New payments must still default to today's date.");
             if ((int)Field(form, "rentID") != -1 || (int)Field(form, "_rentLicencesDetailsID") != -1) return false;
             Click(form, "btnCancel_Click");
             if ((int)Field(form, "rentID") != rentalId || toolbar.btnEdit.Enabled) return false;
@@ -525,5 +539,42 @@ public sealed class LicenceRentalFormSmoke : MarshalByRefObject
             }
         }
         return true;
+    }
+
+    private static void PaymentSearchChecks(int receiptId)
+    {
+        using (var db = new BarakeitAlkheirEntities())
+        {
+            var detail = db.RentLicensesDetails.Single(d => d.rentLicencesDetailsID == receiptId);
+            var licence = detail.RentLicens.CompanyLicence;
+            string voucher = detail.rentLicPay_VouNo, link = licence.licenseLinkCode;
+            try
+            {
+                detail.rentLicPay_VouNo = null;
+                licence.licenseLinkCode = "SEARCH-TEST";
+                db.SaveChanges();
+                using (var form = new frmfindLicencesPayment())
+                {
+                    var grid = (Telerik.WinControls.UI.RadGridView)Field(form, "GView");
+                    foreach (string filter in new[] { "", null, "NO-MATCH" })
+                    {
+                        Call(form, "getData", new[] { typeof(string), typeof(string), typeof(string), typeof(string) }, filter, "", "SEARCH-TEST", "");
+                        bool found = grid.Rows.Any(r => Convert.ToInt32(r.Cells[0].Value) == receiptId);
+                        if (found != string.IsNullOrEmpty(filter)) throw new Exception("Blank vouchers must be searchable only when the voucher filter is absent.");
+                    }
+                    detail.rentLicPay_VouNo = "RECEIPT-TEST";
+                    db.SaveChanges();
+                    Call(form, "getData", new[] { typeof(string), typeof(string), typeof(string), typeof(string) }, "CEIPT", "", "SEARCH-TEST", "");
+                    if (!grid.Rows.Any(r => Convert.ToInt32(r.Cells[0].Value) == receiptId)) throw new Exception("Voucher substring search regressed.");
+                }
+            }
+            finally
+            {
+                detail.rentLicPay_VouNo = voucher;
+                licence.licenseLinkCode = link;
+                db.SaveChanges();
+            }
+        }
+        Console.WriteLine("PASS: actual payment search includes null vouchers for empty/null filters and retains substring matching.");
     }
 }

@@ -124,7 +124,7 @@ namespace BarakalAlkheir.Docs
                     //BindingSource bs = new BindingSource();
                     //bs.Add(val.ToList().Where(p => p.document_endDate <= DateTime.Now.AddDays(p.noOfDays)));
                     DateTime now = DateTime.Now;
-                    var val1 = val.Where(p => p.document_endDate <= System.Data.Objects.EntityFunctions.AddDays(now, p.noOfDays)).ToList();
+                    var val1 = val.Where(p => p.document_endDate <= System.Data.Entity.DbFunctions.AddDays(now, p.noOfDays)).ToList();
                     //GView1.DataSource = val1.ToList();
                     return DocumentListLookup.Create(db, val1, item => item.documentID, item => item.companyLicencesID, true);
                 }
@@ -333,7 +333,7 @@ namespace BarakalAlkheir.Docs
                                 dd.edited_Date = DateTime.Now;
                                 dd.editedBy = MainClass.userID;
 
-                                db.DocumentTransactionTasks.AddObject(dd);
+                                db.DocumentTransactionTasks.Add(dd);
                                 int rowsAffected = db.SaveChanges();
 
                                 if (rowsAffected > 0 && isPressed && GView.CurrentRow.Cells["gvRemarks"].Value != null &&
@@ -373,7 +373,7 @@ namespace BarakalAlkheir.Docs
                                         //    ass.edited_Date = DateTime.Now;
                                         //    ass.editedBy = MainClass.userID;
 
-                                        //    db.documentTransTaskDetails.AddObject(ass);
+                                        //    db.documentTransTaskDetails.Add(ass);
                                         //    db.SaveChanges();
                                         //}
 
@@ -493,7 +493,7 @@ namespace BarakalAlkheir.Docs
                                                                                   where cc3.documentTransTaskDetailsID == dID
                                                                                   select cc3).FirstOrDefault();
                                                     if (dd != null)
-                                                        db.documentTransTaskDetails.DeleteObject(dd);
+                                                        db.documentTransTaskDetails.Remove(dd);
                                                     db.SaveChanges();
                                                 }
 
@@ -515,7 +515,7 @@ namespace BarakalAlkheir.Docs
                                                                                           where cc2.DocumentTransactionTasksPaymentID == pID
                                                                                           select cc2).FirstOrDefault();
                                                     if (dd != null)
-                                                        db.DocumentTransactionTasksPayments.DeleteObject(dd);
+                                                        db.DocumentTransactionTasksPayments.Remove(dd);
                                                     db.SaveChanges();
                                                 }
 
@@ -524,7 +524,7 @@ namespace BarakalAlkheir.Docs
                                                                                where cc1.documentID == docID
                                                                                select cc1).SingleOrDefault();
                                                 if (dtt != null)
-                                                    db.DocumentTransactionTasks.DeleteObject(dtt);
+                                                    db.DocumentTransactionTasks.Remove(dtt);
                                                 db.SaveChanges();
 
                                                 db.AcceptAllChanges();

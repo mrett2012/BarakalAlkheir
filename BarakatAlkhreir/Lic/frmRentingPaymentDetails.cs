@@ -39,24 +39,6 @@ namespace BarakalAlkheir.Lic
        
 
 
-        private bool isPaidAmount(int _rentLicenseID, DateTime _dfrom)
-        {
-            bool temp = false;
-            using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
-            {
-                DateTime _dTo = _dfrom.AddMonths(1);
-                var val2 = (from c in db.RentLicensesPayments
-                           where c.rentLicenseID == _rentLicenseID &&
-                           c.rentLicPay_ForDate.Value >= _dfrom &&
-                           c.rentLicPay_ForDate.Value < _dTo
-                           select c).ToList();
-                if (val2.Count > 0)
-                    temp = true;
-            }
-
-            return temp;
-        }
-
         private void getData()
         {
             GView.Rows.Clear();
@@ -65,16 +47,11 @@ namespace BarakalAlkheir.Lic
             int year = txtDate.Value.Year;
             DateTime first = LicenseRentalRules.PeriodStart(new DateTime(year, 1, 1));
             DateTime end = LicenseRentalRules.PeriodEndExclusive(new DateTime(year, 12, 1));
-            DateTime receiptFrom = new DateTime(year, 1, 1);
-            DateTime receiptTo = receiptFrom.AddYears(1);
             using (var db = new BarakeitAlkheirEntities())
             {
                 var details = db.RentLicensesDetails.Where(d => d.rd_fromDate >= first && d.rd_fromDate < end).ToList();
-                // Show actual collections under the receipt's recorded rental, including allocation conflicts.
-                // The reconciliation audit identifies those conflicts; they must not disappear from cash totals.
-                var receipts = db.RentLicensesPayments.Where(p => p.rentLicPay_ForDate >= receiptFrom && p.rentLicPay_ForDate < receiptTo).ToList();
-                var ids = details.Where(d => d.rentLicenseID.HasValue).Select(d => d.rentLicenseID.Value)
-                    .Union(receipts.Where(p => p.rentLicenseID.HasValue).Select(p => p.rentLicenseID.Value)).Distinct().ToList();
+                var receipts = details.Where(d => d.rd_isPaid == true).ToList();
+                var ids = details.Where(d => d.rentLicenseID.HasValue).Select(d => d.rentLicenseID.Value).Distinct().ToList();
                 // Historical rentals remain visible in their billing year after closure.
                 var rentals = (from r in db.RentLicenses
                                join c in db.CompanyLicences on r.companyLicencesID equals c.companyLicencesID
@@ -88,7 +65,7 @@ namespace BarakalAlkheir.Lic
                     foreach (var detail in details.Where(d => d.rentLicenseID == rental.rentLicenseID))
                         scheduled[LicenseRentalRules.BillingDate(detail.rd_fromDate.Value).Month - 1] += LicenseRentalRules.Amount(detail.rd_amount ?? 0);
                     foreach (var receipt in receipts.Where(p => p.rentLicenseID == rental.rentLicenseID))
-                        paid[receipt.rentLicPay_ForDate.Value.Month - 1] += LicenseRentalRules.Amount(receipt.rentLicPay_Amount ?? 0);
+                        paid[LicenseRentalRules.BillingDate(receipt.rd_fromDate.Value).Month - 1] += LicenseRentalRules.Amount(receipt.rd_amount ?? 0);
                     int row = GView.Rows.Add();
                     GView.Rows[row].Cells[0].Value = rental.rentLicenseID;
                     GView.Rows[row].Cells[1].Value = rental.licenseNo;

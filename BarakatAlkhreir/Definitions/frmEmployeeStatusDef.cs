@@ -100,7 +100,7 @@ namespace BarakalAlkheir.Definitions
                                                         bbID
                                                     select c).FirstOrDefault();
 
-                            db.EmployeeStatusDefs.DeleteObject(bb);
+                            db.EmployeeStatusDefs.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -146,7 +146,7 @@ namespace BarakalAlkheir.Definitions
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.EmployeeStatusDefs.AddObject(bb);
+                        db.EmployeeStatusDefs.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -167,7 +167,7 @@ namespace BarakalAlkheir.Definitions
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.EmployeeStatusDefs.AddObject(bb);
+                        //db.EmployeeStatusDefs.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }

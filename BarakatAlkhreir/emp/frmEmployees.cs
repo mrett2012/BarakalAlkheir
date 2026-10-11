@@ -517,7 +517,7 @@ namespace BarakalAlkheir.emp
                                                bbID
                                            select c).FirstOrDefault();
 
-                            db.Employees.DeleteObject(bb);
+                            db.Employees.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -607,7 +607,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.Employees.AddObject(bb);
+                        db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -654,7 +654,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -1117,7 +1117,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -1272,7 +1272,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -1598,7 +1598,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -1883,7 +1883,7 @@ namespace BarakalAlkheir.emp
 
                                     if (bb1 != null)
                                     {
-                                        db.Documents.DeleteObject(bb1);
+                                        db.Documents.Remove(bb1);
                                         db.SaveChanges();
                                     }
 
@@ -1893,7 +1893,7 @@ namespace BarakalAlkheir.emp
                                                               bbID
                                                           select c).FirstOrDefault();
 
-                                    db.EmployeeSponsors.DeleteObject(bb);
+                                    db.EmployeeSponsors.Remove(bb);
                                     db.SaveChanges();
 
 
@@ -1982,7 +1982,7 @@ namespace BarakalAlkheir.emp
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.EmployeeSponsors.AddObject(bb);
+                            db.EmployeeSponsors.Add(bb);
                             rowsAffected = db.SaveChanges();
 
                             //// we must get the id of the document
@@ -2013,7 +2013,7 @@ namespace BarakalAlkheir.emp
                             bb1.edited_Date = DateTime.Now;
                             bb1.editedBy = MainClass.userID;
 
-                            db.Documents.AddObject(bb1);
+                            db.Documents.Add(bb1);
                             rowsAffected = db.SaveChanges();
 
 
@@ -2089,7 +2089,7 @@ namespace BarakalAlkheir.emp
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            //db.EmployeeSponsors.AddObject(bb);
+                            //db.EmployeeSponsors.Add(bb);
                             rowsAffected = db.SaveChanges();
 
                             // we must get the id of the document
@@ -2116,7 +2116,7 @@ namespace BarakalAlkheir.emp
                             bb1.edited_Date = DateTime.Now;
                             bb1.editedBy = MainClass.userID;
 
-                            //db.Documents.AddObject(bb1);
+                            //db.Documents.Add(bb1);
                             rowsAffected = db.SaveChanges();
 
 
@@ -2396,7 +2396,7 @@ namespace BarakalAlkheir.emp
                                                          bbID
                                                      select c).FirstOrDefault();
 
-                                db.EmployeeSalaries.DeleteObject(bb);
+                                db.EmployeeSalaries.Remove(bb);
                                 int noOfAffectedRows = db.SaveChanges();
                                 if (noOfAffectedRows > 0)
                                 {
@@ -2437,7 +2437,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.EmployeeSalaries.AddObject(bb);
+                        db.EmployeeSalaries.Add(bb);
                         rowsAffected = db.SaveChanges();
                         lblSalaryID.Text = bb.employeeSalaryID.ToString();
                     }
@@ -2463,7 +2463,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -2622,7 +2622,7 @@ namespace BarakalAlkheir.emp
                                                                bbID
                                                            select c).FirstOrDefault();
 
-                                db.EmployeeWorkContracts.DeleteObject(bb);
+                                db.EmployeeWorkContracts.Remove(bb);
                                 int noOfAffectedRows = db.SaveChanges();
                                 if (noOfAffectedRows > 0)
                                 {
@@ -2662,7 +2662,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.EmployeeWorkContracts.AddObject(bb);
+                        db.EmployeeWorkContracts.Add(bb);
                         rowsAffected = db.SaveChanges();
 
                         lblWorkContractID.Text = bb.workContractID.ToString();
@@ -2688,7 +2688,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -2827,7 +2827,7 @@ namespace BarakalAlkheir.emp
                                                 bbID
                                             select c).FirstOrDefault();
 
-                            db.Dependents.DeleteObject(bb);
+                            db.Dependents.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -2878,7 +2878,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.Dependents.AddObject(bb);
+                        db.Dependents.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -2904,7 +2904,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        //db.Employees.AddObject(bb);
+                        //db.Employees.Add(bb);
                         rowsAffected = db.SaveChanges();
                     }
                 }
@@ -3109,7 +3109,7 @@ namespace BarakalAlkheir.emp
                                                               bbID
                                                           select c).FirstOrDefault();
 
-                                db.EmployeeLicenseShops.DeleteObject(bb);
+                                db.EmployeeLicenseShops.Remove(bb);
                                 int noOfAffectedRows = db.SaveChanges();
                                 if (noOfAffectedRows > 0)
                                 {
@@ -3157,7 +3157,7 @@ namespace BarakalAlkheir.emp
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.EmployeeLicenseShops.AddObject(bb);
+                        db.EmployeeLicenseShops.Add(bb);
                         rowsAffected = db.SaveChanges();
 
                         this.lblemployeeLicShopID.Text = bb.employeeLicShopID.ToString();
@@ -3392,7 +3392,7 @@ namespace BarakalAlkheir.emp
                                                bbID
                                            select c).FirstOrDefault();
 
-                            db.Documents.DeleteObject(bb);
+                            db.Documents.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -3795,7 +3795,7 @@ namespace BarakalAlkheir.emp
                                                                                   where cc3.documentTransTaskDetailsID == dID
                                                                                   select cc3).FirstOrDefault();
                                                     if (dd != null)
-                                                        db.documentTransTaskDetails.DeleteObject(dd);
+                                                        db.documentTransTaskDetails.Remove(dd);
                                                     db.SaveChanges();
                                                 }
 
@@ -3817,7 +3817,7 @@ namespace BarakalAlkheir.emp
                                                                                           where cc2.DocumentTransactionTasksPaymentID == pID
                                                                                           select cc2).FirstOrDefault();
                                                     if (dd != null)
-                                                        db.DocumentTransactionTasksPayments.DeleteObject(dd);
+                                                        db.DocumentTransactionTasksPayments.Remove(dd);
                                                     db.SaveChanges();
                                                 }
 
@@ -3826,7 +3826,7 @@ namespace BarakalAlkheir.emp
                                                                                where cc1.documentID == docID
                                                                                select cc1).SingleOrDefault();
                                                 if (dtt != null)
-                                                    db.DocumentTransactionTasks.DeleteObject(dtt);
+                                                    db.DocumentTransactionTasks.Remove(dtt);
                                                 db.SaveChanges();
 
                                                 db.AcceptAllChanges();
@@ -3955,7 +3955,7 @@ namespace BarakalAlkheir.emp
                                                                bbID
                                                            select c).FirstOrDefault();
 
-                                    db.EmployeePassports.DeleteObject(bb);
+                                    db.EmployeePassports.Remove(bb);
                                     db.SaveChanges();
 
                                     int IDDD = int.Parse(lblEmployeeID.Text);
@@ -3966,7 +3966,7 @@ namespace BarakalAlkheir.emp
                                                     select c).FirstOrDefault();
 
                                     if (bb1 != null)
-                                        db.Documents.DeleteObject(bb1);
+                                        db.Documents.Remove(bb1);
 
                                     db.SaveChanges();
                                     ts.Complete();
@@ -4038,7 +4038,7 @@ namespace BarakalAlkheir.emp
 
                             
 
-                            db.EmployeePassports.AddObject(bb);
+                            db.EmployeePassports.Add(bb);
                             rowsAffected = db.SaveChanges();
                             lblpassportID.Text = bb.passportID.ToString();
 
@@ -4075,7 +4075,7 @@ namespace BarakalAlkheir.emp
                             bb1.edited_Date = DateTime.Now;
                             bb1.editedBy = MainClass.userID;
 
-                            db.Documents.AddObject(bb1);
+                            db.Documents.Add(bb1);
                             db.SaveChanges();
 
                             db.AcceptAllChanges();
@@ -4136,7 +4136,7 @@ namespace BarakalAlkheir.emp
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            //db.Employees.AddObject(bb);
+                            //db.Employees.Add(bb);
                             rowsAffected = db.SaveChanges();
 
 
@@ -5606,7 +5606,7 @@ namespace BarakalAlkheir.emp
                                 dd.edited_Date = DateTime.Now;
                                 dd.editedBy = MainClass.userID;
 
-                                db.DocumentTransactionTasks.AddObject(dd);
+                                db.DocumentTransactionTasks.Add(dd);
                                 int rowsAffected = db.SaveChanges();
 
                                 if (rowsAffected > 0 && isPressed && this.gvDocument.CurrentRow.Cells["gvRemarks"].Value != null &&
@@ -5645,7 +5645,7 @@ namespace BarakalAlkheir.emp
                                     //        ass.edited_Date = DateTime.Now;
                                     //        ass.editedBy = MainClass.userID;
 
-                                    //        db.documentTransTaskDetails.AddObject(ass);
+                                    //        db.documentTransTaskDetails.Add(ass);
                                     //        db.SaveChanges();
                                     //    }
 

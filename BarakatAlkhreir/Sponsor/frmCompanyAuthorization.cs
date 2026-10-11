@@ -116,7 +116,7 @@ namespace BarakalAlkheir.Sponsor
                                                           bbID
                                                       select c).FirstOrDefault();
 
-                            db.AuthorizationPersons.DeleteObject(bb);
+                            db.AuthorizationPersons.Remove(bb);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -179,7 +179,7 @@ namespace BarakalAlkheir.Sponsor
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.AuthorizationPersons.AddObject(bb);
+                            db.AuthorizationPersons.Add(bb);
                             rowsAffected = db.SaveChanges();
 
                             //if (rowsAffected > 0 && chkisActive.Checked)

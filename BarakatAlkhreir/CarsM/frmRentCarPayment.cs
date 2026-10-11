@@ -135,7 +135,7 @@ namespace BarakalAlkheir.CarsM
                                                                  bbID
                                                              select c).FirstOrDefault();
 
-                                db.CarCustomerRentPayments.DeleteObject(bb);
+                                db.CarCustomerRentPayments.Remove(bb);
                                 int noOfAffectedRows = db.SaveChanges();
 
                                 int bbID1 = bb.carCustomerRentDetailsID.Value;
@@ -230,7 +230,7 @@ namespace BarakalAlkheir.CarsM
                                 {
                                     bb.carCustomerRentID = bb1.carCustomerRentID.Value;
                                     bb.carCustomerRentDetailsID = bb1.carCustomerRentDetailsID;
-                                    db.CarCustomerRentPayments.AddObject(bb);
+                                    db.CarCustomerRentPayments.Add(bb);
 
                                     bb1.rd_isPaid = true;
 
@@ -325,8 +325,6 @@ namespace BarakalAlkheir.CarsM
             frm.ShowDialog();
             if (frm.found)
             {
-                //RentLicensesPayment cl = lstRentLicensesPayment.Find(c => c.rentLicensePaymentID == frm.licID);
-                //position = lstRentLicensesPayment.IndexOf(cl);
                 getData(frm.licID);
                 bindData();
             }

@@ -9,13 +9,9 @@ namespace BarakalAlkheir.Lic
     {
         internal static Dictionary<int, decimal> PaidByInstalment(BarakeitAlkheirEntities db)
         {
-            // Both keys must match. An incorrectly assigned receipt must not settle another contract.
-            var receipts = (from p in db.RentLicensesPayments
-                            join d in db.RentLicensesDetails on p.rentLicencesDetailsID equals d.rentLicencesDetailsID
-                            where p.rentLicenseID == d.rentLicenseID
-                            select new { d.rentLicencesDetailsID, p.rentLicPay_Amount }).ToList();
-            return receipts.GroupBy(p => p.rentLicencesDetailsID).ToDictionary(g => g.Key,
-                g => g.Sum(p => LicenseRentalRules.Amount(p.rentLicPay_Amount ?? 0)));
+            return db.RentLicensesDetails.Where(d => d.rd_isPaid == true)
+                .Select(d => new { d.rentLicencesDetailsID, d.rd_amount }).ToList()
+                .ToDictionary(d => d.rentLicencesDetailsID, d => LicenseRentalRules.Amount(d.rd_amount));
         }
 
         internal static decimal Paid(Dictionary<int, decimal> totals, int detailId)

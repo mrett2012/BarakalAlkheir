@@ -202,7 +202,7 @@ namespace BarakalAlkheir.CarsM
             {
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    var val = from c in db.Cars
+                    var val = (from c in db.Cars
                               where c.car_isAvailable == false
                               orderby c.car_Name
                               select new
@@ -212,7 +212,7 @@ namespace BarakalAlkheir.CarsM
                                   car_Name = c.car_Name,
                                   car_Model = c.car_Model,
                                   car_Brand = c.car_Brand
-                              };
+                              }).ToList();
 
                     Gview.DataSource = val;
 

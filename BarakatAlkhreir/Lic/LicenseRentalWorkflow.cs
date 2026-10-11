@@ -30,10 +30,10 @@ namespace BarakalAlkheir.Lic
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, options))
             using (var db = OpenContext())
             {
-                db.Connection.Open();
+                db.Database.Connection.Open();
                 // One database-scoped lock covers this small desktop module's financial writes.
                 // Keeping the connection open makes the lock live until the transaction completes.
-                db.ExecuteStoreCommand(@"DECLARE @result int;
+                db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, @"DECLARE @result int;
 EXEC @result = sys.sp_getapplock @Resource=N'BarakalAlkheir.LicenceRentals',
  @LockMode='Exclusive', @LockOwner='Transaction', @LockTimeout=10000;
 IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى المحاولة مرة أخرى',16,1);");
@@ -70,7 +70,7 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
         {
             internal RentLicens Rental;
             internal List<RentLicensesDetail> Details;
-            internal List<RentLicensesPayment> Payments;
+            internal bool HasPayments { get { return Details.Any(d => d.rd_isPaid == true); } }
         }
 
         private static Ledger LoadLedger(BarakeitAlkheirEntities db, int rentalId)
@@ -79,9 +79,6 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
             RequireActive(rental);
             var details = db.RentLicensesDetails.Where(d => d.rentLicenseID == rentalId)
                 .OrderBy(d => d.rd_fromDate).ThenBy(d => d.rd_mNo).ThenBy(d => d.rentLicencesDetailsID).ToList();
-            var ids = details.Select(d => d.rentLicencesDetailsID).ToList();
-            var payments = db.RentLicensesPayments.Where(p => p.rentLicenseID == rentalId ||
-                (p.rentLicencesDetailsID.HasValue && ids.Contains(p.rentLicencesDetailsID.Value))).ToList();
             const string error = "توجد بيانات غير متطابقة في العقد أو الأقساط أو المدفوعات. يجب مراجعتها قبل التعديل";
             if (!rental.rentLicense_from.HasValue || !rental.rentLicense_noOfMonths.HasValue ||
                 rental.rentLicense_noOfMonths < 1 || rental.rentLicense_noOfMonths > 1000 ||
@@ -95,16 +92,12 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
                     detail.rd_toDate != LicenseRentalRules.InstalmentEnd(rental.rentLicense_from.Value, detail.rd_mNo.Value) ||
                     LicenseRentalRules.Amount(detail.rd_amount) <= 0 || !detail.rd_isPaid.HasValue)
                     throw new InvalidOperationException(error);
-                var receipts = payments.Where(p => p.rentLicencesDetailsID == detail.rentLicencesDetailsID).ToList();
-                if (receipts.Count > 1 || detail.rd_isPaid.Value != (receipts.Count == 1) ||
-                    receipts.Any(p => p.rentLicenseID != rentalId ||
-                        LicenseRentalRules.Amount(p.rentLicPay_Amount) != LicenseRentalRules.Amount(detail.rd_amount) ||
-                        p.rentLicPay_ForDate != LicenseRentalRules.BillingDate(detail.rd_fromDate.Value)))
+                if (detail.rd_isPaid == false && (detail.rentLicPay_VouNo != null || detail.rentLicPay_PaymentDate.HasValue ||
+                    detail.rentLicPay_mandoubID.HasValue || detail.payment_added_Date.HasValue || detail.payment_edited_Date.HasValue ||
+                    detail.payment_addedBy.HasValue || detail.payment_editedBy.HasValue || detail.legacyPaymentID.HasValue))
                     throw new InvalidOperationException(error);
             }
-            if (payments.Any(p => !p.rentLicencesDetailsID.HasValue || !ids.Contains(p.rentLicencesDetailsID.Value)))
-                throw new InvalidOperationException(error);
-            return new Ledger { Rental = rental, Details = details, Payments = payments };
+            return new Ledger { Rental = rental, Details = details };
         }
 
         private static DateTime NextEdit(DateTime? previous)
@@ -161,7 +154,7 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
                     rental = new RentLicens { customerID = customerId, companyLicencesID = companyLicenceId,
                         rentLicense_from = start.Date, rentLicense_RentalAmount = LicenseRentalRules.ToStorageAmount(initialAmount),
                         rentLicense_active = true, rentLicense_date = DateTime.Now, added_Date = DateTime.Now, addedBy = MainClass.userID };
-                    db.RentLicenses.AddObject(rental);
+                    db.RentLicenses.Add(rental);
                     db.SaveChanges();
                     details = new List<RentLicensesDetail>();
                 }
@@ -173,13 +166,13 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
                     if (rental.edited_Date != expectedEdit) throw new RentalChangedException();
                     if (rental.rentLicense_from.Value.Date != start.Date)
                         throw new InvalidOperationException("لا يمكن تغيير تاريخ بداية العقد");
-                    if (ledger.Payments.Count > 0 && (rental.companyLicencesID != companyLicenceId || rental.customerID != customerId))
+                    if (ledger.HasPayments && (rental.companyLicencesID != companyLicenceId || rental.customerID != customerId))
                         throw new InvalidOperationException("لا يمكن تغيير الرخصة أو العميل بعد تسجيل المدفوعات");
                     foreach (var detail in details.Where(d => d.rd_mNo > months).ToList())
                     {
-                        if (detail.rd_isPaid == true || ledger.Payments.Any(p => p.rentLicencesDetailsID == detail.rentLicencesDetailsID))
+                        if (detail.rd_isPaid == true)
                             throw new InvalidOperationException("لا يمكن حذف أشهر مسددة من العقد");
-                        db.RentLicensesDetails.DeleteObject(detail);
+                        db.RentLicensesDetails.Remove(detail);
                         details.Remove(detail);
                     }
                 }
@@ -187,7 +180,7 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
                 for (int month = details.Count + 1; month <= months; month++)
                 {
                     var detail = NewDetail(rental.rentLicenseID, start, month, rate);
-                    db.RentLicensesDetails.AddObject(detail);
+                    db.RentLicensesDetails.Add(detail);
                     details.Add(detail);
                 }
                 rental.customerID = customerId;
@@ -226,9 +219,9 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
             Write(db => {
                 RequirePermission(db, "pageRentAlicences", "delete");
                 var ledger = LoadLedger(db, rentalId);
-                if (ledger.Payments.Count != 0) throw new InvalidOperationException("لا يمكن حذف عقد له مدفوعات");
-                foreach (var detail in ledger.Details) db.RentLicensesDetails.DeleteObject(detail);
-                db.RentLicenses.DeleteObject(ledger.Rental);
+                if (ledger.HasPayments) throw new InvalidOperationException("لا يمكن حذف عقد له مدفوعات");
+                foreach (var detail in ledger.Details) db.RentLicensesDetails.Remove(detail);
+                db.RentLicenses.Remove(ledger.Rental);
                 return true;
             });
         }
@@ -259,33 +252,30 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
                 var detail = ledger.Details.FirstOrDefault(d => d.rentLicencesDetailsID == detailId);
                 if (detail == null || LicenseRentalRules.Amount(detail.rd_amount) != displayedAmount)
                     throw new RentalChangedException();
-                RentLicensesPayment receipt;
                 if (paymentId <= 0)
                 {
                     var next = ledger.Details.FirstOrDefault(d => d.rd_isPaid == false);
-                    if (detail.rd_isPaid != false || next == null || next.rentLicencesDetailsID != detailId ||
-                        ledger.Payments.Any(p => p.rentLicencesDetailsID == detailId)) throw new RentalChangedException();
-                    receipt = new RentLicensesPayment { rentLicenseID = rentalId, rentLicencesDetailsID = detailId,
-                        rentLicPay_Amount = detail.rd_amount, rentLicPay_ForDate = LicenseRentalRules.BillingDate(detail.rd_fromDate.Value),
-                        added_Date = DateTime.Now, addedBy = MainClass.userID };
-                    db.RentLicensesPayments.AddObject(receipt);
+                    if (detail.rd_isPaid != false || next == null || next.rentLicencesDetailsID != detailId)
+                        throw new RentalChangedException();
+                    detail.payment_added_Date = DateTime.Now;
+                    detail.payment_addedBy = MainClass.userID;
                 }
-                else
-                {
-                    receipt = ledger.Payments.FirstOrDefault(p => p.rentLicensePaymentID == paymentId);
-                    if (receipt == null || receipt.rentLicencesDetailsID != detailId || receipt.rentLicenseID != rentalId ||
-                        receipt.edited_Date != expectedEdit) throw new RentalChangedException();
-                }
-                receipt.rentLicPay_VouNo = voucher;
-                receipt.rentLicPay_PaymentDate = paymentDate.Date;
-                receipt.rentLicPay_mandoubID = collectorId;
-                receipt.edited_Date = NextEdit(receipt.edited_Date);
-                receipt.editedBy = MainClass.userID;
+                else if (paymentId != detailId || detail.rd_isPaid != true || detail.payment_edited_Date != expectedEdit)
+                    throw new RentalChangedException();
+                detail.rentLicPay_VouNo = voucher;
+                detail.rentLicPay_PaymentDate = paymentDate.Date;
+                detail.rentLicPay_mandoubID = collectorId;
+                // The installment edit token survives receipt deletion, so a rapid re-payment cannot reuse an old receipt token.
+                DateTime? previousEdit = detail.payment_edited_Date.HasValue &&
+                    (!detail.edited_Date.HasValue || detail.payment_edited_Date > detail.edited_Date)
+                    ? detail.payment_edited_Date : detail.edited_Date;
+                detail.payment_edited_Date = NextEdit(previousEdit);
+                detail.payment_editedBy = MainClass.userID;
                 detail.rd_isPaid = true;
                 Touch(detail);
                 Touch(ledger.Rental);
                 db.SaveChanges();
-                return receipt.rentLicensePaymentID;
+                return detail.rentLicencesDetailsID;
             });
         }
 
@@ -294,12 +284,16 @@ IF @result < 0 RAISERROR(N'تعذر حجز العقد للتعديل. يرجى �
             Write(db => {
                 RequirePermission(db, "frmRentLicensePayment", "delete");
                 var ledger = LoadLedger(db, rentalId);
-                var receipt = ledger.Payments.FirstOrDefault(p => p.rentLicensePaymentID == paymentId);
-                if (receipt == null || receipt.edited_Date != expectedEdit) throw new RentalChangedException();
-                var detail = ledger.Details.Single(d => d.rentLicencesDetailsID == receipt.rentLicencesDetailsID);
-                if (ledger.Payments.Any(p => p.rentLicencesDetailsID == detail.rentLicencesDetailsID && p.rentLicensePaymentID != paymentId))
-                    throw new InvalidOperationException("يوجد أكثر من إيصال للقسط. يرجى مراجعة المدفوعات");
-                db.RentLicensesPayments.DeleteObject(receipt);
+                var detail = ledger.Details.FirstOrDefault(d => d.rentLicencesDetailsID == paymentId && d.rd_isPaid == true);
+                if (detail == null || detail.payment_edited_Date != expectedEdit) throw new RentalChangedException();
+                detail.rentLicPay_VouNo = null;
+                detail.rentLicPay_PaymentDate = null;
+                detail.rentLicPay_mandoubID = null;
+                detail.payment_added_Date = null;
+                detail.payment_edited_Date = null;
+                detail.payment_addedBy = null;
+                detail.payment_editedBy = null;
+                detail.legacyPaymentID = null;
                 detail.rd_isPaid = false;
                 Touch(detail);
                 Touch(ledger.Rental);

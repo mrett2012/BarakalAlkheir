@@ -103,7 +103,7 @@ namespace BarakalAlkheir.Definitions
                                           select cc).ToList();
                                 foreach (var item in vv)
                                 {
-                                    db.UserGroupEvents.DeleteObject(item);
+                                    db.UserGroupEvents.Remove(item);
                                     db.SaveChanges();
                                 }
 
@@ -306,11 +306,9 @@ namespace BarakalAlkheir.Definitions
         {
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
             {
-                lstUserGroupEvent = (from c in db.UserGroupEvents
+                lstUserGroupEvent = (from c in db.UserGroupEvents.AsNoTracking()
                                      where c.userGroupID == ugID
                                      select c).ToList();
-                db.UserGroupEvents.MergeOption = System.Data.Objects.MergeOption.NoTracking;
-
             }
         }
 
@@ -393,7 +391,7 @@ namespace BarakalAlkheir.Definitions
                                           select cc).ToList();
                                 foreach (var item in vv)
                                 {
-                                    db.UserGroupEvents.DeleteObject(item);
+                                    db.UserGroupEvents.Remove(item);
                                     db.SaveChanges();
                                 }
 
@@ -429,7 +427,7 @@ namespace BarakalAlkheir.Definitions
                                                         uu.addedBy = MainClass.userID;
                                                         uu.editedBy = MainClass.userID;
 
-                                                        db.UserGroupEvents.AddObject(uu);
+                                                        db.UserGroupEvents.Add(uu);
                                                         db.SaveChanges();
                                                     }
                                                 }

@@ -134,7 +134,7 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    var val = from c in db.CompanyLicences
+                    var val = (from c in db.CompanyLicences
                               where c.isActive == false
                               && c.isMainLicences == false
                               orderby c.commercialName
@@ -150,7 +150,7 @@ namespace BarakalAlkheir.Lic
                                   startDate = c.startDate,
                                    endDate = c.endDate,
                                    licenseUniqueNo = c.licenseUniqueNo
-                              };
+                              }).ToList();
 
                     Gview.DataSource = val;
                     makePrintTable();
@@ -201,7 +201,7 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    var val = from c in db.CompanyLicences
+                    var val = (from c in db.CompanyLicences
                               where c.isClose == true
                               && c.isMainLicences == false
                               select new
@@ -214,7 +214,7 @@ namespace BarakalAlkheir.Lic
                                   startDate = c.startDate,
                                   endDate = c.endDate,
                                   licenseUniqueNo = c.licenseUniqueNo
-                              };
+                              }).ToList();
 
                     Gview.DataSource = val;
                     makePrintTable();
@@ -465,9 +465,9 @@ namespace BarakalAlkheir.Lic
                     var val = (from c in db.CompanyLicences
                                join d in db.RentLicenses
                                 on c.companyLicencesID equals d.companyLicencesID
-                               join eee in db.RentLicensesPayments on d.rentLicenseID equals eee.rentLicenseID
-                               where eee.rentLicPay_ForDate >= new DateTime(year, month, 1)
-                                && eee.rentLicPay_ForDate < new DateTime(year, month, 1).AddMonths(1)
+                               join eee in db.RentLicensesDetails.Where(detail => detail.rd_isPaid == true) on d.rentLicenseID equals eee.rentLicenseID
+                               where eee.rd_fromDate >= lastDay
+                                && eee.rd_fromDate < firstDay
                                select new
                                {
                                    rentLicPay_VouNo = eee.rentLicPay_VouNo,
@@ -478,7 +478,7 @@ namespace BarakalAlkheir.Lic
                                    customer_Name = d.Customer.customer_Name,
                                    rentLicense_from = d.rentLicense_from,
                                    rentLicense_to = d.rentLicense_to,
-                                   rd_amount = eee.rentLicPay_Amount ?? 0,
+                                   rd_amount = eee.rd_amount ?? 0,
                                    Mohafaza = c.Mohafaza ,
                                    
                                    
@@ -591,7 +591,7 @@ namespace BarakalAlkheir.Lic
             //        var val = (from c in db.CompanyLicences
             //                   join d in db.RentLicenses
             //                   on c.companyLicencesID equals d.companyLicencesID
-            //                   from j in db.RentLicensesPayments.Where(j => j.rentLicenseID == d.rentLicenseID &&
+            //                   from j in db.RentLicensesDetails.Where(detail => detail.rd_isPaid == true).Where(j => j.rentLicenseID == d.rentLicenseID &&
             //                       j.rentLicPay_ForDate>=firstDay
             //                       && j.rentLicPay_ForDate<=lastDay && j.rentLicPay_Amount<=0).DefaultIfEmpty()
             //                   where c.isActive == true
@@ -711,7 +711,7 @@ namespace BarakalAlkheir.Lic
 
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    var val = from c in db.CompanyLicences
+                    var val = (from c in db.CompanyLicences
                               where c.isActive == true &&
                               c.noOfSeats> 0
                               orderby c.commercialName
@@ -727,7 +727,7 @@ namespace BarakalAlkheir.Lic
                                   noOfSeatsFree = c.noOfSeats,
                                   noOfSeatsUsed = c.CompanyLicenseDesignations.Sum(cc => cc.noOfSeats),
                                   Mohafaza = c.Mohafaza
-                              };
+                              }).ToList();
 
                     Gview.DataSource = val;
 
@@ -1077,7 +1077,7 @@ namespace BarakalAlkheir.Lic
             {
                 using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
                 {
-                    var val = from c in db.CompanyLicences
+                    var val = (from c in db.CompanyLicences
                               where c.isActive == true &&
                               c.noOfSeats > 0
                               orderby c.commercialName
@@ -1094,7 +1094,7 @@ namespace BarakalAlkheir.Lic
                                   noOfSeatsUsed = c.EmployeeSponsors.Count(p => p.Employee.emp_active == true),
                                   Left = c.noOfSeats - c.EmployeeSponsors.Count(p => p.Employee.emp_active == true),
                                   Mohafaza = c.Mohafaza
-                              };
+                              }).ToList();
 
                     Gview.DataSource = val;
 

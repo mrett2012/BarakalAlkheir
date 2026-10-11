@@ -14,7 +14,6 @@ namespace BarakalAlkheir.Lic
 {
     public partial class frmfindLicencesPayment : Telerik.WinControls.UI.RadForm
     {
-        List<RentLicensesPayment> lstRentLicensesPayment = null;
         public bool found = false;
         public int licID = -1;
         public string licNO = "";
@@ -45,22 +44,23 @@ namespace BarakalAlkheir.Lic
 
         private void getData(string _voucher, string _linO, string _LNo, string _Cname)
         {
+            bool filterByVoucher = !string.IsNullOrEmpty(_voucher);
             using (BarakeitAlkheirEntities db = new BarakeitAlkheirEntities())
             {
-                var val = (from c in db.RentLicensesPayments
+                var val = (from c in db.RentLicensesDetails.Where(d => d.rd_isPaid == true)
                            join cc in db.RentLicenses on c.rentLicenseID equals cc.rentLicenseID
                            join ccc in db.CompanyLicences on cc.companyLicencesID equals ccc.companyLicencesID
-                           where c.rentLicPay_VouNo.Contains(_voucher) &&
+                           where (!filterByVoucher || c.rentLicPay_VouNo.Contains(_voucher)) &&
                            ccc.commercialName.Contains(_Cname) &&
                            ccc.licenseLinkCode.Contains(_LNo) &&
                            ccc.licenseNo.Contains(_linO)
-                           orderby c.rentLicPay_ForDate
+                           orderby c.rd_fromDate
                            select new
                            {
-                               c.rentLicensePaymentID,
-                               c.rentLicPay_Amount,
+                               c.rentLicencesDetailsID,
+                               c.rd_amount,
                                c.rentLicPay_VouNo,
-                               rentLicPay_ForDate = c.rentLicPay_ForDate.Value,
+                               rd_fromDate = c.rd_fromDate,
                                ccc.licenseNo,
                                ccc.licenseLinkCode,
                                ccc.commercialName
@@ -72,13 +72,13 @@ namespace BarakalAlkheir.Lic
                 {
                     int r = GView.Rows.Count;
                     GView.Rows.Add(1);
-                    GView.Rows[r].Cells[0].Value = item.rentLicensePaymentID.ToString();
+                    GView.Rows[r].Cells[0].Value = item.rentLicencesDetailsID.ToString();
                     GView.Rows[r].Cells[1].Value = item.rentLicPay_VouNo;
                     GView.Rows[r].Cells[2].Value = item.licenseLinkCode;
                     GView.Rows[r].Cells[3].Value = item.licenseNo;
-                    GView.Rows[r].Cells[4].Value = LicenseRentalRules.FormatDate(item.rentLicPay_ForDate);
+                    GView.Rows[r].Cells[4].Value = item.rd_fromDate.HasValue ? LicenseRentalRules.FormatDate(LicenseRentalRules.BillingDate(item.rd_fromDate.Value)) : "";
                     
-                    GView.Rows[r].Cells[5].Value = item.rentLicPay_Amount.Value.ToString();
+                    GView.Rows[r].Cells[5].Value = item.rd_amount.Value.ToString();
                     GView.Rows[r].Cells[6].Value = item.commercialName;
                     
                 }

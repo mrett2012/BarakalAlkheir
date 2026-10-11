@@ -14,7 +14,7 @@ if (-not $SkipBuild) {
     if ($LASTEXITCODE -ne 0) { Get-Content (Join-Path $buildRoot 'build.log'); throw 'Application build failed' }
 }
 $testExe = Join-Path $buildBin 'GlobalDateFormat.Tests.exe'
-& $csc /nologo /target:exe /platform:x86 "/out:$testExe" /r:System.Core.dll /r:System.Data.dll /r:System.Data.Entity.dll /r:System.Windows.Forms.dll /r:System.Drawing.dll "/r:$buildBin/BarakalAlkheir.exe" "/r:$buildBin/Telerik.WinControls.dll" "/r:$buildBin/Telerik.WinControls.UI.dll" "/r:$buildBin/Telerik.WinControls.GridView.dll" "/r:$buildBin/TelerikCommon.dll" (Join-Path $PSScriptRoot 'GlobalDateFormat.Tests.cs')
+& $csc /nologo /target:exe /platform:x86 "/out:$testExe" /r:System.Core.dll /r:System.Data.dll "/r:$buildBin/EntityFramework.dll" /r:System.Windows.Forms.dll /r:System.Drawing.dll "/r:$buildBin/BarakalAlkheir.exe" "/r:$buildBin/Telerik.WinControls.dll" "/r:$buildBin/Telerik.WinControls.UI.dll" "/r:$buildBin/Telerik.WinControls.GridView.dll" "/r:$buildBin/TelerikCommon.dll" (Join-Path $PSScriptRoot 'GlobalDateFormat.Tests.cs')
 if ($LASTEXITCODE -ne 0) { throw 'Global date regression harness compilation failed' }
 & $testExe
 if ($LASTEXITCODE -ne 0) { throw 'Global date regression checks failed' }

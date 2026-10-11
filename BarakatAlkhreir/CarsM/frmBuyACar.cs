@@ -135,7 +135,7 @@ namespace BarakalAlkheir.CarsM
 
                                 foreach (var item in bb1)
                                 {
-                                    db.CarSupplierRentDetails.DeleteObject(item);
+                                    db.CarSupplierRentDetails.Remove(item);
                                     db.SaveChanges();
                                 }
 
@@ -145,7 +145,7 @@ namespace BarakalAlkheir.CarsM
                                                           bbID
                                                       select c).FirstOrDefault();
 
-                                db.CarSupplierRents.DeleteObject(bb);
+                                db.CarSupplierRents.Remove(bb);
                                 int noOfAffectedRows = db.SaveChanges();
                                 if (noOfAffectedRows > 0)
                                 {
@@ -222,7 +222,7 @@ namespace BarakalAlkheir.CarsM
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            db.CarSupplierRents.AddObject(bb);
+                            db.CarSupplierRents.Add(bb);
                             rowsAffected = db.SaveChanges();
 
 
@@ -244,7 +244,7 @@ namespace BarakalAlkheir.CarsM
                                 rld.rd_isMonthlyPayment = true;
                                 rld.rd_isFirstPayment = false;
                                 rld.rd_isLastPayment = false;
-                                db.CarSupplierRentDetails.AddObject(rld);
+                                db.CarSupplierRentDetails.Add(rld);
                                 db.SaveChanges();
                             }
 
@@ -265,7 +265,7 @@ namespace BarakalAlkheir.CarsM
                                 rld.rd_isFirstPayment = true;
                                 rld.rd_isLastPayment = false;
                                 rld.rd_isMonthlyPayment = false;
-                                db.CarSupplierRentDetails.AddObject(rld);
+                                db.CarSupplierRentDetails.Add(rld);
                                 db.SaveChanges();
                             }
 
@@ -286,7 +286,7 @@ namespace BarakalAlkheir.CarsM
                                 rld.rd_isFirstPayment = false;
                                 rld.rd_isLastPayment = true;
                                 rld.rd_isMonthlyPayment = false;
-                                db.CarSupplierRentDetails.AddObject(rld);
+                                db.CarSupplierRentDetails.Add(rld);
                                 db.SaveChanges();
                             }
 
@@ -333,7 +333,7 @@ namespace BarakalAlkheir.CarsM
                             bb.edited_Date = DateTime.Now;
                             bb.editedBy = MainClass.userID;
 
-                            //db.CarSupplierRents.AddObject(bb);
+                            //db.CarSupplierRents.Add(bb);
                             rowsAffected = db.SaveChanges();
 
 
@@ -355,7 +355,7 @@ namespace BarakalAlkheir.CarsM
                                 }
                                 else
                                 {
-                                    db.CarSupplierRentDetails.DeleteObject(item);
+                                    db.CarSupplierRentDetails.Remove(item);
                                     db.SaveChanges();
                                 }
                             }
@@ -419,7 +419,7 @@ namespace BarakalAlkheir.CarsM
                                         rld.rd_isLastPayment = false;
                                         rld.rd_isMonthlyPayment = true;
 
-                                        db.CarSupplierRentDetails.AddObject(rld);
+                                        db.CarSupplierRentDetails.Add(rld);
                                         db.SaveChanges();
                                     }
                                 }
@@ -444,7 +444,7 @@ namespace BarakalAlkheir.CarsM
                                     rld.rd_isLastPayment = false;
                                     rld.rd_isMonthlyPayment = true;
 
-                                    db.CarSupplierRentDetails.AddObject(rld);
+                                    db.CarSupplierRentDetails.Add(rld);
                                     db.SaveChanges();
                                 }
                             }
@@ -500,7 +500,7 @@ namespace BarakalAlkheir.CarsM
                                     rld1.rd_isFirstPayment = true;
                                     rld1.rd_isLastPayment = false;
                                     rld1.rd_isMonthlyPayment = false;
-                                    db.CarSupplierRentDetails.AddObject(rld1);
+                                    db.CarSupplierRentDetails.Add(rld1);
                                     db.SaveChanges();
                                 }
 
@@ -522,7 +522,7 @@ namespace BarakalAlkheir.CarsM
                                     }
                                     else
                                     {
-                                        db.CarSupplierRentDetails.DeleteObject(rld);
+                                        db.CarSupplierRentDetails.Remove(rld);
                                     }
                                 }
                             }
@@ -577,7 +577,7 @@ namespace BarakalAlkheir.CarsM
                                     rld1.rd_isFirstPayment = false;
                                     rld1.rd_isLastPayment = true;
                                     rld1.rd_isMonthlyPayment = false;
-                                    db.CarSupplierRentDetails.AddObject(rld1);
+                                    db.CarSupplierRentDetails.Add(rld1);
                                     db.SaveChanges();
                                 }
                             }
@@ -597,7 +597,7 @@ namespace BarakalAlkheir.CarsM
                                     }
                                     else
                                     {
-                                        db.CarSupplierRentDetails.DeleteObject(rld);
+                                        db.CarSupplierRentDetails.Remove(rld);
                                     }
                                 }
                             }

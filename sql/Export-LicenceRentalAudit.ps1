@@ -5,17 +5,18 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Data
-[xml]$config = [IO.File]::ReadAllText((Resolve-Path -LiteralPath $ConfigPath))
-$entry = @($config.configuration.connectionStrings.add | Where-Object {$_.name -eq 'BarakeitAlkheirEntities'})
-if($entry.Count -ne 1){throw 'Expected one application entity connection.'}
-$entity = New-Object System.Data.Common.DbConnectionStringBuilder
-$entity.set_ConnectionString([string]$entry[0].connectionString)
-$connection = New-Object System.Data.SqlClient.SqlConnection([string]$entity['provider connection string'])
+. (Join-Path $PSScriptRoot "Get-LicenceSqlConnectionString.ps1")
+$providerConnectionString = Get-LicenceSqlConnectionString -ConfigPath $ConfigPath
+$connection = New-Object System.Data.SqlClient.SqlConnection($providerConnectionString)
 try {
     $connection.Open()
     if($connection.Database -cne $ExpectedDatabase){throw 'Connected database does not match ExpectedDatabase.'}
+    $schemaProbe=$connection.CreateCommand()
+    $schemaProbe.CommandText="SELECT CASE WHEN COL_LENGTH('dbo.RentLicensesDetails','rentLicPay_VouNo') IS NULL THEN 0 ELSE 1 END"
+    try { $merged=[int]$schemaProbe.ExecuteScalar() -eq 1 } finally { $schemaProbe.Dispose() }
+    $sqlFolder=if($merged){$PSScriptRoot}else{Join-Path $PSScriptRoot 'legacy-payment-table'}
     $command = $connection.CreateCommand()
-    $command.CommandText = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'licence-rental-audit.sql'))
+    $command.CommandText = [IO.File]::ReadAllText((Join-Path $sqlFolder 'licence-rental-audit.sql'))
     $command.CommandTimeout = 120
     $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($command)
     $data = New-Object System.Data.DataSet

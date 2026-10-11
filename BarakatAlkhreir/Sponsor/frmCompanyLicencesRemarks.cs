@@ -112,7 +112,7 @@ namespace BarakalAlkheir.Sponsor
                             CompanyLicencesRemark cc = (from c in db.CompanyLicencesRemarks
                                                         where c.comLicenseRemID == ID
                                                         select c).FirstOrDefault();
-                            db.DeleteObject(cc);
+                            db.CompanyLicencesRemarks.Remove(cc);
                             int noOfAffectedRows = db.SaveChanges();
                             if (noOfAffectedRows > 0)
                             {
@@ -167,7 +167,7 @@ namespace BarakalAlkheir.Sponsor
                         bb.edited_Date = DateTime.Now;
                         bb.editedBy = MainClass.userID;
 
-                        db.CompanyLicencesRemarks.AddObject(bb);
+                        db.CompanyLicencesRemarks.Add(bb);
                         rowsAffected = db.SaveChanges();
 
 

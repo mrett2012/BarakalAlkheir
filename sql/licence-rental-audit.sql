@@ -1,37 +1,18 @@
--- Read-only reconciliation. Run against the explicitly selected target database.
--- IDs are database identities, not licence/customer names. No correction is inferred.
+-- Read-only reconciliation after payment consolidation. No correction is inferred.
 SET NOCOUNT ON;
 ;WITH Issues AS (
-    SELECT 'ReceiptRentalMismatch' Issue, p.rentLicenseID RentalId, p.rentLicencesDetailsID DetailId,
-        p.rentLicensePaymentID PaymentId, 'Receipt and instalment refer to different rentals' Explanation
-    FROM dbo.RentLicensesPayment p JOIN dbo.RentLicensesDetails d ON d.rentLicencesDetailsID=p.rentLicencesDetailsID
-    WHERE p.rentLicenseID<>d.rentLicenseID OR p.rentLicenseID IS NULL
+    SELECT 'UnpaidWithReceiptMetadata' Issue,d.rentLicenseID RentalId,d.rentLicencesDetailsID DetailId,
+        d.rentLicencesDetailsID PaymentId,'Unpaid installment retains receipt metadata' Explanation
+    FROM dbo.RentLicensesDetails d WHERE ISNULL(d.rd_isPaid,0)=0 AND
+        (d.rentLicPay_VouNo IS NOT NULL OR d.rentLicPay_PaymentDate IS NOT NULL OR d.rentLicPay_mandoubID IS NOT NULL
+        OR d.payment_added_Date IS NOT NULL OR d.payment_edited_Date IS NOT NULL OR d.payment_addedBy IS NOT NULL
+        OR d.payment_editedBy IS NOT NULL OR d.legacyPaymentID IS NOT NULL)
     UNION ALL
-    SELECT 'MissingInstalment',p.rentLicenseID,p.rentLicencesDetailsID,p.rentLicensePaymentID,'Receipt has no matching instalment'
-    FROM dbo.RentLicensesPayment p LEFT JOIN dbo.RentLicensesDetails d ON d.rentLicencesDetailsID=p.rentLicencesDetailsID
-    WHERE d.rentLicencesDetailsID IS NULL
+    SELECT 'MissingCollector',d.rentLicenseID,d.rentLicencesDetailsID,d.rentLicencesDetailsID,'Collector record missing; paid installment remains reportable'
+    FROM dbo.RentLicensesDetails d LEFT JOIN dbo.Employees e ON e.employeeID=d.rentLicPay_mandoubID WHERE d.rd_isPaid=1 AND e.employeeID IS NULL
     UNION ALL
-    SELECT 'PaidWithoutReceipt',d.rentLicenseID,d.rentLicencesDetailsID,NULL,'Paid flag has no receipt'
-    FROM dbo.RentLicensesDetails d WHERE d.rd_isPaid=1 AND NOT EXISTS(SELECT 1 FROM dbo.RentLicensesPayment p WHERE p.rentLicencesDetailsID=d.rentLicencesDetailsID)
-    UNION ALL
-    SELECT 'UnpaidWithReceipt',d.rentLicenseID,d.rentLicencesDetailsID,p.rentLicensePaymentID,'Receipt exists but instalment is unpaid'
-    FROM dbo.RentLicensesDetails d JOIN dbo.RentLicensesPayment p ON p.rentLicencesDetailsID=d.rentLicencesDetailsID
-    WHERE ISNULL(d.rd_isPaid,0)=0
-    UNION ALL
-    SELECT 'DuplicateReceipt',p.rentLicenseID,p.rentLicencesDetailsID,p.rentLicensePaymentID,'More than one receipt for this instalment'
-    FROM dbo.RentLicensesPayment p WHERE (SELECT COUNT(*) FROM dbo.RentLicensesPayment x WHERE x.rentLicencesDetailsID=p.rentLicencesDetailsID)>1
-    UNION ALL
-    SELECT 'ReceiptAmountMismatch',p.rentLicenseID,p.rentLicencesDetailsID,p.rentLicensePaymentID,'Receipt amount differs from full instalment charge'
-    FROM dbo.RentLicensesPayment p JOIN dbo.RentLicensesDetails d ON d.rentLicencesDetailsID=p.rentLicencesDetailsID
-    WHERE p.rentLicPay_Amount IS NULL OR p.rentLicPay_Amount<>d.rd_amount
-    UNION ALL
-    SELECT 'BillingMonthMismatch',p.rentLicenseID,p.rentLicencesDetailsID,p.rentLicensePaymentID,'Receipt billing month differs from instalment cutoff'
-    FROM dbo.RentLicensesPayment p JOIN dbo.RentLicensesDetails d ON d.rentLicencesDetailsID=p.rentLicencesDetailsID
-    WHERE p.rentLicPay_ForDate IS NULL OR DAY(p.rentLicPay_ForDate)<>15 OR
-        DATEDIFF(month,p.rentLicPay_ForDate,DATEADD(month,CASE WHEN DAY(d.rd_fromDate)>10 THEN 1 ELSE 0 END,d.rd_fromDate))<>0
-    UNION ALL
-    SELECT 'MissingCollector',p.rentLicenseID,p.rentLicencesDetailsID,p.rentLicensePaymentID,'Collector record is missing; receipt remains reportable'
-    FROM dbo.RentLicensesPayment p LEFT JOIN dbo.Employees e ON e.employeeID=p.rentLicPay_mandoubID WHERE e.employeeID IS NULL
+    SELECT 'MissingPaymentMetadata',d.rentLicenseID,d.rentLicencesDetailsID,d.rentLicencesDetailsID,'Historical payment date or voucher missing; no value is inferred'
+    FROM dbo.RentLicensesDetails d WHERE d.rd_isPaid=1 AND (d.rentLicPay_PaymentDate IS NULL OR NULLIF(LTRIM(RTRIM(d.rentLicPay_VouNo)),'') IS NULL)
     UNION ALL
     SELECT 'InvalidInstalment',d.rentLicenseID,d.rentLicencesDetailsID,NULL,'Missing date/state/month or nonpositive charge requires review'
     FROM dbo.RentLicensesDetails d WHERE d.rd_fromDate IS NULL OR d.rd_toDate IS NULL OR d.rd_isPaid IS NULL OR ISNULL(d.rd_mNo,0)<1 OR ISNULL(d.rd_amount,0)<=0
@@ -64,8 +45,7 @@ SET NOCOUNT ON;
 SELECT Issue,RentalId,DetailId,PaymentId,Explanation FROM Issues ORDER BY Issue,RentalId,DetailId,PaymentId;
 
 -- Before-values for preparing exact, reviewed corrections. Excludes names and credentials.
-SELECT rentLicensePaymentID,rentLicenseID,rentLicencesDetailsID,rentLicPay_Amount,rentLicPay_ForDate,
-    rentLicPay_mandoubID,edited_Date FROM dbo.RentLicensesPayment ORDER BY rentLicensePaymentID;
+SELECT rentLicencesDetailsID AS PaymentId,legacyPaymentID,rentLicenseID,rd_amount,rentLicPay_PaymentDate,rentLicPay_mandoubID,payment_edited_Date FROM dbo.RentLicensesDetails WHERE rd_isPaid=1 ORDER BY rentLicencesDetailsID;
 SELECT rentLicencesDetailsID,rentLicenseID,rd_mNo,rd_fromDate,rd_toDate,rd_amount,rd_isPaid,edited_Date
     FROM dbo.RentLicensesDetails ORDER BY rentLicenseID,rd_mNo;
 SELECT rentLicenseID,companyLicencesID,rentLicense_noOfMonths,rentLicense_from,rentLicense_to,
