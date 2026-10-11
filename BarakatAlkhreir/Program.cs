@@ -25,20 +25,20 @@ namespace BarakalAlkheir
             Exception failure = null;
             using (var status = new Form
             {
-                Text = "بركات الخير",
+                Text = "Barakat Al Kheir",
                 StartPosition = FormStartPosition.CenterScreen,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 ClientSize = new System.Drawing.Size(420, 100),
                 ControlBox = false,
-                RightToLeft = RightToLeft.Yes,
-                RightToLeftLayout = true
+                RightToLeft = RightToLeft.No,
+                RightToLeftLayout = false
             })
             {
                 status.Controls.Add(new Label
                 {
                     Dock = DockStyle.Fill,
                     TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
-                    Text = "جارٍ تجهيز قاعدة البيانات، يرجى الانتظار..."
+                    Text = "Preparing the database. Please wait..."
                 });
                 status.Controls.Add(new ProgressBar { Dock = DockStyle.Bottom, Style = ProgressBarStyle.Marquee });
                 status.Shown += async (sender, e) =>
@@ -53,10 +53,10 @@ namespace BarakalAlkheir
                 status.ShowDialog();
             }
             if (failure == null) return true;
-            MessageBox.Show("تعذر تجهيز قاعدة البيانات. لم يتم فتح البرنامج.\r\n" +
-                "تحقق من الاتصال وصلاحيات تحديث قاعدة البيانات ثم أعد المحاولة.\r\n\r\n" +
+            MessageBox.Show("Unable to prepare the database. The application could not start.\r\n" +
+                "Check the database connection and update permissions, then try again.\r\n\r\n" +
                 failure.GetBaseException().Message,
-                "خطأ في قاعدة البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
     }
