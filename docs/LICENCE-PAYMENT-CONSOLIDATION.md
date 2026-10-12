@@ -1,5 +1,7 @@
 # Licence payment consolidation
 
+For the subsequent correction of stale receipt detail IDs and misallocated dates, see [Licence receipt allocation recovery](LICENCE-RECEIPT-RECOVERY.md). The 2026-10-12 migration matches rental, billing month, and amount independently of the historical detail ID; it preserves paid flags and the original archive.
+
 ## Application behavior
 
 The active EF6 model no longer contains a `RentLicensesPayment` entity or set. `RentLicensesDetails` is the operational source for both installment schedules and receipts.

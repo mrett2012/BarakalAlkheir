@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -1269,6 +1269,13 @@
       <DependentUpon>202610110924552_MergeLicencePaymentsIntoDetails.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Model\Migrations\Configuration.cs" />
+    <Compile Include="Model\Migrations\202610121200000_RestoreLicenceReceiptAllocations.cs" />
+    <Compile Include="Model\Migrations\202610121200000_RestoreLicenceReceiptAllocations.Designer.cs">
+      <DependentUpon>202610121200000_RestoreLicenceReceiptAllocations.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Model\Migrations\202610121200000_RestoreLicenceReceiptAllocations.resx">
+      <DependentUpon>202610121200000_RestoreLicenceReceiptAllocations.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Model\Migrations\202610111200000_AddLicenceAutomatedNumber.cs" />
     <Compile Include="Model\Migrations\202610111200000_AddLicenceAutomatedNumber.Designer.cs">
       <DependentUpon>202610111200000_AddLicenceAutomatedNumber.cs</DependentUpon>

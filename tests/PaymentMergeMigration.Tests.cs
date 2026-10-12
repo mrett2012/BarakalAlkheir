@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
@@ -261,14 +261,14 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
         }
         else BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString);
         Check(!Migrator().GetPendingMigrations().Any(), "startup applies all explicit migrations: " + scenario);
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 4, "startup records each migration once");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 5, "startup records each migration once");
         Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.columns WHERE object_id=OBJECT_ID('dbo.CompanyLicences') AND name='licenseAutomatedNumber' AND max_length=100 AND is_nullable=1")) == 1, "startup adds optional automated number");
         Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.CompanyLicences WHERE licenseNo=N'LEGACY' AND commercialName=N'Existing licence' AND licenseAutomatedNumber IS NULL")) == 1, "migration retains existing licence with blank automated number");
         Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.RentLicensesPaymentArchive_20261011")) == 1, "startup preserves receipt archive");
         using (var db = new BarakeitAlkheirEntities(connectionString))
             Check(db.RentLicensesDetails.Single().rentLicPay_VouNo == "TEST", "EF payment page query succeeds after startup migration");
         BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString);
-        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 4, "repeat startup skips applied migrations");
+        Check(Convert.ToInt32(Sql("SELECT COUNT(*) FROM dbo.__MigrationHistory")) == 5, "repeat startup skips applied migrations");
         if (scenario == "first-start")
         {
             using (var db = new BarakeitAlkheirEntities(connectionString))
@@ -292,10 +292,11 @@ SET IDENTITY_INSERT dbo.RentLicensesPayment OFF;");
             BarakalAlkheir.Model.Migrations.DatabaseMigrationRunner.ApplyPending(connectionString);
             using (var db = new BarakeitAlkheirEntities(connectionString))
                 Check(db.CompanyLicences.Single().licenseAutomatedNumber == "009876", "edited number survives repeated startup");
-            Migrator().Update("RestoreArchivedLicencePaymentDates");
-            Check(Sql("SELECT COL_LENGTH('dbo.CompanyLicences','licenseAutomatedNumber')") == DBNull.Value, "field migration downgrade removes only its column");
-            Migrator().Update();
-            Check(Sql("SELECT licenseNo FROM dbo.CompanyLicences").Equals("LEGACY"), "field migration reapply preserves licence record");
+            bool recoveryDowngradeRejected = false;
+            try { Migrator().Update("RestoreArchivedLicencePaymentDates"); }
+            catch (NotSupportedException) { recoveryDowngradeRejected = true; }
+            Check(recoveryDowngradeRejected, "receipt recovery blocks an automatic downgrade over financial corrections");
+            Check(Sql("SELECT licenseAutomatedNumber FROM dbo.CompanyLicences").Equals("009876"), "rejected downgrade preserves subsequent licence edits");
         }
         Console.WriteLine("PASS: application startup migration scenario " + scenario);
     }
